@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\FortifyServiceProvider;
+
 return [
 
     /*
@@ -13,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'ISHOSU'),
 
     /*
     |--------------------------------------------------------------------------
@@ -174,7 +176,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Providers\FortifyServiceProvider::class,
     ],
 
     /*

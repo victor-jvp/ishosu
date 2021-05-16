@@ -18,7 +18,8 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            Lista de Relaciones <small>Description text here...</small>
+                            Lista de Relaciones
+                            {{-- <small>Description text here...</small> --}}
                         </h2>
                     </div>
                     <div class="body">
