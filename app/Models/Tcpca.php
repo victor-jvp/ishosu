@@ -11,4 +11,10 @@ class Tcpca extends Model
 
     // protected $connecion = "ishosu";
     protected $table = 'tcpca';
+    public $incrementing = false;
+    protected $primaryKey = "CODICLIE";
+    protected $keyType = "string";
+    protected $casts = [
+        "AGENTERET" => "boolean",
+    ];
 }

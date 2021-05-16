@@ -11,4 +11,16 @@ class Tfachisa extends Model
 
     // protected $connecion = "ishosu";
     protected $table = "tfachisa";
+    public $incrementing = false;
+    protected $primaryKey = "NUMEDOCU";
+    protected $keyType = "string";
+    protected $casts = [
+        'FECHA'    => "datetime:Y-m-d",
+        'TOTADOCU' => "double",
+    ];
+
+    public function cliente()
+    {
+        return $this->belongsTo(Tcpca::class, "CODICLIE", "CODICLIE");
+    }
 }

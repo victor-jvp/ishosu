@@ -11,4 +11,10 @@ class Tfacnda extends Model
 
     // protected $connecion = "ishosu";
     protected $table = "tfacnda";
+    public $incrementing = false;
+    protected $primaryKey = "NUMEDOCU";
+    protected $keyType = "string";
+    protected $casts = [
+        'FECHA' => "datetime:Y-m-d"
+    ];
 }
