@@ -56,7 +56,7 @@
                                     <div class="form-group">
                                         <div class="form-line">
                                             <select class="form-control show-tick" data-live-search="true" required
-                                                data-title="Seleccione..." name="nro_documento">
+                                                data-title="Seleccione..." name="nro_documento" id="nro_documento">
                                                 @foreach ($facturas as $item)
                                                 <option {{ $item->NUMEDOCU }}>{{ $item->NUMEDOCU }}</option>
                                                 @endforeach
@@ -68,8 +68,7 @@
                                     <p><b>Fecha Factura</b></p>
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <input type="date" class="form-control" id="fecha_factura"
-                                                name="fecha_factura" disabled>
+                                            <input type="date" class="form-control" id="fecha_factura" readonly >
                                         </div>
                                     </div>
                                 </div>
@@ -80,16 +79,26 @@
                                     <div class="form-group">
                                         <div class="form-line">
                                             <input type="text" class="form-control" id="id_cliente" name="id_cliente"
-                                                disabled>
+                                                readonly>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-6">
                                     <p><b>Cliente</b></p>
                                     <div class="form-group">
                                         <div class="form-line">
                                             <input type="text" class="form-control" id="cliente" disabled>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p><b>Es Agente de Retencion</b></p>
+                                    <div class="switch">
+                                        <label>
+                                            NO
+                                            <input type="checkbox" disabled="" id="agente_ret"><span class="lever"></span>
+                                            SI
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +108,7 @@
                                     <p><b>Codigo Ruta</b></p>
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <input type="text" class="form-control" id="id_ruta" name="id_ruta"
+                                            <input type="text" class="form-control" id="id_ruta"
                                                 disabled>
                                         </div>
                                     </div>
@@ -210,6 +219,8 @@
 <script src="../../js/jquery.validate.messages_es.js"></script>
 <!-- tooltips-popovers -->
 <script src="../../js/pages/ui/tooltips-popovers.js"></script>
+<!-- Moment Js -->
+<script src="../../plugins/momentjs/moment.js"></script>
 
 <script>
     var dolares = "{{ $dolares }}"
@@ -227,6 +238,10 @@
 
         $(".tipo_moneda").change(function (e) {
             UpdateDenominacion(e)
+        })
+
+        $("#nro_documento").on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            LoadFactData()
         })
 
         UpdateDenominacion()
@@ -250,8 +265,7 @@
 		submitHandler: function (form) {
 
 			data = $("#form_create");
-
-			swal({
+            swal({
 				title: "Confirmar",
 				text: "Confirme realizar el proceso.",
 				type: "info",
@@ -382,6 +396,51 @@
             options += `<option value="${e}">${e} ${simbolo}</option>`
         });
         $("#denominacion").html(options).selectpicker('refresh')
+    }
+
+    function LoadFactData()
+    {
+        const nro_documento = $("#nro_documento").val()
+        if (nro_documento == "") {
+            return
+        }
+        const tipo_doc = "FA";
+
+        $.ajax({
+            url: "{{ route('documentos.details') }}",
+            dataType: 'JSON',
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            type: 'POST',
+            data: {
+                id: nro_documento,
+                tipo_doc: tipo_doc,
+            },
+            success: function (resp) {
+                if (resp == null) {
+                    swal("Aviso", "La consulta del documento no tiene información. Intente nuevamente", "warning")
+                    return
+                }
+
+                $("#fecha_factura").val(moment(resp.FECHA).format("YYYY-MM-DD"))
+                $("#id_cliente").val(resp.CODICLIE)
+                $("#cliente").val((resp.cliente.NOMBCLIE).trim())
+                $("#agente_ret").prop("checked", resp.cliente.AGENTERET)
+                $("#fecha_factura").val(resp.FECHA)
+                $("#id_ruta").val(resp.CODIRUTA)
+                $("#monto_factura_vef").val(resp.TOTADOCU)
+            },
+            error: function (resp) {
+
+                if (result == undefined || result == null) {
+                    swal('Error en el proceso',
+                        'Error al procesar los datos. Intente nuevamente',
+                        'error')
+                } else {
+                    swal(result.title, result.message, result.result);
+                }
+
+            }
+        })
     }
 </script>
 @endsection

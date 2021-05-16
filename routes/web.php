@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecibosController;
 use App\Http\Controllers\CobranzasController;
+use App\Http\Controllers\DocumentosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +27,4 @@ Route::get('cobranzas', function(){
 Route::resource('recibos', RecibosController::class);
 Route::get('recibos/{id?}', [RecibosController::class, 'index'])->name('recibos.index');
 
+Route::post('documentos/details', [DocumentosController::class, 'details'])->name('documentos.details');
