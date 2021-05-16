@@ -17,6 +17,7 @@ class Tfachisa extends Model
     protected $casts = [
         'FECHA'    => "datetime:Y-m-d",
         'TOTADOCU' => "double",
+        "CAMBDOL"  => "double",
     ];
 
     public function cliente()

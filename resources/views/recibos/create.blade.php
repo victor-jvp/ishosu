@@ -428,6 +428,7 @@
                 $("#fecha_factura").val(resp.FECHA)
                 $("#id_ruta").val(resp.CODIRUTA)
                 $("#monto_factura_vef").val(resp.TOTADOCU)
+                $("#monto_factura_usd").val((resp.TOTADOCU / resp.CAMBDOL).toFixed(2))
             },
             error: function (resp) {
 
