@@ -29,7 +29,7 @@
                         <div class="body">
                             {{-- <h2 class="card-inside-title">Floating Label Examples</h2> --}}
                             <div class="row clearfix">
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <p><b>Moneda</b></p>
                                     <input name="tipo_moneda" type="radio" id="tipo_moneda_usd" value="usd"
                                         class="tipo_moneda with-gap radio-col-indigo" checked />
@@ -40,7 +40,7 @@
                                     <label for="tipo_moneda_vef">Bolivares</label>
                                 </div>
 
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <p><b>Tipo de Pago</b></p>
                                     <input name="tipo_recibo" type="radio" id="tipo_recibo_tran" value="transferencia"
                                         class="tipo_recibo with-gap radio-col-indigo" checked />
@@ -51,6 +51,19 @@
                                     <label for="tipo_recibo_efec">Efectivo</label>
                                 </div>
 
+                                <div class="col-sm-4">
+                                    <p><b>Tipo de Documento</b></p>
+                                    <input name="tipo_doc" type="radio" id="tipo_doc_fa" value="FA"
+                                        class="tipo_doc with-gap radio-col-indigo" checked />
+                                    <label for="tipo_doc_fa">Factura</label>
+
+                                    <input name="tipo_doc" type="radio" id="tipo_doc_ne" value="NE"
+                                        class="tipo_doc with-gap radio-col-indigo" />
+                                    <label for="tipo_doc_ne">Nota de Entrega</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-sm-3">
                                     <p><b>Nro. Documento</b></p>
                                     <div class="form-group">
@@ -68,26 +81,16 @@
                                     <p><b>Fecha Factura</b></p>
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <input type="date" class="form-control" id="fecha_factura" readonly >
+                                            <input type="date" class="form-control" id="fecha_factura" readonly>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row clearfix">
                                 <div class="col-sm-3">
                                     <p><b>Codigo Cliente</b></p>
                                     <div class="form-group">
                                         <div class="form-line">
                                             <input type="text" class="form-control" id="id_cliente" name="id_cliente"
-                                                readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <p><b>Cliente</b></p>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" id="cliente" disabled>
+                                                readonly autofocus>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +99,8 @@
                                     <div class="switch">
                                         <label>
                                             NO
-                                            <input type="checkbox" disabled="" id="agente_ret"><span class="lever"></span>
+                                            <input type="checkbox" disabled="" id="agente_ret"><span
+                                                class="lever"></span>
                                             SI
                                         </label>
                                     </div>
@@ -108,8 +112,7 @@
                                     <p><b>Codigo Ruta</b></p>
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <input type="text" class="form-control" id="id_ruta"
-                                                disabled>
+                                            <input type="text" class="form-control" id="id_ruta" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -121,6 +124,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-6">
+                                    <p><b>Cliente</b></p>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control" id="cliente" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
                                 <div class="col-sm-3">
                                     <p><b>Monto Factura Bs.</b></p>
                                     <div class="form-group">
@@ -136,6 +150,24 @@
                                         <div class="form-line">
                                             <input type="number" class="form-control" id="monto_factura_usd" disabled
                                                     value="0" step="1" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p><b>Tasa de Cambio</b></p>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="number" class="form-control" id="tasa_cambio" disabled
+                                                value="0" step="1">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p><b>Diferencial</b></p>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="number" class="form-control" id="monto_dife" disabled
+                                                value="0" step="1">
                                         </div>
                                     </div>
                                 </div>
@@ -264,7 +296,6 @@
         },
 		submitHandler: function (form) {
 
-			data = $("#form_create");
             swal({
 				title: "Confirmar",
 				text: "Confirme realizar el proceso.",
@@ -281,7 +312,8 @@
 					url: $(form).attr('action'),
 					dataType: 'JSON',
 					type: 'POST',
-					data: data.serialize(),
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					data: $(form).serialize(),
 					success: function (result) {
 						swal({
 							title: result.title,
@@ -428,7 +460,14 @@
                 $("#fecha_factura").val(resp.FECHA)
                 $("#id_ruta").val(resp.CODIRUTA)
                 $("#monto_factura_vef").val(resp.TOTADOCU)
-                $("#monto_factura_usd").val((resp.TOTADOCU / resp.CAMBDOL).toFixed(2))
+                const montoFacturaUsd = (resp.TOTADOCU / resp.CAMBDOL)
+                $("#monto_factura_usd").val(montoFacturaUsd.toFixed(2))
+                $("#tasa_cambio").val(resp.CAMBDOL)
+
+                console.log(table_billetes.column(2).data())
+
+                // let total_billetes = montoFacturaUsd / table_billetes.column(2).data().sum()
+                // $("#total_billetes").val(total_billetes.toFixed(2))
             },
             error: function (resp) {
 
