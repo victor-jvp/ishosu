@@ -16,15 +16,18 @@ use App\Http\Controllers\DocumentosController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return view('home');
+    })->name('home');
+
+    Route::get('cobranzas', function () {
+        return view('cobranzas.index');
+    })->name('cobranzas.index');
+
+    Route::resource('cobranzas/recibos', RecibosController::class);
+    Route::get('cobranzas/recibos/{id?}', [RecibosController::class, 'index'])->name('recibos.index');
+
+    Route::post('documentos/details', [DocumentosController::class, 'details'])->name('documentos.details');
 });
 
-Route::get('cobranzas', function(){
-    return view('cobranzas.index');
-})->name('cobranzas.index');
-
-Route::resource('recibos', RecibosController::class);
-Route::get('recibos/{id?}', [RecibosController::class, 'index'])->name('recibos.index');
-
-Route::post('documentos/details', [DocumentosController::class, 'details'])->name('documentos.details');

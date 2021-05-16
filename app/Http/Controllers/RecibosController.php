@@ -11,7 +11,7 @@ class RecibosController extends Controller
     //
     public function index($id = null)
     {
-        return view('cobranzas.index',[
+        return view('recibos.index',[
             'recibos' => []
         ]);
     }

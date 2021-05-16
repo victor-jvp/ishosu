@@ -18,19 +18,17 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            Lista de Relaciones <small>Description text here...</small>
+                            Lista de Relaciones
+                            {{-- <small>Description text here...</small> --}}
                         </h2>
                         <ul class="header-dropdown m-r-0">
-                            <li title="Agregar nuevo">
-                                <a href="{{ route('cobranzas.index') }}">
+                            <li>
+                                <a href="{{ route('recibos.create') }}" data-toggle="tooltip" data-placement="auto"
+                                    data-original-title="Agregar"
+                                    class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
                                     <i class="material-icons">add_circle</i>
                                 </a>
                             </li>
-                            {{--  <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li> --}}
                         </ul>
                     </div>
                     <div class="body">
@@ -76,9 +74,16 @@
 <script src="../../plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
 <script src="../../plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
 <script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+<!-- tooltips-popovers -->
+<script src="../../js/pages/ui/tooltips-popovers.js"></script>
 
 <script>
     $(document).ready(function(){
+        //Tooltip
+        $('body').tooltip({
+            selector: '[data-toggle="tooltip"]'
+        });
+
         $("#table").DataTable({
             language: table_es_lang,
             dom: 'Bfrtip',

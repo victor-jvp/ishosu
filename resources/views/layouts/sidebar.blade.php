@@ -7,19 +7,28 @@
                 <img src="../../images/user.png" width="48" height="48" alt="User" />
             </div>
             <div class="info-container">
-                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">John Doe</div>
-                <div class="email">john.doe@example.com</div>
+                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</div>
+                <div class="email">{{ Auth::user()->email }}</div>
                 <div class="btn-group user-helper-dropdown">
                     <i class="material-icons" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="true">keyboard_arrow_down</i>
                     <ul class="dropdown-menu pull-right">
-                        <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
+                        {{-- <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
                         <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
                         <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="javascript:void(0);"><i class="material-icons">input</i>Sign Out</a></li>
+                        <li role="separator" class="divider"></li> --}}
+                        <li>
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                {{ __('Cerrar Sesión') }}
+                                <i class="material-icons">input</i>
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -29,13 +38,13 @@
         <div class="menu">
             <ul class="list">
                 <li class="header">MENU PRINCIPAL</li>
-                <li>
-                    <a href="../../index.html">
+                <li class="{{ request()->is('/') ? 'active' : '' }}">
+                    <a href="{{ route('home') }}">
                         <i class="material-icons">home</i>
                         <span>Home</span>
                     </a>
                 </li>
-                <li>
+                <li class="{{ (request()->is('cobranzas') || request()->is('cobranzas/*')) ? 'active' : '' }}">
                     <a href="{{ route('cobranzas.index') }}">
                         <i class="material-icons">money</i>
                         <span>Cobranzas</span>
