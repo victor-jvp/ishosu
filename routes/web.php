@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RecibosController;
+use App\Http\Controllers\CobranzasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('cobranzas', function(){
+    return view('cobranzas.index');
+})->name('cobranzas.index');
+
+Route::resource('recibos', RecibosController::class);
+Route::get('recibos/{id?}', [RecibosController::class, 'index'])->name('recibos.index');
+
