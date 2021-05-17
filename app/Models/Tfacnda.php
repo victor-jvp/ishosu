@@ -15,6 +15,13 @@ class Tfacnda extends Model
     protected $primaryKey = "NUMEDOCU";
     protected $keyType = "string";
     protected $casts = [
-        'FECHA' => "datetime:Y-m-d"
+        'FECHA'    => "datetime:Y-m-d",
+        'TOTADOCU' => "double",
+        "CAMBDOL"  => "double",
     ];
+
+    public function cliente()
+    {
+        return $this->belongsTo(Tcpca::class, "CODICLIE", "CODICLIE");
+    }
 }

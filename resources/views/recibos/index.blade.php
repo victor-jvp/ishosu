@@ -18,7 +18,7 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            Lista de Relaciones
+                            Lista de Recibos
                             {{-- <small>Description text here...</small> --}}
                         </h2>
                         <ul class="header-dropdown m-r-0">
