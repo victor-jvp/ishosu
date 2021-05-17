@@ -21,13 +21,9 @@ Route::middleware(['auth'])->group(function () {
         return view('home');
     })->name('home');
 
-    Route::get('cobranzas', function () {
-        return view('cobranzas.index');
-    })->name('cobranzas.index');
+    Route::get('cobranzas', [CobranzasController::class, "index"])->name("cobranzas.index");
 
     Route::resource('cobranzas/recibos', RecibosController::class);
-    Route::get('cobranzas/recibos/{id?}', [RecibosController::class, 'index'])->name('recibos.index');
-
     Route::post('documentos/details', [DocumentosController::class, 'details'])->name('documentos.details');
 });
 

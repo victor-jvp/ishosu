@@ -14,10 +14,11 @@ use Illuminate\Support\Str;
 class RecibosController extends Controller
 {
     //
-    public function index($id)
+    public function index()
     {
+//        dd(ReciboCab::first());
         return view('recibos.index', [
-            'recibos' => []
+            'recibos' => ReciboCab::all()
         ]);
     }
 
@@ -85,7 +86,7 @@ class RecibosController extends Controller
                 'title' => "Aviso.",
                 "text"  => "Se ha guardado el registro con éxito.",
                 "type"  => "success",
-                "goto"  => route("recibos.show", $reciboCab->id)
+                "goto"  => route("recibos.index")
             ]);
 
         } catch (\Exception $e) {
