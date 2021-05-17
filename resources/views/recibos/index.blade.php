@@ -33,18 +33,36 @@
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                            <table id="table" class="table table-bordered table-striped table-hover dataTable js-exportable" width="100%">
-                                <thead>
+                            <table id="table" class="table table-striped table-hover dataTable js-exportable" width="100%">
+                                <thead class="bg-indigo">
                                     <tr>
                                         <th>Nro.</th>
                                         <th>Fecha</th>
-                                        <th>Tipo de Relacion</th>
-                                        <th>Cajera</th>
+                                        <th>Tipo Documento</th>
+                                        <th>Cod. Cliente</th>
+                                        <th>Cliente</th>
+                                        <th>Nro. Documento</th>
+                                        <th>Monto Documento</th>
+                                        <th>Monto Recibido</th>
+                                        <th>Realizado por</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
+                                @foreach($recibos as $item)
+                                    <tr>
+                                        <td>{{ $item->id }}</td>
+                                        <td>{{ $item->FECHA->format("d/m/Y") }}</td>
+                                        <td>{{ $item->TIPO_DOC }}</td>
+                                        <td>{{ $item->factura->CODICLIE }}</td>
+                                        <td>{{ $item->factura->cliente->NOMBCLIE }}</td>
+                                        <td>{{ $item->NUMEDOCU }}</td>
+                                        <td>{{number_format( ($item->TIPO_MONEDA == "usd") ? $item->MONTO_DOC_USD: $item->MONTO_DOC_VEF, 2, ".", "," ) }}</td>
+                                        <td>{{number_format( $item->montoRecibido, 2, ".", "," ) }}</td>
+                                        <td>{{ $item->createdBy->name }}</td>
+                                        <td></td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -91,7 +109,9 @@
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ],
-
+            sorting: [
+                [0, 'desc']
+            ]
         })
     })
 </script>
