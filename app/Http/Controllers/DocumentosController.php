@@ -19,7 +19,7 @@ class DocumentosController extends Controller
         if ($tipo_doc == "FA") { // Si es Factura
             $data = Tfachisa::with('cliente')->find($id);
         }else{
-            $data = Tfacnda::find($id);
+            $data = Tfacnda::with('cliente')->find($id);
         }
 
         return response()->json($data);
