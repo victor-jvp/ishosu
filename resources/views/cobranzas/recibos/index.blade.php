@@ -23,8 +23,15 @@
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>
+                                <a href="{{ route('cobranzas.create') }}" data-toggle="tooltip" data-placement="auto"
+                                   data-original-title="Relacionar Recibos"
+                                   class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
+                                    <i class="material-icons">assignment</i>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('recibos.create') }}" data-toggle="tooltip" data-placement="auto"
-                                    data-original-title="Agregar"
+                                    data-original-title="Nuevo Recibo"
                                     class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
                                     <i class="material-icons">add_circle</i>
                                 </a>
@@ -60,7 +67,14 @@
                                         <td>{{number_format( ($item->TIPO_MONEDA == "usd") ? $item->MONTO_DOC_USD: $item->MONTO_DOC_VEF, 2, ".", "," ) }}</td>
                                         <td>{{number_format( $item->montoRecibido, 2, ".", "," ) }}</td>
                                         <td>{{ $item->createdBy->name }}</td>
-                                        <td></td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ route("recibos.edit", $item->id) }}" class="btn btn-default btn-sm waves-effect"
+                                                       data-toggle="tooltip" data-placement="auto"
+                                                       data-original-title="Detalles"><i class="material-icons">visibility</i>
+                                                </a>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>

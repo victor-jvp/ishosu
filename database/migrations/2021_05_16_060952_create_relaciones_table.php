@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRelacionesTables extends Migration
+class CreateRelacionesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRelacionesTables extends Migration
      */
     public function up()
     {
-        Schema::create('relaciones_cab', function (Blueprint $table) {
+        Schema::create('relaciones', function (Blueprint $table) {
             $table->id();
 
             $table->dateTime("FECHA");
@@ -28,16 +28,6 @@ class CreateRelacionesTables extends Migration
 
             $table->timestamps();
         });
-
-        Schema::create('relaciones_det', function (Blueprint $table) {
-            $table->id();
-
-            $table->unsignedBigInteger("id_relacion");
-            $table->unsignedBigInteger("id_recibo");
-
-            $table->foreign('id_relacion')->references('id')->on('relaciones_cab');
-            $table->foreign('id_recibo')->references('id')->on('recibos_cab');
-        });
     }
 
     /**
@@ -47,7 +37,6 @@ class CreateRelacionesTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('relaciones_det');
-        Schema::dropIfExists('relaciones_cab');
+        Schema::dropIfExists('relaciones');
     }
 }
