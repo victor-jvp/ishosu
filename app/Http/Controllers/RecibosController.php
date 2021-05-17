@@ -17,16 +17,17 @@ class RecibosController extends Controller
     public function index()
     {
 //        dd(ReciboCab::first());
-        return view('recibos.index', [
+        return view('cobranzas.recibos.index', [
             'recibos' => ReciboCab::all()
         ]);
     }
 
-    public function show($id)
+    public function edit($id)
     {
-        return view('recibos.show', [
-            'recibos' => []
-        ]);
+        $recibo = ReciboCab::find($id);
+        dd($recibo->toArray());
+
+        return view('cobranzas.recibos.edit', compact("recibo"));
     }
 
     public function create()
@@ -36,7 +37,7 @@ class RecibosController extends Controller
         $facturas  = Tfachisa::all();
         $notas     = Tfacnda::all();
 
-        return view('recibos.create', compact('dolares', 'bolivares', 'facturas', 'notas'));
+        return view('cobranzas.recibos.create', compact('dolares', 'bolivares', 'facturas', 'notas'));
     }
 
     public function store(Request $request)

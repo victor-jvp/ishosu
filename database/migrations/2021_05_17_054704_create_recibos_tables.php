@@ -16,6 +16,9 @@ class CreateRecibosTables extends Migration
         Schema::create('recibos_cab', function (Blueprint $table) {
 
             $table->id();
+
+            $table->unsignedBigInteger("id_relacion")->nullable();
+
             $table->dateTime("FECHA");
             $table->string("TIPO_MONEDA", 6)->nullable();
             $table->string("TIPO_PAGO", 1)->nullable();
@@ -31,6 +34,7 @@ class CreateRecibosTables extends Migration
             $table->unsignedBigInteger("created_by");
             $table->unsignedBigInteger("updated_by");
 
+            $table->foreign('id_relacion')->references('id')->on('relaciones');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
 

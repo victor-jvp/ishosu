@@ -3,10 +3,10 @@
     <aside id="leftsidebar" class="sidebar">
         <!-- User Info -->
         <div class="user-info">
-            <div class="image">
-                <img src="../../images/user.png" width="48" height="48" alt="User" />
-            </div>
-            <div class="info-container">
+{{--            <div class="image">--}}
+{{--                <img src="../../images/user.png" width="48" height="48" alt="User" />--}}
+{{--            </div>--}}
+            <div class="info-container" style="margin-top: 48px">
                 <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</div>
                 <div class="email">{{ Auth::user()->email }}</div>
                 <div class="btn-group user-helper-dropdown">
@@ -44,18 +44,20 @@
                         <span>Home</span>
                     </a>
                 </li>
-                <li class="{{ (request()->is('cobranzas') || request()->is('cobranzas/*')) ? 'active' : '' }}">
-                    <a href="{{ route('cobranzas.index') }}">
+                <li class="{{ (request()->is('cobranzas/*')) ? 'active' : '' }}">
+                    <a href="javascript:void(0);" class="menu-toggle">
                         <i class="material-icons">money</i>
                         <span>Cobranzas</span>
                     </a>
+                    <ul class="ml-menu">
+                        <li class="{{ (request()->is('cobranzas/relaciones')) ? 'active' : '' }}">
+                            <a href="{{ route("cobranzas.index") }}">Relaciones</a>
+                        </li>
+                        <li class="{{ (request()->is('cobranzas/recibos*')) ? 'active' : '' }}">
+                            <a href="{{ route("recibos.index") }}">Recibos</a>
+                        </li>
+                    </ul>
                 </li>
-                {{-- <li>
-                    <a href="../../pages/helper-classes.html">
-                        <i class="material-icons">layers</i>
-                        <span>Helper Classes</span>
-                    </a>
-                </li> --}}
             </ul>
         </div>
         <!-- #Menu -->
