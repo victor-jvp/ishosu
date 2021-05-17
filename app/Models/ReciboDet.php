@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Recibo extends Model
+class ReciboDet extends Model
 {
-    use HasFactory;
+    public $timestamps = false;
 
-    protected $table = 'recibos';
+    protected $table = "recibos_det";
 }
