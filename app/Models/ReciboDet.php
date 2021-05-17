@@ -8,6 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class ReciboDet extends Model
 {
     public $timestamps = false;
-
     protected $table = "recibos_det";
 }
