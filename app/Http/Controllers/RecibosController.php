@@ -16,16 +16,21 @@ class RecibosController extends Controller
     //
     public function index()
     {
-        $recibos = ReciboCab::where("created_by", auth()->user()->id)->get();
+        $recibos = ReciboCab::whereNull("id_relacion")->where("created_by", auth()->user()->getAuthIdentifier())->get();
 
         return view('cobranzas.recibos.index', compact('recibos'));
+    }
+
+    public function show($id)
+    {
+        $recibo = ReciboCab::find($id);
+        return view("cobranzas.recibos.show", compact("recibo"));
     }
 
     public function edit($id)
     {
         $recibo = ReciboCab::find($id);
         dd($recibo->toArray());
-
         return view('cobranzas.recibos.edit', compact("recibo"));
     }
 

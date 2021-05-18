@@ -50,7 +50,7 @@
                         <span>Cobranzas</span>
                     </a>
                     <ul class="ml-menu">
-                        <li class="{{ (request()->is('cobranzas/relaciones')) ? 'active' : '' }}">
+                        <li class="{{ (request()->is('cobranzas/relaciones*')) ? 'active' : '' }}">
                             <a href="{{ route("cobranzas.index") }}">Relaciones</a>
                         </li>
                         <li class="{{ (request()->is('cobranzas/recibos*')) ? 'active' : '' }}">

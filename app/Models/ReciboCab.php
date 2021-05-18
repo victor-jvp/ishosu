@@ -14,6 +14,11 @@ class ReciboCab extends Model
         "FECHA"
     ];
 
+    public function getIdZeroAttribute()
+    {
+        return str_pad($this->id,"6","0",STR_PAD_LEFT);
+    }
+
     public function getMontoRecibidoAttribute()
     {
         if ($this->TIPO_PAGO == "T") {
@@ -54,13 +59,13 @@ class ReciboCab extends Model
         static::creating(function($model)
         {
             $user = Auth::user();
-            $model->created_by = $user->id;
-            $model->updated_by = $user->id;
+            $model->created_by = $user->getAuthIdentifier();
+            $model->updated_by = $user->getAuthIdentifier();
         });
         static::updating(function($model)
         {
             $user = Auth::user();
-            $model->updated_by = $user->id;
+            $model->updated_by = $user->getAuthIdentifier();
         });
     }
 }
