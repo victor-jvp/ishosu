@@ -8,6 +8,24 @@
             @csrf
 
             <div class="container-fluid">
+                <div class="block-header">
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="javascript:void(0);">
+                                <i class="material-icons">money</i> Cobranzas
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Recibos
+                            </a>
+                        </li>
+                        <li class="active">
+                            Nuevo
+                        </li>
+                    </ol>
+                </div>
+
                 <div class="row clearfix">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card">

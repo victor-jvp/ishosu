@@ -11,6 +11,18 @@
                 <small>Taken from <a href="https://datatables.net/" target="_blank">datatables.net</a></small>
             </h2>
         </div> --}}
+        <div class="block-header">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="javascript:void(0);">
+                        <i class="material-icons">money</i> Cobranzas
+                    </a>
+                </li>
+                <li class="active">
+                    Relaciones
+                </li>
+            </ol>
+        </div>
 
         <!-- Exportable Table -->
         <div class="row clearfix">
