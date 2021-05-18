@@ -287,26 +287,26 @@
 
 @section('styles')
     <!-- Bootstrap Select Css -->
-    <link href="../../plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet"/>
+    <link href="{{ asset('plugins/bootstrap-select/css/bootstrap-select.css') }}" rel="stylesheet"/>
     <!-- JQuery DataTable Css -->
-    <link href="../../plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="{{ asset('plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css') }}" rel="stylesheet">
 @endsection
 
 @section('scripts')
     <!-- Select Plugin Js -->
-    <script src="../../plugins/bootstrap-select/js/bootstrap-select.js"></script>
+    <script src="{{ asset('plugins/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <!-- Jquery DataTable Plugin Js -->
-    <script src="../../plugins/jquery-datatable/jquery.dataTables.js"></script>
-    <script src="../../plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+    <script src="{{ asset('plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
+    <script src="{{ asset('plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js') }}"></script>
     <!-- Jquery Validation Plugin Css -->
-    <script src="../../plugins/jquery-validation/jquery.validate.js"></script>
-    <script src="../../js/jquery.validate.messages_es.js"></script>
+    <script src="{{ asset('plugins/jquery-validation/jquery.validate.js') }}"></script>
+    <script src="{{ asset('js/jquery.validate.messages_es.js') }}"></script>
     <!-- tooltips-popovers -->
-    <script src="../../js/pages/ui/tooltips-popovers.js"></script>
+    <script src="{{ asset('js/pages/ui/tooltips-popovers.js') }}"></script>
     <!-- Moment Js -->
-    <script src="../../plugins/momentjs/moment.js"></script>
+    <script src="{{ asset('plugins/momentjs/moment.js') }}"></script>
     <!-- Input Mask Plugin Js -->
-    <script src="../../plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+    <script src="{{ asset('plugins/jquery-inputmask/jquery.inputmask.bundle.js') }}"></script>
 
     <script>
 
@@ -491,17 +491,17 @@
         }
 
         function UpdateMontos() {
-            if ($("#vuelto").val() == "") {
+            if ($("#vuelto").inputmask('unmaskedvalue') === "") {
                 $("#vuelto").val(0)
             }
             let total_recibido = parseFloat(table_montos.column(3).data().sum())
-            let vuelto = parseFloat($("#vuelto").val())
+            let vuelto = parseFloat($("#vuelto").inputmask('unmaskedvalue'))
 
             let monto_factura
             if ($("#tipo_moneda_usd").prop("checked")) {
-                monto_factura = parseFloat($("#monto_doc_usd").val() ?? 0)
+                monto_factura = parseFloat($("#monto_doc_usd").inputmask('unmaskedvalue') ?? 0)
             } else {
-                monto_factura = parseFloat($("#monto_doc_vef").val() ?? 0)
+                monto_factura = parseFloat($("#monto_doc_vef").inputmask('unmaskedvalue') ?? 0)
             }
             $("#total_recibido").html(total_recibido.toFixed(2))
 
@@ -546,8 +546,6 @@
         function AddTransferencia() {
             const referencia = $("#referencia").val().trim()
             const monto_trans = parseFloat($("#monto_trans").inputmask('unmaskedvalue'))
-
-            console.log(referencia, monto_trans)
 
             if (referencia == "") {
                 swal("Aviso", 'El campo "Referencia" no puede ser vacio.', "warning")
@@ -680,38 +678,6 @@
 
                 }
             })
-        }
-
-        function DolarTransFA() {
-
-        }
-
-        function DolarEfectFA() {
-
-        }
-
-        function DolarTransNE() {
-
-        }
-
-        function DolarEfectNE() {
-
-        }
-
-        function BolivarTransNE() {
-
-        }
-
-        function BolivarEfectNE() {
-
-        }
-
-        function BolivarTransFA() {
-
-        }
-
-        function BolivarEfectFA() {
-
         }
     </script>
 @endsection
