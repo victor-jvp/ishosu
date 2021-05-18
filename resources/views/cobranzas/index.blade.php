@@ -25,18 +25,38 @@
                     <div class="body">
                         <div class="table-responsive">
                             <table id="table"
-                                class="table table-bordered table-striped table-hover dataTable js-exportable"
+                                class="table table-striped table-hover dataTable js-exportable"
                                 width="100%">
-                                <thead>
+                                <thead class="bg-indigo">
                                     <tr>
                                         <th>Nro.</th>
                                         <th>Fecha</th>
                                         <th>Tipo de Relacion</th>
-                                        <th>Cajera</th>
+                                        <th>Comentario</th>
+                                        <th>Realizado por</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    @foreach($relaciones as $item)
+                                    <tr>
+                                        <td><b>{{ $item->idzero }}</b></td>
+                                        <td>{{ $item->FECHA->format("d/m/Y") }}</td>
+                                        <td>{{ $item->TIPO_MONEDA }}</td>
+                                        <td>{{ $item->COMENTARIO }}</td>
+                                        <td>{{ $item->createdBy->name }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ route("cobranzas.show", $item->id) }}"
+                                                   class="btn btn-default btn-sm waves-effect"
+                                                   data-toggle="tooltip" data-placement="auto"
+                                                   data-original-title="Detalles"><i class="material-icons">visibility</i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -75,7 +95,9 @@
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ],
-
+            columnDefs: [
+                {targets: 5, sorting: false}
+            ]
         })
     })
 </script>

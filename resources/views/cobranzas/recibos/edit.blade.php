@@ -32,11 +32,11 @@
                                 <div class="row clearfix">
                                     <div class="col-sm-4">
                                         <p><b>Moneda</b></p>
-                                        <input name="tipo_moneda" type="radio" id="tipo_moneda_usd" value="usd"
+                                        <input name="tipo_moneda" type="radio" id="tipo_moneda_usd" value="USD"
                                                class="tipo_moneda with-gap radio-col-indigo" checked/>
                                         <label for="tipo_moneda_usd">Dolares</label>
 
-                                        <input name="tipo_moneda" type="radio" id="tipo_moneda_vef" value="vef"
+                                        <input name="tipo_moneda" type="radio" id="tipo_moneda_vef" value="VEF"
                                                class="tipo_moneda with-gap radio-col-indigo"/>
                                         <label for="tipo_moneda_vef">Bolivares</label>
                                     </div>
