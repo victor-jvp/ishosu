@@ -12,6 +12,19 @@
             </h2>
         </div> --}}
 
+            <div class="block-header">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="javascript:void(0);">
+                            <i class="material-icons">money</i> Cobranzas
+                        </a>
+                    </li>
+                    <li class="active">
+                        Recibos
+                    </li>
+                </ol>
+            </div>
+
         <!-- Exportable Table -->
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
