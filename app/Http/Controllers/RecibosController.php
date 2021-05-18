@@ -16,10 +16,9 @@ class RecibosController extends Controller
     //
     public function index()
     {
-//        dd(ReciboCab::first());
-        return view('cobranzas.recibos.index', [
-            'recibos' => ReciboCab::all()
-        ]);
+        $recibos = ReciboCab::where("created_by", auth()->user()->id)->get();
+
+        return view('cobranzas.recibos.index', compact('recibos'));
     }
 
     public function edit($id)

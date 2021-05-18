@@ -23,11 +23,11 @@
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>
-                                <a href="{{ route('cobranzas.create') }}" data-toggle="tooltip" data-placement="auto"
-                                   data-original-title="Relacionar Recibos"
+                                <button type="button" data-toggle="tooltip" data-placement="auto"
+                                   data-original-title="Relacionar Recibos" id="btnRelacionarRecibos"
                                    class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
                                     <i class="material-icons">assignment</i>
-                                </a>
+                                </button>
                             </li>
                             <li>
                                 <a href="{{ route('recibos.create') }}" data-toggle="tooltip" data-placement="auto"
@@ -51,6 +51,7 @@
                                         <th>Nro. Documento</th>
                                         <th>Monto Documento</th>
                                         <th>Monto Recibido</th>
+                                        <th>Saldo Cliente</th>
                                         <th>Realizado por</th>
                                         <th>Opciones</th>
                                     </tr>
@@ -58,14 +59,18 @@
                                 <tbody>
                                 @foreach($recibos as $item)
                                     <tr>
-                                        <td>{{ $item->id }}</td>
+                                        <td>
+                                            <input type="checkbox" id="md_checkbox_{{ $item->id }}" class="filled-in chk-col-indigo" checked="" value="{{ $item->id }}">
+                                            <label for="md_checkbox_{{ $item->id }}"><b>{{ str_pad($item->id,"6","0",STR_PAD_LEFT) }}</b></label>
+                                        </td>
                                         <td>{{ $item->FECHA->format("d/m/Y") }}</td>
-                                        <td>{{ $item->TIPO_DOC }}</td>
-                                        <td>{{ $item->factura->CODICLIE }}</td>
-                                        <td>{{ $item->factura->cliente->NOMBCLIE }}</td>
+                                        <td>{{ ($item->TIPO_DOC == "FA") ? "Factura" : "Nota de Entrega" }}</td>
+                                        <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE : $item->notaEntrega->CODICLIE }}</td>
+                                        <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE : $item->notaEntrega->cliente->NOMBCLIE }}</td>
                                         <td>{{ $item->NUMEDOCU }}</td>
                                         <td>{{number_format( ($item->TIPO_MONEDA == "usd") ? $item->MONTO_DOC_USD: $item->MONTO_DOC_VEF, 2, ".", "," ) }}</td>
                                         <td>{{number_format( $item->montoRecibido, 2, ".", "," ) }}</td>
+                                        <td>{{number_format( $item->SALDO_CLI, 2, ".", "," ) }}</td>
                                         <td>{{ $item->createdBy->name }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
@@ -92,22 +97,22 @@
 
 @section('styles')
 <!-- JQuery DataTable Css -->
-<link href="../../plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+<link href="{{ asset('plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css') }}" rel="stylesheet">
 @endsection
 
 @section('scripts')
 <!-- Jquery DataTable Plugin Js -->
-<script src="../../plugins/jquery-datatable/jquery.dataTables.js"></script>
-<script src="../../plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
-<script src="../../plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
-<script src="../../plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
-<script src="../../plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
-<script src="../../plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
-<script src="../../plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
-<script src="../../plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-<script src="../../plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+<script src="{{ asset('plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
+<script src="{{ asset('plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js') }}"></script>
+<script src="{{ asset('plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery-datatable/extensions/export/buttons.flash.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery-datatable/extensions/export/jszip.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery-datatable/extensions/export/pdfmake.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery-datatable/extensions/export/vfs_fonts.js') }}"></script>
+<script src="{{ asset('plugins/jquery-datatable/extensions/export/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery-datatable/extensions/export/buttons.print.min.js') }}"></script>
 <!-- tooltips-popovers -->
-<script src="../../js/pages/ui/tooltips-popovers.js"></script>
+<script src="{{ asset('js/pages/ui/tooltips-popovers.js') }}"></script>
 
 <script>
     $(document).ready(function(){
@@ -125,6 +130,9 @@
             ],
             sorting: [
                 [0, 'desc']
+            ],
+            columnDefs: [
+                { targets: 9, sorting: false }
             ]
         })
     })
