@@ -28,8 +28,6 @@ class CreateRecibosTables extends Migration
             $table->double("MONTO_DOC_USD")->nullable()->default(null);
             $table->double("TASA_CAMB")->nullable()->default(null);
             $table->double("VUELTO")->nullable()->default(null);
-            $table->double("SALDO_CLI")->nullable()->default(null);
-
 
             $table->unsignedBigInteger("created_by");
             $table->unsignedBigInteger("updated_by");

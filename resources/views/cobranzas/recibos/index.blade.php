@@ -97,10 +97,15 @@
                                                 {{--                                        <td>{{ $item->createdBy->name }}</td>--}}
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        <a href="{{ route("recibos.edit", $item->id) }}"
+                                                        {{-- <a href="{{ route("recibos.edit", $item->id) }}"
                                                            class="btn btn-default btn-sm waves-effect"
                                                            data-toggle="tooltip" data-placement="auto"
                                                            data-original-title="Modificar"><i class="material-icons">edit</i>
+                                                        </a> --}}
+                                                        <a href="{{ route("recibos.show", $item->id) }}"
+                                                           class="btn btn-default btn-sm waves-effect"
+                                                           data-toggle="tooltip" data-placement="auto"
+                                                           data-original-title="Detalles"><i class="material-icons">visibility</i>
                                                         </a>
                                                         <button type="button" onclick="DeleteRow({{ $item->id }})"
                                                             class="btn btn-default btn-sm waves-effect"

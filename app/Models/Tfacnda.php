@@ -19,9 +19,22 @@ class Tfacnda extends Model
         'TOTADOCU' => "double",
         "CAMBDOL"  => "double",
     ];
+    protected $appends = [
+        "monto_cobrado"
+    ];
+
+    public function getMontoCobradoAttribute()
+    {
+        return $this->recibos->sum("MontoRecibido");
+    }
 
     public function cliente()
     {
         return $this->belongsTo(Tcpca::class, "CODICLIE", "CODICLIE");
+    }
+
+    public function recibos()
+    {
+        return $this->hasMany(ReciboCab::class, "NUMEDOCU", "NUMEDOCU");
     }
 }
