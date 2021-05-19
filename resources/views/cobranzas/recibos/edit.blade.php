@@ -50,11 +50,11 @@
                                     <div class="col-sm-4">
                                         <p><b>Moneda</b></p>
                                         <input name="tipo_moneda" type="radio" id="tipo_moneda_usd" value="USD"
-                                               class="tipo_moneda with-gap radio-col-indigo" checked/>
+                                               class="tipo_moneda with-gap radio-col-indigo" {{ ($recibo->TIPO_MONEDA == "USD") ? "checked" : "" }}/>
                                         <label for="tipo_moneda_usd">Dolares</label>
 
                                         <input name="tipo_moneda" type="radio" id="tipo_moneda_vef" value="VEF"
-                                               class="tipo_moneda with-gap radio-col-indigo"/>
+                                               class="tipo_moneda with-gap radio-col-indigo" {{ ($recibo->TIPO_MONEDA == "VEF") ? "checked" : "" }}/>
                                         <label for="tipo_moneda_vef">Bolivares</label>
                                     </div>
 
@@ -229,7 +229,26 @@
                                                 <th>Opciones</th>
                                             </tr>
                                             </thead>
-                                            <tbody></tbody>
+                                            <tbody>
+                                                @foreach ($recibo->reciboDet as $item)
+                                                    <tr>
+                                                        <td>{{ $item->CANTIDAD }}</td>
+                                                        <td>{{ $item->DENOMINACION }}</td>
+                                                        <td>{{ $item->REFERENCIA }}</td>
+                                                        <td>{{ ($recibo->TIPO_DOC == "FA") ? round($item->CANTIDAD * $item->DENOMINACION, 2) : $item->MONTO }}</td>
+                                                        <td>
+                                                            <div class="btn-group" role="group">
+                                                                <button type="button" onclick="RemoveRowTable(this)"
+                                                                    class="btn btn-default btn-sm waves-effect"
+                                                                    data-toggle="tooltip" data-placement="auto"
+                                                                    data-original-title="Remover">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
                                             <tfoot>
                                             <tr>
                                                 <td class="font-bold" colspan="3">Total</td>
@@ -392,16 +411,16 @@
                 UpdateMontos()
             })
 
-            UpdateDenominacion()
-            ChangeTipoDoc()
-            ChangeTipoPago()
-
             const tipo_doc = "{{ $recibo->TIPO_DOC }}"
             if (tipo_doc == "FA") {
-                $("#nro_fa").val("{{ $recibo->NUMEDOCU }}")
+                $("#nro_fa").val("{{ $recibo->NUMEDOCU }}").selectpicker("refresh")
             } else {
-                $("#nro_ne").val("{{ $recibo->NUMEDOCU }}")
+                $("#nro_ne").val("{{ $recibo->NUMEDOCU }}").selectpicker("refresh")
             }
+            LoadDocData("{{ $recibo->NUMEDOCU }}")
+            // UpdateDenominacion()
+            // ChangeTipoDoc()
+            ChangeTipoPago()
 
             //Tooltip
             $('body').tooltip({
@@ -495,8 +514,6 @@
                 $("#fields_efectivo").show()
                 $("#fields_transferencia").hide()
             }
-
-            CleanTableMontos()
         }
 
         function ChangeTipoDoc() {
@@ -542,6 +559,7 @@
                 monto_factura = parseFloat($("#monto_doc_vef").inputmask('unmaskedvalue') ?? 0)
             }
             $("#total_recibido").html(total_recibido)
+            console.log(total_recibido)
             const saldo_cli = parseFloat(monto_factura - total_recibido + vuelto)
             $("#saldo_cli").val(saldo_cli)
         }
@@ -568,11 +586,11 @@
                 "",
                 total.toFixed(2),
                 `<div class="btn-group" role="group">
-                <button type="button" onclick="RemoveRowTable(this)" class="btn btn-default btn-sm waves-effect"
-                    data-toggle="tooltip" data-placement="auto"
-                    data-original-title="Remover"><i class="material-icons">delete</i>
-                </button>
-            </div>`
+                    <button type="button" onclick="RemoveRowTable(this)" class="btn btn-default btn-sm waves-effect"
+                        data-toggle="tooltip" data-placement="auto"
+                        data-original-title="Remover"><i class="material-icons">delete</i>
+                    </button>
+                </div>`
             ]).draw()
 
             UpdateMontos()
