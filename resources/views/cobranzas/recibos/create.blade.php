@@ -365,6 +365,7 @@
 
             $(".tipo_moneda").change(function (e) {
                 UpdateDenominacion(e)
+                UpdateMontos()
             })
 
             $(".tipo_doc").change(function (e) {
@@ -520,10 +521,9 @@
             } else {
                 monto_factura = parseFloat($("#monto_doc_vef").inputmask('unmaskedvalue') ?? 0)
             }
-            $("#total_recibido").html(total_recibido.toFixed(2))
-
+            $("#total_recibido").html(total_recibido)
             const saldo_cli = parseFloat(monto_factura - total_recibido + vuelto)
-            $("#saldo_cli").val(saldo_cli.toFixed(2))
+            $("#saldo_cli").val(saldo_cli)
         }
 
         function AddBilletes() {
