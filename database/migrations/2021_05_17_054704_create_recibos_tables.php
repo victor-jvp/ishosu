@@ -51,7 +51,7 @@ class CreateRecibosTables extends Migration
             $table->string("REFERENCIA", 55)->nullable();
             $table->double("MONTO")->nullable();
 
-            $table->foreign('id_recibo')->references('id')->on('recibos_cab');
+            $table->foreign('id_recibo')->references('id')->on('recibos_cab')->onDelete('cascade');
         });
     }
 

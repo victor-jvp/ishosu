@@ -30,8 +30,13 @@ class RecibosController extends Controller
     public function edit($id)
     {
         $recibo = ReciboCab::find($id);
-        dd($recibo->toArray());
-        return view('cobranzas.recibos.edit', compact("recibo"));
+
+        $dolares   = "100, 50, 20, 10, 5, 1, 0.5";
+        $bolivares = "500000, 200000, 100000, 50000";
+        $facturas  = Tfachisa::all();
+        $notas     = Tfacnda::all();
+
+        return view('cobranzas.recibos.edit', compact('recibo', 'dolares', 'bolivares', 'facturas', 'notas'));
     }
 
     public function create()
@@ -86,7 +91,6 @@ class RecibosController extends Controller
             }
 
             DB::commit();
-
             return response()->json([
                 'title' => "Aviso.",
                 "text"  => "Se ha guardado el registro con éxito.",
@@ -94,6 +98,33 @@ class RecibosController extends Controller
                 "goto"  => route("recibos.index")
             ]);
 
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollback();
+
+            return response()->json([
+                'title' => "Atención.",
+                "text"  => "Error en guardado del registro. Intente nuevamente.",
+                "type"  => "error",
+                "error" => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            ReciboCab::destroy($id);
+
+            DB::commit();
+            return response()->json([
+                'title' => "Aviso.",
+                "text"  => "Se ha guardado el registro con éxito.",
+                "type"  => "success",
+                "goto"  => route("recibos.index")
+            ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             DB::rollback();

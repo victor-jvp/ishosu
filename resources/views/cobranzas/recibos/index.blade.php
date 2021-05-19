@@ -83,7 +83,7 @@
                                                     <label for="md_checkbox_{{ $item->id }}">
                                                         <b>{{ str_pad($item->id,"6","0",STR_PAD_LEFT) }}</b>
                                                     </label>--}}
-                                                    <b>{{ str_pad($item->id,"6","0",STR_PAD_LEFT) }}</b>
+                                                    <b>{{ $item->idZero }}</b>
                                                 </td>
                                                 <td>{{ $item->FECHA->format("d/m/Y") }}</td>
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? "Factura" : "Nota de Entrega" }}</td>
@@ -100,7 +100,13 @@
                                                         <a href="{{ route("recibos.edit", $item->id) }}"
                                                            class="btn btn-default btn-sm waves-effect"
                                                            data-toggle="tooltip" data-placement="auto"
-                                                           data-original-title="Detalles"><i class="material-icons">visibility</i>
+                                                           data-original-title="Modificar"><i class="material-icons">edit</i>
+                                                        </a>
+                                                        <button type="button" onclick="DeleteRow({{ $item->id }})"
+                                                            class="btn btn-default btn-sm waves-effect"
+                                                            data-toggle="tooltip" data-placement="auto"
+                                                            data-original-title="Borrar"><i
+                                                                class="material-icons">delete</i>
                                                         </a>
                                                     </div>
                                                 </td>
@@ -235,6 +241,49 @@
                     type: 'POST',
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     data: $(form).serialize(),
+                    timeout: 10000,
+                    success: function (result) {
+                        swal({
+                            title: result.title,
+                            text: result.text,
+                            type: result.type,
+                            showCancelButton: false,
+                            closeOnConfirm: true
+                        }, function () {
+                            if (result.type == "success") window.location.href = result.goto
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error.error)
+                        swal(error.title, error.message, error.result);
+                    },
+                    statusCode: {
+                        500: function () {
+                            swal('Error en el proceso', 'Error al procesar los datos. Intente nuevamente', 'error')
+                        }
+                    }
+                })
+            });
+        }
+
+        function DeleteRow(id)
+        {
+            swal({
+                title: "Confirmar",
+                text: "Confirme eliminar el registro.",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#2b982b",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true,
+            }, function () {
+                $.ajax({
+                    url: `{{ url("cobranzas/recibos/") }}/${id}`,
+                    dataType: 'JSON',
+                    type: 'DELETE',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     timeout: 10000,
                     success: function (result) {
                         swal({
