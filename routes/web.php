@@ -25,6 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('cobranzas/relaciones/create', [CobranzasController::class, 'store'])->name('cobranzas.store');
     Route::get('cobranzas/relaciones/show/{id}', [CobranzasController::class, 'show'])->name('cobranzas.show');
 
+    Route::get('cobranzas/recibos/print/{id}', [RecibosController::class, 'print'])->name('recibos.print');
     Route::resource('cobranzas/recibos', RecibosController::class);
     Route::post('documentos/details', [DocumentosController::class, 'details'])->name('documentos.details');
 });

@@ -137,4 +137,10 @@ class RecibosController extends Controller
             ]);
         }
     }
+
+    public function print($id = null)
+    {
+        $recibo = ReciboCab::find($id);
+        dd($recibo);
+    }
 }

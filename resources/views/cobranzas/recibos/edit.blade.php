@@ -168,7 +168,7 @@
                                 </div>
 
                                 <div class="row clearfix">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <p><b>Monto Documento Bs.</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
@@ -177,7 +177,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <p><b>Monto Documento $</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
@@ -206,11 +206,11 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
-                                        <p><b>Saldo de Cliente</b></p>
+                                        <p><b>Saldo Documento</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text" class="form-control monto" id="saldo_cli" readonly
-                                                       name="saldo_cli" value="0">
+                                                <input type="text" class="form-control monto" id="saldo_doc" readonly
+                                                       name="saldo_doc" value="0">
                                             </div>
                                         </div>
                                     </div>
@@ -534,7 +534,7 @@
 
         function CleanDocFields() {
             $("#id_ruta, #ruta, #cliente, #fecha_documento, #id_cliente").val(null)
-            $("#monto_doc_vef, #monto_doc_usd, #tasa_cambio, #vuelto, #saldo_cli").val(0)
+            $("#monto_doc_vef, #monto_doc_usd, #tasa_cambio, #vuelto, #saldo_doc").val(0)
             $("#nro_fa, #nro_ne").val(null).selectpicker('refresh')
 
             $("#div_ret_iva").hide()
@@ -560,8 +560,8 @@
             }
             $("#total_recibido").html(total_recibido)
             console.log(total_recibido)
-            const saldo_cli = parseFloat(monto_factura - total_recibido + vuelto)
-            $("#saldo_cli").val(saldo_cli)
+            const saldo_doc = parseFloat(monto_factura - total_recibido + vuelto)
+            $("#saldo_doc").val(saldo_doc)
         }
 
         function AddBilletes() {
