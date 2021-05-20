@@ -61,14 +61,14 @@
                                         <tr>
                                             <th>Nro.</th>
                                             <th>Fecha</th>
-                                            <th>Tipo Documento</th>
+                                            <th>Tipo Doc.</th>
+                                            <th>Nro. Doc.</th>
                                             <th>Cod. Cliente</th>
                                             <th>Cliente</th>
-                                            <th>Nro. Documento</th>
                                             <th>Moneda</th>
-                                            <th>Monto Documento</th>
-                                            <th>Monto Recibido</th>
-                                            <th>Saldo Cliente</th>
+                                            <th>Monto Doc.</th>
+                                            <th>Monto Recibo</th>
+                                            <th>Saldo</th>
                                             {{--                                        <th>Realizado por</th>--}}
                                             <th>Opciones</th>
                                         </tr>
@@ -87,9 +87,9 @@
                                                 </td>
                                                 <td>{{ $item->FECHA->format("d/m/Y") }}</td>
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? "Factura" : "Nota de Entrega" }}</td>
+                                                <td>{{ $item->NUMEDOCU }}</td>
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE : $item->notaEntrega->CODICLIE }}</td>
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE : $item->notaEntrega->cliente->NOMBCLIE }}</td>
-                                                <td>{{ $item->NUMEDOCU }}</td>
                                                 <td>{{ $item->TIPO_MONEDA }}</td>
                                                 <td>{{number_format( ($item->TIPO_MONEDA == "USD") ? $item->MONTO_DOC_USD: $item->MONTO_DOC_VEF, 2, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->montoRecibido, 2, ".", "," ) }}</td>
@@ -97,22 +97,27 @@
                                                 {{--                                        <td>{{ $item->createdBy->name }}</td>--}}
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        {{-- <a href="{{ route("recibos.edit", $item->id) }}"
+                                                         <a href="{{ route("recibos.edit", $item->id) }}"
                                                            class="btn btn-default btn-sm waves-effect"
                                                            data-toggle="tooltip" data-placement="auto"
                                                            data-original-title="Modificar"><i class="material-icons">edit</i>
-                                                        </a> --}}
+                                                        </a>
                                                         <a href="{{ route("recibos.show", $item->id) }}"
                                                            class="btn btn-default btn-sm waves-effect"
                                                            data-toggle="tooltip" data-placement="auto"
                                                            data-original-title="Detalles"><i class="material-icons">visibility</i>
+                                                        </a>
+                                                        <a href="{{ route("recibos.print", $item->id) }}" target="_blank"
+                                                           class="btn btn-default btn-sm waves-effect"
+                                                           data-toggle="tooltip" data-placement="auto"
+                                                           data-original-title="Imprimir"><i class="material-icons">print</i>
                                                         </a>
                                                         <button type="button" onclick="DeleteRow({{ $item->id }})"
                                                             class="btn btn-default btn-sm waves-effect"
                                                             data-toggle="tooltip" data-placement="auto"
                                                             data-original-title="Borrar"><i
                                                                 class="material-icons">delete</i>
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -219,7 +224,7 @@
                 ],
                 columnDefs: [
                     {targets: [7,8,9], className: "dt-body-right"},
-                    {targets: 10, sorting: false}
+                    {targets: 10, sorting: false, width: "15%"}
                 ]
             })
             $("#btnModalRelacionar").click(function (e) {

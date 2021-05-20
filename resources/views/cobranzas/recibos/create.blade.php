@@ -168,8 +168,8 @@
                                 </div>
 
                                 <div class="row clearfix">
-                                    <div class="col-sm-3">
-                                        <p><b>Monto Documento Bs.</b></p>
+                                    <div class="col-sm-2">
+                                        <p><b>Total Doc. Bs.</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <input type="text" class="form-control monto" id="monto_doc_vef"
@@ -177,8 +177,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
-                                        <p><b>Monto Documento $</b></p>
+                                    <div class="col-sm-2">
+                                        <p><b>Total Doc. $</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <input type="text" class="form-control monto" id="monto_doc_usd"
@@ -205,11 +205,11 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
-                                        <p><b>Saldo de Cliente</b></p>
+                                        <p><b>Saldo Documento</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text" class="form-control monto" id="saldo_cli" readonly
-                                                       name="saldo_cli" value="0">
+                                                <input type="text" class="form-control monto" id="saldo_doc" readonly
+                                                       name="saldo_doc" value="0">
                                             </div>
                                         </div>
                                     </div>
@@ -370,10 +370,12 @@
 
             $(".tipo_doc").change(function (e) {
                 ChangeTipoDoc()
+                UpdateMontos()
             })
 
             $(".tipo_pago").change(function (e) {
                 ChangeTipoPago()
+                UpdateMontos()
             })
 
             $("#nro_ne, #nro_fa").on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
@@ -497,7 +499,7 @@
 
         function CleanDocFields() {
             $("#id_ruta, #ruta, #cliente, #fecha_documento, #id_cliente").val(null)
-            $("#monto_doc_vef, #monto_doc_usd, #tasa_cambio, #vuelto, #saldo_cli").val(0)
+            $("#monto_doc_vef, #monto_doc_usd, #tasa_cambio, #vuelto, #saldo_doc").val(0)
             $("#nro_fa, #nro_ne").val(null).selectpicker('refresh')
 
             $("#div_ret_iva").hide()
@@ -522,8 +524,8 @@
                 monto_factura = parseFloat($("#monto_doc_vef").inputmask('unmaskedvalue') ?? 0)
             }
             $("#total_recibido").html(total_recibido.toFixed(2))
-            const saldo_cli = parseFloat(monto_factura - total_recibido + vuelto)
-            $("#saldo_cli").val(saldo_cli.toFixed(2))
+            const saldo_doc = parseFloat(monto_factura - total_recibido + vuelto)
+            $("#saldo_doc").val(saldo_doc.toFixed(2))
         }
 
         function AddBilletes() {

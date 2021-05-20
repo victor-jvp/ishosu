@@ -16,7 +16,7 @@ class ReciboCab extends Model
 
     public function getIdZeroAttribute()
     {
-        return str_pad($this->id,"6","0",STR_PAD_LEFT);
+        return str_pad($this->id, "6", "0", STR_PAD_LEFT);
     }
 
     public function getSaldoCliAttribute()
@@ -31,7 +31,7 @@ class ReciboCab extends Model
     {
         if ($this->TIPO_PAGO == "T") {
             return $this->reciboDet()->sum("MONTO");
-        }else{
+        } else {
             return $this->reciboDet()->sum(DB::raw("CANTIDAD * DENOMINACION"));
         }
     }
@@ -64,15 +64,13 @@ class ReciboCab extends Model
     public static function boot()
     {
         parent::boot();
-        static::creating(function($model)
-        {
-            $user = Auth::user();
+        static::creating(function ($model) {
+            $user              = Auth::user();
             $model->created_by = $user->getAuthIdentifier();
             $model->updated_by = $user->getAuthIdentifier();
         });
-        static::updating(function($model)
-        {
-            $user = Auth::user();
+        static::updating(function ($model) {
+            $user              = Auth::user();
             $model->updated_by = $user->getAuthIdentifier();
         });
     }
