@@ -146,16 +146,16 @@ class RecibosController extends Controller
         {
             $billetes   = [100, 50, 20, 10, 5, 1, 0.5];
             $copies = 3;
-            $pdf = PDF::loadView('cobranzas.reports.recibo_usd', compact("recibo", "billetes", "copies"));
-            return $pdf->setPaper("Letter", "portrait")->stream("Recibo {$recibo->idZero}.pdf");
+            $pdf = PDF::loadView('cobranzas.reports.recibo_usd', compact("recibo", "billetes", "copies"))->setPaper("Letter", "portrait");
+            return $pdf->stream("Recibo {$recibo->idZero}.pdf");
+//            return view("cobranzas.reports.recibo_usd", compact("recibo", "billetes", "copies"));
 
         }else{
             $billetes = [500000, 200000, 100000, 50000];
             $copies = 3;
-            $pdf = PDF::loadView('cobranzas.reports.recibo_vef', compact("recibo", "billetes", "copies"));
-            return $pdf->setPaper("Letter", "portrait")->stream("Recibo {$recibo->idZero}.pdf");
+            $pdf = PDF::loadView('cobranzas.reports.recibo_vef', compact("recibo", "billetes", "copies"))->setPaper("Letter", "portrait");
+            return $pdf->stream("Recibo {$recibo->idZero}.pdf");
+//            return view("cobranzas.reports.recibo_vef", compact("recibo", "billetes", "copies"));
         }
-
-//        return view("cobranzas.recibos.print", compact("recibo", "billetes"));
     }
 }

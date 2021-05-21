@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ReciboCab;
 use App\Models\Relacion;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -68,5 +69,22 @@ class CobranzasController extends Controller
         $relacion = Relacion::with("recibos")->find($id);
 
         return view("cobranzas.show", compact("relacion"));
+    }
+
+    public function print($id)
+    {
+        $relacion = Relacion::find($id);
+
+        if($relacion->TIPO_MONEDA == "USD")
+        {
+            $pdf = PDF::loadView('cobranzas.reports.relacion_usd', compact("relacion"))->setPaper("Letter", "portrait");
+            return $pdf->stream("Recibo {$relacion->idZero}.pdf");
+//            return view("cobranzas.reports.$relacion_usd", compact("relacion", "billetes", "copies"));
+
+        }else{
+            $pdf = PDF::loadView('cobranzas.reports.relacion_vef', compact("relacion"))->setPaper("Letter", "landscape");
+            return $pdf->stream("Recibo {$relacion->idZero}.pdf");
+//            return view("cobranzas.reports.recibo_vef", compact("$relacion", "billetes", "copies"));
+        }
     }
 }
