@@ -6,6 +6,7 @@ use App\Models\ReciboCab;
 use App\Models\ReciboDet;
 use App\Models\Tfachisa;
 use App\Models\Tfacnda;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -142,5 +143,8 @@ class RecibosController extends Controller
     {
         $recibo = ReciboCab::find($id);
         dd($recibo);
+
+        $pdf = PDF::loadView('pdf.invoice', $data);
+        return $pdf->download('invoice.pdf');
     }
 }
