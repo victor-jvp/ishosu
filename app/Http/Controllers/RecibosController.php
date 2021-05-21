@@ -6,7 +6,7 @@ use App\Models\ReciboCab;
 use App\Models\ReciboDet;
 use App\Models\Tfachisa;
 use App\Models\Tfacnda;
-use Barryvdh\DomPDF\PDF;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -142,9 +142,20 @@ class RecibosController extends Controller
     public function print($id = null)
     {
         $recibo = ReciboCab::find($id);
-        dd($recibo);
+        if($recibo->TIPO_MONEDA == "USD")
+        {
+            $billetes   = [100, 50, 20, 10, 5, 1, 0.5];
+            $copies = 3;
+            $pdf = PDF::loadView('cobranzas.reports.recibo_usd', compact("recibo", "billetes", "copies"));
+            return $pdf->setPaper("Letter", "portrait")->stream("Recibo {$recibo->idZero}.pdf");
 
-        $pdf = PDF::loadView('pdf.invoice', $data);
-        return $pdf->download('invoice.pdf');
+        }else{
+            $billetes = [500000, 200000, 100000, 50000];
+            $copies = 3;
+            $pdf = PDF::loadView('cobranzas.reports.recibo_vef', compact("recibo", "billetes", "copies"));
+            return $pdf->setPaper("Letter", "portrait")->stream("Recibo {$recibo->idZero}.pdf");
+        }
+
+//        return view("cobranzas.recibos.print", compact("recibo", "billetes"));
     }
 }
