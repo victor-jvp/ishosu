@@ -53,7 +53,7 @@
                                     @foreach($relaciones as $item)
                                     <tr>
                                         <td><b>{{ $item->idzero }}</b></td>
-                                        <td>{{ $item->FECHA->format("d/m/Y") }}</td>
+                                        <td>{{ $item->created_at->format("d/m/Y H:i A") }}</td>
                                         <td>{{ $item->TIPO_MONEDA }}</td>
                                         <td>{{ $item->COMENTARIO }}</td>
                                         <td>{{ $item->createdBy->name }}</td>
@@ -114,6 +114,9 @@
             ],
             columnDefs: [
                 {targets: 5, sorting: false}
+            ],
+            sorting: [
+                [0, 'desc']
             ]
         })
     })
