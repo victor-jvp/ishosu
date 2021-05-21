@@ -64,6 +64,11 @@
                                                    data-toggle="tooltip" data-placement="auto"
                                                    data-original-title="Detalles"><i class="material-icons">visibility</i>
                                                 </a>
+                                                <a href="{{ route("cobranzas.print", $item->id) }}" target="_blank"
+                                                   class="btn btn-default btn-sm waves-effect"
+                                                   data-toggle="tooltip" data-placement="auto"
+                                                   data-original-title="Detalles"><i class="material-icons">print</i>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>

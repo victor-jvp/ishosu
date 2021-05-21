@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cobranzas/relaciones', [CobranzasController::class, "index"])->name("cobranzas.index");
     Route::post('cobranzas/relaciones/create', [CobranzasController::class, 'store'])->name('cobranzas.store');
     Route::get('cobranzas/relaciones/show/{id}', [CobranzasController::class, 'show'])->name('cobranzas.show');
+    Route::get('cobranzas/relaciones/print/{id}', [CobranzasController::class, 'print'])->name('cobranzas.print');
 
     Route::get('cobranzas/recibos/print/{id}', [RecibosController::class, 'print'])->name('recibos.print');
     Route::resource('cobranzas/recibos', RecibosController::class);
