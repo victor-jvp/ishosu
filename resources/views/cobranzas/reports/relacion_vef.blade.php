@@ -53,13 +53,13 @@
 <br>
 
 <table class="table-bordered" style="width: 100%;">
-    <thead>
-    <tr style="background-color: lightgrey">
+
+    <tr style="background-color: lightgrey;">
         <td class="text-center" colspan="5" style="font-weight: bold;"></td>
         <td class="text-center"  style="font-weight: bold;"></td>
         <td class="text-center" colspan="2" style="font-weight: bold;">AREA DE COBRANZAS</td>
     </tr>
-    <tr style="background-color: lightgrey">
+    <tr style="background-color: lightgrey; padding: 8px">
         <td class="text-center" style="font-weight: bold;">Nº RECIBO</td>
         <td class="text-center" style="font-weight: bold;">FECHA</td>
         <td class="text-center" style="font-weight: bold;">CODIGO</td>
@@ -69,8 +69,7 @@
         <td class="text-center" style="font-weight: bold;">FECHA ENTREGA</td>
         <td class="text-center" style="font-weight: bold;">FIRMA</td>
     </tr>
-    </thead>
-    <tbody>
+
     @foreach($relacion->recibos as $recibo)
         <tr>
             <td class="text-center" style="padding: 5px;">{{ $recibo->idZero }}</td>
@@ -85,9 +84,9 @@
                 @foreach($recibo->reciboDet as $item)
                     <tr>
                         <td>{{ $item->REFERENCIA }}</td>
-                        <td>-Banco Emisor-</td>
-                        <td>-Banco Receptor-</td>
-                        <td class="text-right">{{ $item->MONTO }}</td>
+                        <td class="text-center">-Banco Emisor-</td>
+                        <td class="text-center">-Banco Receptor-</td>
+                        <td class="text-right">{{ number_format($item->MONTO, 2) }}</td>
                     </tr>
                 @endforeach
                 </table>
@@ -96,7 +95,7 @@
             <td class="text-right" style="padding: 5px;">______________</td>
         </tr>
     @endforeach
-    </tbody>
+
     <tfoot>
     <tr class="text-right" style="">
         <td colspan="5" style="padding: 5px; font-size: 9pt;">TOTAL:</td>
