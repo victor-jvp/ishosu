@@ -89,7 +89,7 @@
                                                 <select class="form-control show-tick" data-live-search="true" required
                                                         data-title="Seleccione..." name="nro_documento" id="nro_fa">
                                                     @foreach ($facturas as $item)
-                                                        <option {{ $item->NUMEDOCU }}>{{ $item->NUMEDOCU }}</option>
+                                                        <option value="{{ $item->NUMEDOCU }}">{{ $item->NUMEDOCU }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -102,7 +102,7 @@
                                                 <select class="form-control show-tick" data-live-search="true" required
                                                         data-title="Seleccione..." name="nro_documento" id="nro_ne">
                                                     @foreach ($notas as $item)
-                                                        <option {{ $item->NUMEDOCU }}>{{ $item->NUMEDOCU }}</option>
+                                                        <option value="{{ $item->NUMEDOCU }}">{{ $item->NUMEDOCU }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -482,16 +482,18 @@
         }
 
         function ChangeTipoDoc() {
-            if ($("#tipo_doc_fa").prop("checked")) {
+            if ($("#tipo_doc_fa").prop("checked")) { // Si es una factura
                 $("#div_fa").show();
                 $("#div_ne").hide();
                 $("#nro_fa").prop('disabled', false)
                 $("#nro_ne").prop('disabled', true)
-            } else {
+                $("#tasa_cambio").prop("readonly", true)
+            } else { // Si es una nota de entrega
                 $("#div_fa").hide();
                 $("#div_ne").show();
                 $("#nro_fa").prop('disabled', true)
                 $("#nro_ne").prop('disabled', false)
+                $("#tasa_cambio").prop("readonly", false)
             }
 
             CleanDocFields()
