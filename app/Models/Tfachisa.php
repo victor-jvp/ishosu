@@ -10,18 +10,19 @@ class Tfachisa extends Model
     use HasFactory;
 
     // protected $connecion = "ishosu";
-    protected $table = "tfachisa";
-    public $incrementing = false;
-    protected $primaryKey = "NUMEDOCU";
-    protected $keyType = "string";
-    protected $casts = [
+    protected $table        = "tfachisa";
+    public    $incrementing = false;
+    protected $primaryKey   = "NUMEDOCU";
+    protected $keyType      = "string";
+    protected $casts        = [
         'FECHA'    => "datetime:Y-m-d",
         'TOTADOCU' => "double",
         "CAMBDOL"  => "double",
     ];
-    /*protected $appends = [
+    protected $appends      = [
         "cobrado_usd",
-        "cobrado_vef"
+        "cobrado_vef",
+//        "total_cobrado"
     ];
 
     public function getCobradoUsdAttribute()
@@ -32,6 +33,17 @@ class Tfachisa extends Model
     public function getCobradoVefAttribute()
     {
         return $this->recibos->where("TIPO_MONEDA", "=", "VEF")->sum("MontoRecibido");
+    }
+
+/*    public function getTotalCobradoAttribute()
+    {
+        $totalCobrado = 0;
+        foreach ($this->recibos as $item) {
+            $tasaCamb     = $item->TASA_CAMB;
+            $totalCobrado += ($item->TIPO_MONEDA == "VEF") ? $item->montoRecibido / $tasaCamb : $item->montoRecibido;
+        }
+
+        return $totalCobrado;
     }*/
 
     public function cliente()
