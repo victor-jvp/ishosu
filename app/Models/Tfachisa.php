@@ -17,12 +17,12 @@ class Tfachisa extends Model
     protected $casts        = [
         'FECHA'    => "datetime:Y-m-d",
         'TOTADOCU' => "double",
-        "CAMBDOL"  => "double",
+        "CAMBDOL"  => "double"
     ];
     protected $appends      = [
         "cobrado_usd",
         "cobrado_vef",
-//        "total_cobrado"
+        "total_cobrado"
     ];
 
     public function getCobradoUsdAttribute()
@@ -35,16 +35,15 @@ class Tfachisa extends Model
         return $this->recibos->where("TIPO_MONEDA", "=", "VEF")->sum("MontoRecibido");
     }
 
-/*    public function getTotalCobradoAttribute()
+   public function getTotalCobradoAttribute()
     {
         $totalCobrado = 0;
         foreach ($this->recibos as $item) {
             $tasaCamb     = $item->TASA_CAMB;
-            $totalCobrado += ($item->TIPO_MONEDA == "VEF") ? $item->montoRecibido / $tasaCamb : $item->montoRecibido;
+            $totalCobrado += doubleval( ($item->TIPO_MONEDA == "VEF" && $tasaCamb > 0) ? $item->montoRecibido / $tasaCamb : $item->montoRecibido);
         }
-
         return $totalCobrado;
-    }*/
+    }
 
     public function cliente()
     {
