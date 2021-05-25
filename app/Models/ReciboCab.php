@@ -13,6 +13,9 @@ class ReciboCab extends Model
     protected $dates = [
         "FECHA"
     ];
+    protected $appends = [
+        "saldo_cli",
+    ];
 
     public function getIdZeroAttribute()
     {

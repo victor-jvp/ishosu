@@ -61,12 +61,10 @@
                                     <div class="col-sm-4">
                                         <p><b>Tipo de Pago</b></p>
                                         <input name="tipo_pago" type="radio" id="tipo_pago_tran" value="T"
-                                               {{ ($recibo->TIPO_PAGO == "T") ? "checked" : "" }}
                                                class="tipo_pago with-gap radio-col-indigo" checked/>
                                         <label for="tipo_pago_tran">Transferencia</label>
 
                                         <input name="tipo_pago" type="radio" id="tipo_pago_efec" value="E"
-                                               {{ ($recibo->TIPO_PAGO == "E") ? "checked" : "" }}
                                                class="tipo_pago with-gap radio-col-indigo"/>
                                         <label for="tipo_pago_efec">Efectivo</label>
                                     </div>
@@ -74,31 +72,24 @@
                                     <div class="col-sm-4">
                                         <p><b>Tipo de Documento</b></p>
                                         <input name="tipo_doc" type="radio" id="tipo_doc_fa" value="FA"
-                                               {{ ($recibo->TIPO_DOC == "FA") ? "checked" : "" }}
                                                class="tipo_doc with-gap radio-col-indigo" checked/>
                                         <label for="tipo_doc_fa">Factura</label>
 
                                         <input name="tipo_doc" type="radio" id="tipo_doc_ne" value="NE"
-                                               {{ ($recibo->TIPO_DOC == "NE") ? "checked" : "" }}
                                                class="tipo_doc with-gap radio-col-indigo"/>
                                         <label for="tipo_doc_ne">Nota de Entrega</label>
                                     </div>
                                 </div>
-
-                                @php
-                                $nroDocumento = ($recibo->TIPO_DOC == "FA") ? $recibo->factura->NUMEDOCU : $recibo->notaEntrega->NUMEDOCU;
-                                @endphp
 
                                 <div class="row">
                                     <div class="col-sm-3" id="div_fa">
                                         <p><b>Nro. Factura</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <select class="form-control show-tick nro_documento" data-live-search="true" required
+                                                <select class="form-control show-tick" data-live-search="true" required
                                                         data-title="Seleccione..." name="nro_documento" id="nro_fa">
                                                     @foreach ($facturas as $item)
-                                                        <option {{ ($item->NUMEDOCU == $nroDocumento) ? "selected" : "" }}
-                                                            value="{{ $item->NUMEDOCU }}">{{ $item->NUMEDOCU }}</option>
+                                                        <option {{ $item->NUMEDOCU }}>{{ $item->NUMEDOCU }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -108,11 +99,10 @@
                                         <p><b>Nro. Nota de Entrega</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <select class="form-control show-tick nro_documento" data-live-search="true" required
+                                                <select class="form-control show-tick" data-live-search="true" required
                                                         data-title="Seleccione..." name="nro_documento" id="nro_ne">
                                                     @foreach ($notas as $item)
-                                                        <option {{ ($item->NUMEDOCU == $nroDocumento) ? "selected" : "" }}
-                                                            value="{{ $item->NUMEDOCU }}">{{ $item->NUMEDOCU }}</option>
+                                                        <option {{ $item->NUMEDOCU }}>{{ $item->NUMEDOCU }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -123,8 +113,7 @@
                                         <p><b>Fecha Documento</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="date" class="form-control" id="fecha_documento" readonly
-                                                       value="{{ ($recibo->TIPO_DOC=="FA") ? $recibo->factura->FECHA->format("Y-m-d") : $recibo->notaEntrega->FECHA->format("Y-m-d") }}">
+                                                <input type="date" class="form-control" id="fecha_documento" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -241,24 +230,24 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach ($recibo->reciboDet as $item)
-                                                <tr>
-                                                    <td>{{ $item->CANTIDAD }}</td>
-                                                    <td>{{ $item->DENOMINACION }}</td>
-                                                    <td>{{ $item->REFERENCIA }}</td>
-                                                    <td>{{ ($recibo->TIPO_DOC == "FA") ? round($item->CANTIDAD * $item->DENOMINACION, 2) : $item->MONTO }}</td>
-                                                    <td>
-                                                        <div class="btn-group" role="group">
-                                                            <button type="button" onclick="RemoveRowTable(this)"
+                                                @foreach ($recibo->reciboDet as $item)
+                                                    <tr>
+                                                        <td>{{ $item->CANTIDAD }}</td>
+                                                        <td>{{ $item->DENOMINACION }}</td>
+                                                        <td>{{ $item->REFERENCIA }}</td>
+                                                        <td>{{ ($recibo->TIPO_DOC == "FA") ? round($item->CANTIDAD * $item->DENOMINACION, 2) : $item->MONTO }}</td>
+                                                        <td>
+                                                            <div class="btn-group" role="group">
+                                                                <button type="button" onclick="RemoveRowTable(this)"
                                                                     class="btn btn-default btn-sm waves-effect"
                                                                     data-toggle="tooltip" data-placement="auto"
                                                                     data-original-title="Remover">
-                                                                <i class="material-icons">delete</i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                             <tfoot>
                                             <tr>
@@ -425,13 +414,13 @@
             const tipo_doc = "{{ $recibo->TIPO_DOC }}"
             if (tipo_doc == "FA") {
                 $("#nro_fa").val("{{ $recibo->NUMEDOCU }}").selectpicker("refresh")
-                
             } else {
                 $("#nro_ne").val("{{ $recibo->NUMEDOCU }}").selectpicker("refresh")
             }
+            LoadDocData("{{ $recibo->NUMEDOCU }}")
             // UpdateDenominacion()
             // ChangeTipoDoc()
-            // ChangeTipoPago()
+            ChangeTipoPago()
 
             //Tooltip
             $('body').tooltip({
@@ -694,7 +683,10 @@
             $("#denominacion").html(options).selectpicker('refresh')
         }
 
-        function LoadDocData() {
+        function LoadDocData(nro_documento) {
+            if (nro_documento == "") {
+                return
+            }
             const tipo_doc = $("input[name=tipo_doc]:checked").val()
 
             $.ajax({
@@ -709,10 +701,9 @@
                     tipo_doc: tipo_doc,
                 },
                 success: function (resp) {
-                    console.log(resp)
-                    if (resp == null || jQuery.isEmptyObject(resp)) {
+                    if (resp == null) {
                         swal("Aviso", "La consulta del documento no tiene información. Intente nuevamente",
-                            "error")
+                            "warning")
                         return
                     }
 

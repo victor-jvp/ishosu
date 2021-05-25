@@ -60,13 +60,13 @@
 
                                     <div class="col-sm-4">
                                         <p><b>Tipo de Pago</b></p>
-                                        <input name="tipo_pago" type="radio" id="tipo_pago_tran" value="T"
-                                               class="tipo_pago with-gap radio-col-indigo" checked/>
-                                        <label for="tipo_pago_tran">Transferencia</label>
-
                                         <input name="tipo_pago" type="radio" id="tipo_pago_efec" value="E"
-                                               class="tipo_pago with-gap radio-col-indigo"/>
+                                               class="tipo_pago with-gap radio-col-indigo" checked/>
                                         <label for="tipo_pago_efec">Efectivo</label>
+
+                                        <input name="tipo_pago" type="radio" id="tipo_pago_tran" value="T"
+                                               class="tipo_pago with-gap radio-col-indigo" />
+                                        <label for="tipo_pago_tran">Transferencia</label>
                                     </div>
 
                                     <div class="col-sm-4">
@@ -678,12 +678,13 @@
                         $("#div_ret_iva").hide()
                     }
                     $("#agente_ret").prop("checked", resp.cliente.AGENTERET)
-                    $("#fecha_documento").val(resp.FECHA)
                     $("#id_ruta").val(resp.CODIRUTA)
                     $("#monto_doc_vef").val(resp.TOTADOCU)
                     const montoFacturaUsd = (resp.TOTADOCU / resp.CAMBDOL)
                     $("#monto_doc_usd").val(montoFacturaUsd.toFixed(2))
                     $("#tasa_cambio").val(resp.CAMBDOL)
+
+
 
                     UpdateMontos();
                 },

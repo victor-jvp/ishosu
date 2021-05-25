@@ -16,8 +16,6 @@ class DocumentosController extends Controller
         $id       = $request->input("id");
         $tipo_doc = $request->input('tipo_doc');
 
-        dd($id);
-
         if ($tipo_doc == "FA") { // Si es Factura
             $data = Tfachisa::with(['recibos','cliente'])->find($id);
         }else{
