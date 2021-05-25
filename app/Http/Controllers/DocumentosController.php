@@ -25,13 +25,16 @@ class DocumentosController extends Controller
             $data = Tfacnda::with(['recibos','cliente'])->find($id);
         }
 
-        $totalCobrado = 0;
-        foreach ($data->recibos as $item)
-        {
-            $tasaCamb = $item->TASA_CAMB;
-            $totalCobrado += ($item->TIPO_MONEDA == "VEF") ? $item->montoRecibido / $tasaCamb : $item->montoRecibido;
-        }
-        $data['totalCobrado'] = $totalCobrado;
+        dd($data->toArray());
+        // $totalCobrado = 0;
+        // foreach ($data->recibos as $item)
+        // {
+        //     $tasaCamb = $item->TASA_CAMB;
+        //     // dd($tasaCamb, $item->montoRecibido, $item->TIPO_MONEDA);
+        //     $totalCobrado += ($item->TIPO_MONEDA == "VEF" && $tasaCamb > 0) ? $item->montoRecibido / $tasaCamb : $item->montoRecibido;
+        // }
+
+        // $data->totalCobrado = doubleval($totalCobrado);
 
         return response()->json($data);
     }
