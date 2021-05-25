@@ -19,7 +19,7 @@ class Tfachisa extends Model
         'TOTADOCU' => "double",
         "CAMBDOL"  => "double",
     ];
-    protected $appends = [
+    /*protected $appends = [
         "cobrado_usd",
         "cobrado_vef"
     ];
@@ -32,7 +32,7 @@ class Tfachisa extends Model
     public function getCobradoVefAttribute()
     {
         return $this->recibos->where("TIPO_MONEDA", "=", "VEF")->sum("MontoRecibido");
-    }
+    }*/
 
     public function cliente()
     {
