@@ -30,12 +30,12 @@ class ReciboCab extends Model
 
     public function factura()
     {
-        return $this->belongsTo(Tfachisa::class, "NUMEDOCU");
+        return $this->belongsTo(Tfachisa::class, "NUMEDOCU")->orderBy('NUMEDOCU', 'desc');
     }
 
     public function notaEntrega()
     {
-        return $this->belongsTo(Tfacnda::class, "NUMEDOCU");
+        return $this->belongsTo(Tfacnda::class, "NUMEDOCU")->orderBy('NUMEDOCU', 'desc');
     }
 
     public function reciboDet()
