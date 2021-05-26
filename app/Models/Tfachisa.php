@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Tfachisa extends Model
 {
@@ -40,7 +41,8 @@ class Tfachisa extends Model
         $totalCobrado = 0;
         foreach ($this->recibos as $item) {
             $tasaCamb     = $item->TASA_CAMB;
-            $totalCobrado += doubleval( ($item->TIPO_MONEDA == "VEF" && $tasaCamb > 0) ? $item->montoRecibido / $tasaCamb : $item->montoRecibido);
+            $montoRecibido = ($item->TIPO_PAGO == "T") ? $item->reciboDet->sum("MONTO") : $item->reciboDet->sum(DB::raw("CANTIDAD * DENOMINACION"));
+            $totalCobrado += doubleval( ($item->TIPO_MONEDA == "VEF" && $tasaCamb > 0) ? $montoRecibido / $tasaCamb : $montoRecibido);
         }
         return $totalCobrado;
     }
