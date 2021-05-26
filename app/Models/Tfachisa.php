@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Tcpca;
+use App\Models\ReciboCab;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Tfachisa extends Model
 {
@@ -42,9 +44,9 @@ class Tfachisa extends Model
         foreach ($this->recibos as $item) {
             $tasaCamb     = $item->TASA_CAMB;
             $montoRecibido = ($item->TIPO_PAGO == "T") ? $item->reciboDet->sum("MONTO") : $item->reciboDet->sum(DB::raw("CANTIDAD * DENOMINACION"));
-            $totalCobrado += doubleval( ($item->TIPO_MONEDA == "VEF" && $tasaCamb > 0) ? $montoRecibido / $tasaCamb : $montoRecibido);
+            $totalCobrado += ($item->TIPO_MONEDA == "VEF" && $tasaCamb > 0) ? $montoRecibido / $tasaCamb : $montoRecibido;
         }
-        return $totalCobrado;
+        return round($totalCobrado, 2);
     }
 
     public function cliente()
