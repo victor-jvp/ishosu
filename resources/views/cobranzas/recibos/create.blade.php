@@ -230,6 +230,24 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-sm-2">
+                                        <p><b>Total Gravable Bs.</b></p>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control monto" id="total_grav"
+                                                     readonly value="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <p><b>Total Monto Ret. Bs.</b></p>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control monto" id="monto_doc_ret"
+                                                    name="monto_doc_ret" readonly value="0">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -750,12 +768,8 @@
                     $("#id_cliente").val(resp.CODICLIE)
                     $("#cliente").val((resp.cliente.NOMBCLIE).trim())
                     $("#ret_iva").prop("checked", false);
-                    if (resp.cliente.AGENTERET) {
-                        $("#div_ret_iva").show()
-                    } else {
-                        $("#div_ret_iva").hide()
-                    }
-                    $("#agente_ret").prop("checked", resp.cliente.AGENTERET)
+
+
                     $("#id_ruta").val(resp.CODIRUTA)
                     $("#ruta").val(resp.ruta.NOMBVEND)
                     $("#monto_doc_vef").val(resp.TOTADOCU)
@@ -764,6 +778,24 @@
                     const montoFacturaUsd = (resp.TOTADOCU / resp.CAMBDOL)
                     $("#monto_doc_usd").val(montoFacturaUsd.toFixed(2))
                     $("#total_cobrado").val(resp.total_cobrado.toFixed(2))
+
+                    if (resp.cliente.AGENTERET) {
+                        const impBruto = parseFloat(resp.IMPUBRUT);
+                        const iva = parseFloat(resp.IMPU1);
+                        const totalIva = impBruto * ( iva / 100);
+                        const montoRet = totalIva * (75 / 100);
+                        $("#total_grav").val(impBruto.toFixed(2))
+                        $("#monto_doc_ret").val(montoRet.toFixed(2))
+
+                        $("#div_ret_iva").show()
+                    } else {
+                        $("#total_grav").val(0)
+                        $("#monto_doc_ret").val(0)
+
+                        $("#div_ret_iva").hide()
+                    }
+
+                    $("#agente_ret").prop("checked", resp.cliente.AGENTERET)
 
                     UpdateMontos();
                 },
