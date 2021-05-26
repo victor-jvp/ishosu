@@ -684,8 +684,6 @@
                     $("#monto_doc_usd").val(montoFacturaUsd.toFixed(2))
                     $("#tasa_cambio").val(resp.CAMBDOL)
 
-
-
                     UpdateMontos();
                 },
                 error: function (resp) {

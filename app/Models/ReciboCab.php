@@ -13,21 +13,10 @@ class ReciboCab extends Model
     protected $dates = [
         "FECHA"
     ];
-    protected $appends = [
-        "saldo_cli",
-    ];
 
     public function getIdZeroAttribute()
     {
         return str_pad($this->id, "6", "0", STR_PAD_LEFT);
-    }
-
-    public function getSaldoCliAttribute()
-    {
-        $totaDocu  = ($this->TIPO_DOC == "FA") ? $this->factura->TOTADOCU : $this->notaEntrega->TOTADOCU;
-        $montoDocu = ($this->TIPO_MONEDA == "USD") ? $totaDocu / $this->TASA_CAMB : $totaDocu;
-
-        return $montoDocu - $this->montoRecibido;
     }
 
     public function getMontoRecibidoAttribute()
@@ -51,7 +40,7 @@ class ReciboCab extends Model
 
     public function reciboDet()
     {
-        return $this->hasMany(ReciboDet::class, "ID_RECIBO");
+        return $this->hasMany(ReciboDet::class, "id_recibo");
     }
 
     public function createdBy()
