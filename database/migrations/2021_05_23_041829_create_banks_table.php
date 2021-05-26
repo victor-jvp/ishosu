@@ -16,8 +16,9 @@ class CreateBanksTable extends Migration
         Schema::create('banks', function (Blueprint $table) {
             $table->id();
 
-            $table->string("code");
-            $table->string("name");
+            $table->string("code", 10);
+            $table->string("name", 55);
+            $table->string("tipo", 1); // E = Emisor, R = Receptor, A = Ambos
 
             $table->unsignedBigInteger("created_by");
             $table->unsignedBigInteger("updated_by");

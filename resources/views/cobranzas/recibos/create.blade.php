@@ -204,6 +204,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-sm-2">
                                         <p><b>Saldo Documento</b></p>
                                         <div class="form-group">
@@ -224,7 +225,7 @@
                                                 <th class="text-center">Cantidad</th>
                                                 <th class="text-center">Denominacion</th>
                                                 <th class="text-center">Referencia</th>
-                                                <th class="text-center">Total</th>
+                                                <th class="text-center">Total Recibo</th>
                                                 <th>Opciones</th>
                                             </tr>
                                             </thead>
@@ -266,6 +267,16 @@
 
                                 <div class="row" id="fields_transferencia">
                                     <div class="col-sm-3">
+                                        <select class="form-control show-tick" data-live-search="true"
+                                            data-title="Banco Emisor" id="banco_e">
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <select class="form-control show-tick" data-live-search="true"
+                                            data-title="Banco Receptor" id="banco_r">
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
                                         <div class="form-group form-float">
                                             <div class="form-line">
                                                 <input type="text" class="form-control" id="referencia">
@@ -273,7 +284,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group form-float">
                                             <div class="form-line">
                                                 <input type="text" class="form-control monto" id="monto_trans">
@@ -281,7 +292,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <button type="button" onclick="AddTransferencia()"
                                                 class="btn btn-primary btn-circle-lg waves-effect waves-circle waves-float"
                                                 data-toggle="tooltip" data-placement="auto"
