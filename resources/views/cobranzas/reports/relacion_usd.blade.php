@@ -46,7 +46,17 @@
 
 <table style="width: 100%;">
     <tr>
-        <th style="font-size: 10pt;">RELACION DE $ RECIBIDOS</th>
+        <th style="font-size: 10pt;" colspan="2">RELACION DE EFECTIVO RECIBIDO</th>
+    </tr>
+    <tr>
+        <th style="font-size: 9pt;" colspan="2">TIPO DE MONEDA: {{ $relacion->TIPO_MONEDA }}</th>
+    </tr>
+    <tr>
+        <td style="font-size: 9pt;">CAJA 01:</td>
+    </tr>
+    <tr>
+        <td>ANALISTA DE CAJA: {{ __("CAJERA 01") }}</td>
+        <td class="text-right">Pág: 01 de 02</td>
     </tr>
 </table>
 
@@ -59,31 +69,55 @@
         <td class="text-center" style="font-weight: bold;">FECHA</td>
         <td class="text-center" style="font-weight: bold;">CODIGO</td>
         <td class="text-center" style="font-weight: bold;">CLIENTE</td>
+        <td class="text-center" style="font-weight: bold;">RUTA</td>
         <td class="text-center" style="font-weight: bold;">NRO. DOC.</td>
-        <td class="text-center" style="font-weight: bold;">TOTAL $<br>RECIBIDOS</td>
-        <td class="text-center" style="font-weight: bold;">ABONO</td>
+        <td class="text-center" style="font-weight: bold;">MONTO DOC.</td>
+        <td class="text-center" style="font-weight: bold;">TOTAL {{ $relacion->TIPO_MONEDA }}<br>RECIBIDOS</td>
+        <td class="text-center" style="font-weight: bold;">SALDO DOC.</td>
+        <td class="text-center" style="font-weight: bold;">VUELTO</td>
     </tr>
     @foreach($relacion->recibos as $recibo)
         <tr>
             <td class="text-center" style="padding: 5px;">{{ $recibo->idZero }}</td>
-            <td class="text-center" style="padding: 5px;">{{ $recibo->FECHA->format("d/m/Y") }}</td>
+            <td class="text-center" style="padding: 5px;">{{ $recibo->FECHA->format("d/m/Y") }}<br>{{ $recibo->FECHA->format("h:i a") }}</td>
             <td class="text-right"
                 style="padding: 5px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODICLIE : $recibo->notaEntrega->CODICLIE }}</td>
             <td class=""
                 style="padding: 5px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}</td>
+            <td></td>
             <td class="text-center" style="padding: 5px;">{{ $recibo->NUMEDOCU }}</td>
+            <td></td>
             <td class="text-right" style="padding: 5px;">{{ number_format( $recibo->montoRecibido, 2, ".", "," ) }}</td>
-            <td class="text-right" style="padding: 5px;">-</td>
+            <td></td>
+            <td class="text-right" style="padding: 5px;"></td>
         </tr>
     @endforeach
     </tbody>
     <tfoot>
         <tr class="text-right">
-            <td colspan="5" style="padding: 5px; font-size: 9pt;">TOTAL:</td>
+            <td colspan="6" style="padding: 5px; font-size: 9pt;">TOTAL:</td>
+            <td style="padding: 5px; font-size: 9pt;">0.00</td>
+            <td style="padding: 5px; font-size: 9pt;">0.00</td>
             <td style="padding: 5px; font-size: 9pt;">0.00</td>
             <td style="padding: 5px; font-size: 9pt;">0.00</td>
         </tr>
     </tfoot>
+</table>
+
+<br><br>
+<hr>
+
+<table style="width: 100%">
+    <tr>
+        <td>ANALISTA DE CAJA:</td>
+        <td>REVISADO POR: __________________________</td>
+    <tr>
+        <td>FECHA Y HORA: {{ date("d/m/Y h:i a") }}</td>
+    </tr>
+    <tr>
+        <td>FIRMA: __________________________</td>
+        <td>FIRMA: __________________________</td>
+    </tr>
 </table>
 
 </body>
