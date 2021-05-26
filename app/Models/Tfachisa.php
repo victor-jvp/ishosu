@@ -43,7 +43,7 @@ class Tfachisa extends Model
         $totalCobrado = 0;
         foreach ($this->recibos as $item) {
             $tasaCamb     = $item->TASA_CAMB;
-            $montoRecibido = ($item->TIPO_PAGO == "T") ? $item->reciboDet->sum("MONTO") : $item->reciboDet->sum(DB::raw("CANTIDAD * DENOMINACION"));
+            $montoRecibido = ($item->TIPO_PAGO == "T") ? $item->reciboDet()->sum("MONTO") : $item->reciboDet()->sum(DB::raw("CANTIDAD * DENOMINACION"));
             $totalCobrado += ($item->TIPO_MONEDA == "VEF" && $tasaCamb > 0) ? $montoRecibido / $tasaCamb : $montoRecibido;
         }
         return round($totalCobrado, 2);

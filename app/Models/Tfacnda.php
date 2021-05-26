@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Tfacnda extends Model
 {
@@ -20,12 +21,18 @@ class Tfacnda extends Model
         "CAMBDOL"  => "double",
     ];
     protected $appends = [
-        "monto_cobrado"
+        "total_cobrado"
     ];
 
-    public function getMontoCobradoAttribute()
+    public function getTotalCobradoAttribute()
     {
-        return $this->recibos->sum("MontoRecibido");
+        $totalCobrado = 0;
+        foreach ($this->recibos as $item) {
+            $tasaCamb     = $item->TASA_CAMB;
+            $montoRecibido = ($item->TIPO_PAGO == "T") ? $item->reciboDet()->sum("MONTO") : $item->reciboDet()->sum(DB::raw("CANTIDAD * DENOMINACION"));
+            $totalCobrado += ($item->TIPO_MONEDA == "VEF" && $tasaCamb > 0) ? $montoRecibido / $tasaCamb : $montoRecibido;
+        }
+        return round($totalCobrado, 2);
     }
 
     public function cliente()
