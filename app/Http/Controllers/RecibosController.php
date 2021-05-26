@@ -68,6 +68,7 @@ class RecibosController extends Controller
             $reciboCab->NUMEDOCU      = $request->nro_documento;
             $reciboCab->MONTO_DOC_VEF = Str::remove(",", $request->monto_doc_vef);
             $reciboCab->MONTO_DOC_USD = Str::remove(",", $request->monto_doc_usd);
+            $reciboCab->MONTO_DOC_RET = Str::remove(",", $request->monto_doc_ret);
             $reciboCab->TASA_CAMB     = Str::remove(",", $request->tasa_cambio);
             $reciboCab->VUELTO        = Str::remove(",", $request->vuelto);
             $reciboCab->SALDO_DOC     = Str::remove(",", $request->saldo_doc);
