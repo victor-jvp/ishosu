@@ -6,6 +6,10 @@
     <title>Comprobante de Pago - {{ $recibo->idZero }}</title>
 
     <style type="text/css">
+        @page {
+            margin: 30px 20px 20px 20px;
+            /* padding: 0px 0px 0px 0px; */
+        }
         * {
             font-family: Verdana, Arial, sans-serif;
             font-size: 8pt;
@@ -46,7 +50,7 @@
 @for($x = 0; $x < $copies; $x++)
     <table class="table-bordered" style="width: 100%;">
         <tr>
-            <th colspan="9" style="font-size: 10pt; background-color: lightgrey">COMPROBANTE DE PAGO</th>
+            <th colspan="10" style="font-size: 10pt; background-color: lightgrey">COMPROBANTE DE PAGO</th>
         </tr>
         <tr>
             <td class="text-center" rowspan="2" colspan="3"
@@ -57,8 +61,9 @@
                     -
                     {{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}</b>
             </td>
-            <td class="text-left" colspan="2">RUTA: {{--TODO: NOMBRE DEL ASESOR DE VENTAS--}}
-                <b>{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODIRUTA."-" : $recibo->notaEntrega->CODIRUTA."-" }}</b></td>
+            <td class="text-left" colspan="3">RUTA: {{--TODO: NOMBRE DEL ASESOR DE VENTAS--}}
+                <b>{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODIRUTA."-".$recibo->factura->ruta->NOMBVEND : $recibo->notaEntrega->CODIRUTA."-".$recibo->notaEntrega->ruta->NOMBVEND }}</b>
+            </td>
         </tr>
         <tr>
             <td class="text-right">{{ __("FECHA DOC.:") }}</td>
@@ -66,18 +71,19 @@
             <td class="text-right">NUMERO DOC.:</td>
             <td class="text-center"><b>{{ $recibo->NUMEDOCU }}</b></td>
             <td class="text-right" colspan="">{{ __("TASA:") }}</td>
-            <td class="text-right" style="font-size: 10pt"><b>{{number_format( $recibo->TASA_CAMB, 2, ".", "," ) }}</b>
+            <td class="text-right" colspan="2" style="font-size: 10pt">
+                <b>{{number_format( $recibo->TASA_CAMB, 2, ".", "," ) }}</b>
             </td>
         </tr>
         <tr>
             <td class="text-right" colspan="4" rowspan="2">FECHA DE
-                RECIBO: {{ $recibo->FECHA->format("d/m/Y h:i a") }}
+                RECIBO {{ $recibo->FECHA->format("d/m/Y h:i a") }}
             </td>
             <td class="text-center">{{ __("MONTO DOC. Bs.") }}</td>
             <td class="text-center">{{ __("MONTO DOC. $") }}</td>
             <td class="text-center">{{ __("TOTAL A COBRAR") }}</td>
             <td class="text-right">{{ __("MONTO RECIBIDO $:") }}</td>
-            <td class="text-right" style="font-size: 10pt">
+            <td class="text-right" colspan="2" style="font-size: 10pt">
                 <b>{{ __("$ ".number_format($recibo->montoRecibido, 2, ".", ",")) }}</b>
             </td>
         </tr>
@@ -113,8 +119,13 @@
                         <th>RESTA</th>
                     </tr>
                     <tr class="text-center">
-                        <th>0.00</th>
-                        <th>0.00</th>
+                        @if ($recibo->SALDO_DOC > 0)
+                           <th>{{ number_format($recibo->montoRecibido, 2) ?? "0.00" }}</th>
+                           <th>{{ number_format($recibo->SALDO_DOC, 2) ?? "0.00" }}</th>
+                        @else
+                            <th>0.00</th>
+                            <th>0.00</th>
+                        @endif
                     </tr>
                 </table>
             </td>
@@ -127,23 +138,23 @@
 {{--            <td class="text-right" colspan="2">VUELTO</td>--}}
 {{--            <td class="text-right">{{ __("0.00") }}</td>--}}
 
-            <td colspan="3">
+            <td colspan="4">
                 <table class="table-bordered" style="width: 100%;">
                     <tr class="text-right">
                         <td>VUELTO:</td>
-                        <td><b>0.00</b></td>
+                        <td><b>$ {{ number_format($recibo->VUELTO, 2) ?? "0.00" }}</b></td>
                     </tr>
                     <tr class="text-right">
-                        <td>SALDO CLIENTE:</td>
-                        <td><b>0.00</b></td>
+                        <td>SALDO DOCUMENTO:</td>
+                        <td><b>$ {{ number_format($recibo->SALDO_DOC, 2) ?? "0.00" }}</b></td>
                     </tr>
                     <tr class="text-right">
                         <td>TOTAL CANCELADO $:</td>
-                        <td><b>0.00</b></td>
+                        <td><b>$ {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado : $recibo->notaEntrega->total_cobrado, 2) }}</b></td>
                     </tr>
                     <tr class="text-right">
                         <td>TOTAL CANCELADO BS.:</td>
-                        <td><b>0.00</b></td>
+                        <td><b>$ {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado * $recibo->TASA_CAMB : $recibo->notaEntrega->total_cobrado * $recibo->TASA_CAMB, 2) }}</b></td>
                     </tr>
                 </table>
             </td>
@@ -197,7 +208,7 @@
                     </tr>
                 </table>
             </td>
-            <td colspan="2"
+            <td colspan="3"
                 style="text-align: center; font-size: 10pt; font-weight: bold; vertical-align: baseline; text-decoration: underline">
                 RECIBI CONFORME
             </td>
@@ -207,7 +218,7 @@
                 Analista de Caja: <b>{{ $recibo->createdBy->name }}</b>
             </td>
             <td colspan="2" style="padding: 5px 5px 15px;">Hora de Entrega:</td>
-            <td colspan="2" style="padding: 5px 5px 15px;">Firma y Nombre</td>
+            <td colspan="3" style="padding: 5px 5px 15px;">Firma y Nombre</td>
         </tr>
     </table>
     @if($x < ($copies-1))

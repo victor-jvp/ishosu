@@ -70,7 +70,7 @@ class RecibosController extends Controller
             $reciboCab->MONTO_DOC_USD = Str::remove(",", $request->monto_doc_usd);
             $reciboCab->TASA_CAMB     = Str::remove(",", $request->tasa_cambio);
             $reciboCab->VUELTO        = Str::remove(",", $request->vuelto);
-            // $reciboCab->SALDO_CLI     = Str::remove(",", $request->saldo_cli);
+            $reciboCab->SALDO_DOC     = Str::remove(",", $request->saldo_doc);
 
             $reciboCab->save();
 
@@ -78,6 +78,9 @@ class RecibosController extends Controller
                 for ($i = 0; $i < count($request->tran_ref); $i++) {
                     $reciboDet = new ReciboDet();
 
+                    $reciboDet->FECHA_PAGO = $request->tran_fecha[$i];
+                    $reciboDet->REFERENCIA = $request->tran_ref[$i];
+                    $reciboDet->REFERENCIA = $request->tran_ref[$i];
                     $reciboDet->REFERENCIA = $request->tran_ref[$i];
                     $reciboDet->MONTO      = Str::remove(",", $request->tran_monto[$i]);
 
@@ -95,12 +98,16 @@ class RecibosController extends Controller
             }
 
             DB::commit();
-            return response()->json([
+            $result = [
                 'title' => "Aviso.",
                 "text"  => "Se ha guardado el registro con éxito.",
                 "type"  => "success",
                 "goto"  => route("recibos.index")
-            ]);
+            ];
+            if ($reciboCab->TIPO_MONEDA == "USD") {
+                $result["print"] = route("recibos.print", $reciboCab->id);
+            }
+            return response()->json($result);
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -145,6 +152,7 @@ class RecibosController extends Controller
     public function print($id = null)
     {
         $recibo = ReciboCab::find($id);
+
         if($recibo->TIPO_MONEDA == "USD")
         {
             $billetes   = [100, 50, 20, 10, 5, 1, 0.5];

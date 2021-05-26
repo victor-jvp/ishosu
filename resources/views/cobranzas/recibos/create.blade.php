@@ -240,6 +240,9 @@
                                             <tr>
                                                 <th class="text-center">Cantidad</th>
                                                 <th class="text-center">Denominacion</th>
+                                                <th class="text-center">Banco Emisor</th>
+                                                <th class="text-center">Banco Receptor</th>
+                                                <th class="text-center">Fecha de Pago</th>
                                                 <th class="text-center">Referencia</th>
                                                 <th class="text-center">Total Recibo</th>
                                                 <th>Opciones</th>
@@ -248,7 +251,7 @@
                                             <tbody></tbody>
                                             <tfoot>
                                             <tr>
-                                                <td class="font-bold" colspan="3">Total</td>
+                                                <td class="font-bold" colspan="6">Total</td>
                                                 <td class="text-right font-bold" id="total_recibido">0.00</td>
                                                 <td></td>
                                             </tr>
@@ -403,9 +406,9 @@
                 searching: false,
                 ordering: false,
                 columnDefs: [
-                    {targets: 3, className: "dt-body-right"},
+                    {targets: 6, className: "dt-body-right"},
                     {targets: [0, 1], visible: false, className: "dt-center"},
-                    {targets: 4, width: "10%"}
+                    {targets: 7, width: "10%"}
                 ]
             })
 
@@ -493,7 +496,13 @@
                                 showCancelButton: false,
                                 closeOnConfirm: true
                             }, function () {
-                                if (result.type == "success") window.location.href = result.goto
+                                if (result.type == "success") {
+                                    if (result.print) {
+                                        let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=0,height=0,left=-500,top=-500`;
+                                        window.open(result.print,'popUpWindow',params)
+                                    }
+                                    window.location.href = result.goto
+                                }
                             });
                         },
                         error: function (error) {
@@ -513,13 +522,13 @@
         function ChangeTipoPago() {
             if ($("#tipo_pago_tran").prop("checked")) {
                 table_montos.columns([0, 1]).visible(false).draw()
-                table_montos.column([2]).visible(true).draw()
+                table_montos.columns([2,3,4,5]).visible(true).draw()
                 $("#fields_efectivo").hide()
                 $("#fields_transferencia").show()
 
             } else {
                 table_montos.columns([0, 1]).visible(true).draw()
-                table_montos.column([2]).visible(false).draw()
+                table_montos.columns([2,3,4,5]).visible(false).draw()
                 $("#fields_efectivo").show()
                 $("#fields_transferencia").hide()
             }
@@ -562,7 +571,7 @@
             if ($("#vuelto").inputmask('unmaskedvalue') === "") {
                 $("#vuelto").val(0)
             }
-            let total_recibido = parseFloat(table_montos.column(3).data().sum())
+            let total_recibido = parseFloat(table_montos.column(6).data().sum())
             let vuelto = parseFloat($("#vuelto").inputmask('unmaskedvalue'))
 
             let monto_factura
@@ -578,21 +587,7 @@
         }
 
         function AddBilletes() {
-            const banco_e = $("#banco_e").val()
-            if (banco_e == "") {
-                swal("Aviso", 'El campo "Banco Emisor" es requerido', "warning")
-                return
-            }
-            const banco_r = $("#banco_r").val()
-            if (banco_r == "") {
-                swal("Aviso", 'El campo "Banco Receptor" es requerido.', "warning")
-                return
-            }
-            const fecha_pago = $("#fecha_pago").val()
-            if (fecha_pago == "") {
-                swal("Aviso", 'El campo "Fecha Pago"  no es válido.', "warning")
-                return
-            }
+
             const cantidad = $("#cant_billetes").val()
             if (cantidad == "") {
                 swal("Aviso", 'El campo "Cantidad" no puede ser vacio.', "warning")
@@ -610,6 +605,9 @@
                 parseInt(cantidad) + `<input type="hidden" name="bill_cant[]" value="${parseInt(cantidad)}">`,
                 parseFloat(denominacion) + `${simbolo}<input type="hidden" name="bill_deno[]" value="${parseFloat(denominacion)}">`,
                 "",
+                "",
+                "",
+                "",
                 total.toFixed(2),
                 `<div class="btn-group" role="group">
                 <button type="button" onclick="RemoveRowTable(this)" class="btn btn-default btn-sm waves-effect"
@@ -626,13 +624,27 @@
         }
 
         function AddTransferencia() {
+            const banco_e = $("#banco_e").val()
+            if (banco_e == "") {
+                swal("Aviso", 'El campo "Banco Emisor" es requerido', "warning")
+                return
+            }
+            const banco_r = $("#banco_r").val()
+            if (banco_r == "") {
+                swal("Aviso", 'El campo "Banco Receptor" es requerido.', "warning")
+                return
+            }
+            const fecha_pago = $("#fecha_pago").val()
+            if (fecha_pago == "") {
+                swal("Aviso", 'El campo "Fecha Pago"  no es válido.', "warning")
+                return
+            }
             const referencia = $("#referencia").val().trim()
-            const monto_trans = parseFloat($("#monto_trans").inputmask('unmaskedvalue'))
-
             if (referencia == "") {
                 swal("Aviso", 'El campo "Referencia" no puede ser vacio.', "warning")
                 return
             }
+            const monto_trans = parseFloat($("#monto_trans").inputmask('unmaskedvalue'))
             if (monto_trans == "") {
                 swal("Aviso", 'El campo "Monto" no puede ser vacio o menor que cero.', "warning")
                 return
@@ -641,6 +653,9 @@
             table_montos.row.add([
                 "",
                 "",
+                $("#banco_e").find('option:selected').html() + `<input type="hidden" name="tran_bank_e[]" value="${banco_e}">`,
+                $("#banco_r").find('option:selected').html() + `<input type="hidden" name="tran_bank_r[]" value="${banco_r}">`,
+                moment(fecha_pago).format("DD/MM/YYYY") + `<input type="hidden" name="tran_fecha[]" value="${fecha_pago}">`,
                 referencia + `<input type="hidden" name="tran_ref[]" value="${referencia}"><input type="hidden" name="tran_monto[]" value="${monto_trans}">`,
                 monto_trans.toFixed(2),
                 `<div class="btn-group" role="group">
@@ -654,7 +669,9 @@
             UpdateMontos()
 
             $("#referencia, #monto_trans").val(null)
-            $("#referencia").focus();
+            $("#fecha_pago").val(moment().format("YYYY-MM-DD"))
+            $("#banco_e, #banco_r").val(null).selectpicker('refresh')
+            $("#banco_e").focus();
         }
 
         function RemoveRowTable(btn) {
