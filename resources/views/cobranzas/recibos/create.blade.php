@@ -65,7 +65,7 @@
                                         <label for="tipo_pago_efec">Efectivo</label>
 
                                         <input name="tipo_pago" type="radio" id="tipo_pago_tran" value="T"
-                                               class="tipo_pago with-gap radio-col-indigo" />
+                                               class="tipo_pago with-gap radio-col-indigo"/>
                                         <label for="tipo_pago_tran">Transferencia</label>
                                     </div>
 
@@ -87,9 +87,11 @@
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <select class="form-control show-tick" data-live-search="true" required
+                                                        data-container="body" data-size="10"
                                                         data-title="Seleccione..." name="nro_documento" id="nro_fa">
                                                     @foreach ($facturas as $item)
-                                                        <option value="{{ $item->NUMEDOCU }}">{{ $item->NUMEDOCU }}</option>
+                                                        <option
+                                                            value="{{ $item->NUMEDOCU }}">{{ $item->NUMEDOCU }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -100,9 +102,11 @@
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <select class="form-control show-tick" data-live-search="true" required
+                                                        data-container="body" data-size="10"
                                                         data-title="Seleccione..." name="nro_documento" id="nro_ne">
                                                     @foreach ($notas as $item)
-                                                        <option value="{{ $item->NUMEDOCU }}">{{ $item->NUMEDOCU }}</option>
+                                                        <option
+                                                            value="{{ $item->NUMEDOCU }}">{{ $item->NUMEDOCU }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -217,6 +221,18 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="col-sm-2">
+                                        <p><b>Total Cobrado Doc $.</b></p>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control monto" id="total_cobrado"
+                                                       name="total_cobrado" readonly value="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-sm-12 table-responsive" style="margin-bottom: 0px">
                                         <table id="table_montos" class="table table-bordered table-striped table-hover"
                                                width="100%">
@@ -266,17 +282,36 @@
                                 </div>
 
                                 <div class="row" id="fields_transferencia">
-                                    <div class="col-sm-3">
-                                        <select class="form-control show-tick" data-live-search="true"
-                                            data-title="Banco Emisor" id="banco_e">
+                                    <div class="col-sm-4">
+                                        <select class="form-control show-tick dropup " data-live-search="true"
+                                                data-container="body" data-size="10"
+                                                data-title="Banco Emisor" id="banco_e">
+                                            @foreach ($banks_e as $item)
+                                                <option data-subtext="{{ $item->code }}"
+                                                        value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-sm-3">
-                                        <select class="form-control show-tick" data-live-search="true"
-                                            data-title="Banco Receptor" id="banco_r">
+                                    <div class="col-sm-4">
+                                        <select class="form-control show-tick dropup" data-live-search="true"
+                                                data-container="body" data-size="10"
+                                                data-title="Banco Receptor" id="banco_r">
+                                            @foreach ($banks_r as $item)
+                                                <option data-subtext="{{ $item->code }}"
+                                                        value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-4">
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="date" class="form-control" id="fecha_pago"
+                                                       value="{{ date("Y-m-d") }}">
+                                                <label class="form-label">Fecha del Pago</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
                                         <div class="form-group form-float">
                                             <div class="form-line">
                                                 <input type="text" class="form-control" id="referencia">
@@ -284,7 +319,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-4">
                                         <div class="form-group form-float">
                                             <div class="form-line">
                                                 <input type="text" class="form-control monto" id="monto_trans">
@@ -292,7 +327,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-4">
                                         <button type="button" onclick="AddTransferencia()"
                                                 class="btn btn-primary btn-circle-lg waves-effect waves-circle waves-float"
                                                 data-toggle="tooltip" data-placement="auto"
@@ -512,7 +547,7 @@
 
         function CleanDocFields() {
             $("#id_ruta, #ruta, #cliente, #fecha_documento, #id_cliente").val(null)
-            $("#monto_doc_vef, #monto_doc_usd, #tasa_cambio, #vuelto, #saldo_doc").val(0)
+            $("#monto_doc_vef, #monto_doc_usd, #tasa_cambio, #vuelto, #saldo_doc, #total_cobrado").val(0)
             $("#nro_fa, #nro_ne").val(null).selectpicker('refresh')
 
             $("#div_ret_iva").hide()
@@ -536,19 +571,34 @@
             } else {
                 monto_factura = parseFloat($("#monto_doc_vef").inputmask('unmaskedvalue') ?? 0)
             }
+            const total_cobrado = parseFloat($("#total_cobrado").inputmask('unmaskedvalue'))
             $("#total_recibido").html(total_recibido.toFixed(2))
-            const saldo_doc = parseFloat(monto_factura - total_recibido + vuelto)
+            const saldo_doc = parseFloat(monto_factura - total_cobrado - total_recibido + vuelto)
             $("#saldo_doc").val(saldo_doc.toFixed(2))
         }
 
         function AddBilletes() {
+            const banco_e = $("#banco_e").val()
+            if (banco_e == "") {
+                swal("Aviso", 'El campo "Banco Emisor" es requerido', "warning")
+                return
+            }
+            const banco_r = $("#banco_r").val()
+            if (banco_r == "") {
+                swal("Aviso", 'El campo "Banco Receptor" es requerido.', "warning")
+                return
+            }
+            const fecha_pago = $("#fecha_pago").val()
+            if (fecha_pago == "") {
+                swal("Aviso", 'El campo "Fecha Pago"  no es válido.', "warning")
+                return
+            }
             const cantidad = $("#cant_billetes").val()
-            const denominacion = $("#denominacion").val()
-
             if (cantidad == "") {
                 swal("Aviso", 'El campo "Cantidad" no puede ser vacio.', "warning")
                 return
             }
+            const denominacion = $("#denominacion").val()
             if (denominacion == "") {
                 swal("Aviso", 'El campo "Denominacion" no puede ser vacio.', "warning")
                 return
@@ -690,10 +740,13 @@
                     }
                     $("#agente_ret").prop("checked", resp.cliente.AGENTERET)
                     $("#id_ruta").val(resp.CODIRUTA)
+                    $("#ruta").val(resp.ruta.NOMBVEND)
                     $("#monto_doc_vef").val(resp.TOTADOCU)
+                    $("#tasa_cambio").val(resp.CAMBDOL)
+
                     const montoFacturaUsd = (resp.TOTADOCU / resp.CAMBDOL)
                     $("#monto_doc_usd").val(montoFacturaUsd.toFixed(2))
-                    $("#tasa_cambio").val(resp.CAMBDOL)
+                    $("#total_cobrado").val(resp.total_cobrado.toFixed(2))
 
                     UpdateMontos();
                 },

@@ -40,6 +40,11 @@ class Tfacnda extends Model
         return $this->belongsTo(Tcpca::class, "CODICLIE", "CODICLIE");
     }
 
+    public function ruta()
+    {
+        return $this->belongsTo(Truta::class, "CODIRUTA", "CODIRUTA");
+    }
+
     public function recibos()
     {
         return $this->hasMany(ReciboCab::class, "NUMEDOCU", "NUMEDOCU");

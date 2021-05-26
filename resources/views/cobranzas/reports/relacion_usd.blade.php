@@ -79,7 +79,8 @@
     @foreach($relacion->recibos as $recibo)
         <tr>
             <td class="text-center" style="padding: 5px;">{{ $recibo->idZero }}</td>
-            <td class="text-center" style="padding: 5px;">{{ $recibo->FECHA->format("d/m/Y") }}<br>{{ $recibo->FECHA->format("h:i a") }}</td>
+            <td class="text-center" style="padding: 5px;">{{ $recibo->FECHA->format("d/m/Y") }}
+                <br>{{ $recibo->FECHA->format("h:i a") }}</td>
             <td class="text-right"
                 style="padding: 5px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODICLIE : $recibo->notaEntrega->CODICLIE }}</td>
             <td class=""
@@ -94,13 +95,13 @@
     @endforeach
     </tbody>
     <tfoot>
-        <tr class="text-right">
-            <td colspan="6" style="padding: 5px; font-size: 9pt;">TOTAL:</td>
-            <td style="padding: 5px; font-size: 9pt;">0.00</td>
-            <td style="padding: 5px; font-size: 9pt;">0.00</td>
-            <td style="padding: 5px; font-size: 9pt;">0.00</td>
-            <td style="padding: 5px; font-size: 9pt;">0.00</td>
-        </tr>
+    <tr class="text-right">
+        <td colspan="6" style="padding: 5px; font-size: 9pt;">TOTAL:</td>
+        <td style="padding: 5px; font-size: 9pt;">0.00</td>
+        <td style="padding: 5px; font-size: 9pt;">0.00</td>
+        <td style="padding: 5px; font-size: 9pt;">0.00</td>
+        <td style="padding: 5px; font-size: 9pt;">0.00</td>
+    </tr>
     </tfoot>
 </table>
 

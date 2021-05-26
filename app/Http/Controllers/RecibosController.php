@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank;
 use App\Models\ReciboCab;
 use App\Models\ReciboDet;
 use App\Models\Tfachisa;
@@ -46,8 +47,10 @@ class RecibosController extends Controller
         $bolivares = "500000, 200000, 100000, 50000";
         $facturas  = Tfachisa::all();
         $notas     = Tfacnda::all();
+        $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
+        $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
 
-        return view('cobranzas.recibos.create', compact('dolares', 'bolivares', 'facturas', 'notas'));
+        return view('cobranzas.recibos.create', compact('dolares', 'bolivares', 'facturas', 'notas', 'banks_e', 'banks_r'));
     }
 
     public function store(Request $request)
