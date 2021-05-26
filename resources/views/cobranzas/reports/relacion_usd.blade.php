@@ -55,8 +55,7 @@
         <td style="font-size: 9pt;">CAJA 01:</td>
     </tr>
     <tr>
-        <td>ANALISTA DE CAJA: {{ __("CAJERA 01") }}</td>
-        <td class="text-right">Pág: 01 de 02</td>
+        <td>ANALISTA DE CAJA: <b>{{ $relacion->createdBy->name }}</b></td>
     </tr>
 </table>
 
@@ -76,31 +75,45 @@
         <td class="text-center" style="font-weight: bold;">SALDO DOC.</td>
         <td class="text-center" style="font-weight: bold;">VUELTO</td>
     </tr>
+    @php
+        $totalMontoDoc = 0;
+        $totalRecibidos = 0;
+        $totalSaldoDoc = 0;
+        $totalVuelto = 0;
+    @endphp
     @foreach($relacion->recibos as $recibo)
+        @php
+            $totalMontoDoc =+ $recibo->MONTO_DOC_USD;
+            $totalRecibidos =+ $recibo->montoRecibido;
+            $totalSaldoDoc =+ $recibo->SALDO_DOC;
+            $totalVuelto =+ $recibo->VUELTO;
+        @endphp
         <tr>
-            <td class="text-center" style="padding: 5px;">{{ $recibo->idZero }}</td>
-            <td class="text-center" style="padding: 5px;">{{ $recibo->FECHA->format("d/m/Y") }}
+            <td class="text-center" style="padding: 3px;">{{ $recibo->idZero }}</td>
+            <td class="text-center" style="padding: 3px;">{{ $recibo->FECHA->format("d/m/Y") }}
                 <br>{{ $recibo->FECHA->format("h:i a") }}</td>
             <td class="text-right"
-                style="padding: 5px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODICLIE : $recibo->notaEntrega->CODICLIE }}</td>
+                style="padding: 3px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODICLIE : $recibo->notaEntrega->CODICLIE }}</td>
             <td class=""
-                style="padding: 5px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}</td>
-            <td></td>
-            <td class="text-center" style="padding: 5px;">{{ $recibo->NUMEDOCU }}</td>
-            <td></td>
-            <td class="text-right" style="padding: 5px;">{{ number_format( $recibo->montoRecibido, 2, ".", "," ) }}</td>
-            <td></td>
-            <td class="text-right" style="padding: 5px;"></td>
+                style="padding: 3px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}</td>
+            <td>{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODIRUTA."-".$recibo->factura->ruta->NOMBVEND : $recibo->notaEntrega->CODIRUTA."-".$recibo->notaEntrega->ruta->NOMBVEND }}</td>
+            <td class="text-center" style="padding: 3px;">{{ $recibo->NUMEDOCU }}</td>
+            <td class="text-right">
+                {{ number_format($recibo->MONTO_DOC_USD, 2) }}
+            </td>
+            <td class="text-right" style="padding: 3px;">{{ number_format( $recibo->montoRecibido, 2, ".", "," ) }}</td>
+            <td class="text-right">{{ number_format($recibo->SALDO_DOC, 2) }}</td>
+            <td class="text-right">{{ number_format($recibo->VUELTO, 2) }}</td>
         </tr>
     @endforeach
     </tbody>
     <tfoot>
     <tr class="text-right">
-        <td colspan="6" style="padding: 5px; font-size: 9pt;">TOTAL:</td>
-        <td style="padding: 5px; font-size: 9pt;">0.00</td>
-        <td style="padding: 5px; font-size: 9pt;">0.00</td>
-        <td style="padding: 5px; font-size: 9pt;">0.00</td>
-        <td style="padding: 5px; font-size: 9pt;">0.00</td>
+        <td colspan="6" style="padding: 3px; font-size: 9pt;">TOTAL:</td>
+        <td style="padding: 3px; font-size: 9pt;">{{ number_format($totalMontoDoc, 2) }}</td>
+        <td style="padding: 3px; font-size: 9pt;">{{ number_format($totalRecibidos, 2) }}</td>
+        <td style="padding: 3px; font-size: 9pt;">{{ number_format($totalSaldoDoc, 2) }}</td>
+        <td style="padding: 3px; font-size: 9pt;">{{ number_format($totalVuelto, 2) }}</td>
     </tr>
     </tfoot>
 </table>
@@ -110,7 +123,7 @@
 
 <table style="width: 100%">
     <tr>
-        <td>ANALISTA DE CAJA:</td>
+        <td>ANALISTA DE CAJA: <b>{{ $relacion->createdBy->name }}</b></td>
         <td>REVISADO POR: __________________________</td>
     <tr>
         <td>FECHA Y HORA: {{ date("d/m/Y h:i a") }}</td>
@@ -120,6 +133,18 @@
         <td>FIRMA: __________________________</td>
     </tr>
 </table>
+
+<script type="text/php">
+    if (isset($pdf)) {
+        $text = "Página {PAGE_NUM} / {PAGE_COUNT}";
+        $size = 10;
+        $font = $fontMetrics->getFont("Verdana");
+        $width = $fontMetrics->get_text_width($text, $font, $size) / 2;
+        $x = ($pdf->get_width() - $width) / 2;
+        $y = $pdf->get_height() - 35;
+        $pdf->page_text($x, $y, $text, $font, $size);
+    }
+</script>
 
 </body>
 

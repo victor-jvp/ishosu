@@ -74,15 +74,19 @@ class CobranzasController extends Controller
     public function print($id)
     {
         $relacion = Relacion::find($id);
+        $pdf = \App::make('dompdf.wrapper');
+        /* Careful: use "enable_php" option only with local html & script tags you control.
+  used with remote html or scripts is a major security problem (remote php injection) */
+        $pdf->getDomPDF()->set_option("enable_php", true);
 
         if($relacion->TIPO_MONEDA == "USD")
         {
-            $pdf = PDF::loadView('cobranzas.reports.relacion_usd', compact("relacion"))->setPaper("Letter", "portrait");
+            $pdf->loadView('cobranzas.reports.relacion_usd', compact("relacion"))->setPaper("Letter", "portrait");
             return $pdf->stream("Recibo {$relacion->idZero}.pdf");
 //            return view("cobranzas.reports.$relacion_usd", compact("relacion", "billetes", "copies"));
 
         }else{
-            $pdf = PDF::loadView('cobranzas.reports.relacion_vef', compact("relacion"))->setPaper("Letter", "landscape");
+            $pdf->loadView('cobranzas.reports.relacion_vef', compact("relacion"))->setPaper("Letter", "landscape");
             return $pdf->stream("Recibo {$relacion->idZero}.pdf");
 //            return view("cobranzas.reports.recibo_vef", compact("$relacion", "billetes", "copies"));
         }

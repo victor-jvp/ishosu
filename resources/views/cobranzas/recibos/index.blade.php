@@ -93,7 +93,7 @@
                                                 <td>{{ $item->TIPO_MONEDA }}</td>
                                                 <td>{{number_format( ($item->TIPO_MONEDA == "USD") ? $item->MONTO_DOC_USD: $item->MONTO_DOC_VEF, 2, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->montoRecibido, 2, ".", "," ) }}</td>
-                                                <td>{{number_format( $item->SALDO_CLI, 2, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->SALDO_DOC, 2, ".", "," ) }}</td>
                                                 {{--                                        <td>{{ $item->createdBy->name }}</td>--}}
                                                 <td>
                                                     <div class="btn-group" role="group">
