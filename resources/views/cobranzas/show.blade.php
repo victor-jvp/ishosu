@@ -74,6 +74,12 @@
                                                        data-toggle="tooltip" data-placement="auto"
                                                        data-original-title="Imprimir"><i class="material-icons">print</i>
                                                     </a>
+                                                    <button type="button" onclick="DeleteRow({{ $item->id }})"
+                                                            class="btn btn-default btn-sm waves-effect"
+                                                            data-toggle="tooltip" data-placement="auto"
+                                                            data-original-title="Borrar"><i
+                                                            class="material-icons">delete</i>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -138,10 +144,11 @@
             })
         })
 
-        function RelacionarRecibos() {
+        function DeleteRow(id)
+        {
             swal({
                 title: "Confirmar",
-                text: "Confirme realizar el proceso de relacion de los recibos seleccionados.",
+                text: "Confirme eliminar el registro.",
                 type: "info",
                 showCancelButton: true,
                 confirmButtonColor: "#2b982b",
@@ -150,13 +157,11 @@
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true,
             }, function () {
-                const form = $("#form_submit")
                 $.ajax({
-                    url: $(form).attr('action'),
+                    url: `{{ url("cobranzas/relaciones/delete-recibo/") }}/${id}`,
                     dataType: 'JSON',
-                    type: 'POST',
+                    type: 'DELETE',
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    data: $(form).serialize(),
                     timeout: 10000,
                     success: function (result) {
                         swal({

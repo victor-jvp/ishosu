@@ -290,7 +290,7 @@
                 showLoaderOnConfirm: true,
             }, function () {
                 $.ajax({
-                    url: `{{ url("cobranzas/recibos/") }}/${id}`,
+                    url: `{{ url("cobranzas/relaciones/") }}/${id}`,
                     dataType: 'JSON',
                     type: 'DELETE',
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
