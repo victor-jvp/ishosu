@@ -15,7 +15,7 @@
             <ol class="breadcrumb">
                 <li>
                     <a href="javascript:void(0);">
-                        <i class="material-icons">wrench</i> Configuracion
+                        <i class="material-icons">settings</i> Configuraciones
                     </a>
                 </li>
                 <li class="active">
@@ -30,13 +30,13 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            Lista de Relaciones
+                            Lista de Usuarios Registrados
                             {{-- <small>Description text here...</small> --}}
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>
                                 <a href="{{ route('users.create') }}" data-toggle="tooltip" data-placement="auto"
-                                    data-original-title="Nuevo Usuario"
+                                    data-original-title="Nuevo"
                                     class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
                                     <i class="material-icons">add_circle</i>
                                 </a>

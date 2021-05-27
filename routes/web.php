@@ -34,7 +34,5 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('cobranzas/recibos', RecibosController::class);
     Route::post('documentos/details', [DocumentosController::class, 'details'])->name('documentos.details');
 
-    Route::get('config/users', [UsersController::class, 'index'])->name("users.index");
-    Route::get('config/users/edit/{id}', [UsersController::class, 'edit'])->name("users.edit");
-    Route::get('config/users/create', [UsersController::class, 'create'])->name("users.create");
+    Route::resource('config/users', UsersController::class);
 });
