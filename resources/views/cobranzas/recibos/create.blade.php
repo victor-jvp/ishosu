@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Recibos')
+@section('title', 'Nuevo Recibo')
 
 @section('content')
 
@@ -136,8 +136,8 @@
                                         <div class="switch">
                                             <label>
                                                 NO
-                                                <input type="checkbox" id="ret_iva" name="ret_iva"><span
-                                                    class="lever"></span>
+                                                <input type="checkbox" id="ret_iva" disabled><span
+                                                    class="lever switch-col-blue"></span>
                                                 SI
                                             </label>
                                         </div>

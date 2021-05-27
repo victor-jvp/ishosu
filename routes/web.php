@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RecibosController;
 use App\Http\Controllers\CobranzasController;
 use App\Http\Controllers\DocumentosController;
@@ -32,4 +33,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cobranzas/recibos/print/{id}', [RecibosController::class, 'print'])->name('recibos.print');
     Route::resource('cobranzas/recibos', RecibosController::class);
     Route::post('documentos/details', [DocumentosController::class, 'details'])->name('documentos.details');
+
+    Route::get('config/users', [UsersController::class, 'index'])->name("users.index");
+    Route::get('config/users/edit/{id}', [UsersController::class, 'edit'])->name("users.edit");
+    Route::get('config/users/create', [UsersController::class, 'create'])->name("users.create");
 });

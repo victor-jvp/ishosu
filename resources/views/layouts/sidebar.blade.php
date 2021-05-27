@@ -41,7 +41,7 @@
                 <li class="{{ request()->is('/') ? 'active' : '' }}">
                     <a href="{{ route('home') }}">
                         <i class="material-icons">home</i>
-                        <span>Home</span>
+                        <span>Inicio</span>
                     </a>
                 </li>
                 <li class="{{ (request()->is('cobranzas/*')) ? 'active' : '' }}">
@@ -57,6 +57,13 @@
                             <a href="{{ route("recibos.index") }}">Recibos</a>
                         </li>
                     </ul>
+                </li>
+                <li class="header">CONFIGURACIONES</li>
+                <li class="{{ request()->is('config/users*') ? 'active' : '' }}">
+                    <a href="{{ route('users.index') }}">
+                        <i class="material-icons">group</i>
+                        <span>Usuarios</span>
+                    </a>
                 </li>
             </ul>
         </div>

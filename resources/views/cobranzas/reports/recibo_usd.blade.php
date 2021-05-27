@@ -154,7 +154,7 @@
                     </tr>
                     <tr class="text-right">
                         <td>TOTAL CANCELADO BS.:</td>
-                        <td><b>$ {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado * $recibo->TASA_CAMB : $recibo->notaEntrega->total_cobrado * $recibo->TASA_CAMB, 2) }}</b></td>
+                        <td><b>Bs. {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado * $recibo->TASA_CAMB : $recibo->notaEntrega->total_cobrado * $recibo->TASA_CAMB, 2) }}</b></td>
                     </tr>
                 </table>
             </td>
