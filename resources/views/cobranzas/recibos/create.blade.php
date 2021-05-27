@@ -132,7 +132,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-3" id="div_ret_iva">
-                                        <p><b>Retencion de Iva</b></p>
+                                        <p><b>Es Agente de Retencion</b></p>
                                         <div class="switch">
                                             <label>
                                                 NO
@@ -560,13 +560,13 @@
                 $("#div_ne").hide();
                 $("#nro_fa").prop('disabled', false)
                 $("#nro_ne").prop('disabled', true)
-                $("#tasa_cambio").prop("readonly", true)
+                $("#tasa_cambio").prop("readonly", false)
             } else { // Si es una nota de entrega
                 $("#div_fa").hide();
                 $("#div_ne").show();
                 $("#nro_fa").prop('disabled', true)
                 $("#nro_ne").prop('disabled', false)
-                $("#tasa_cambio").prop("readonly", false)
+                $("#tasa_cambio").prop("readonly", true)
             }
 
             CleanDocFields()
@@ -577,7 +577,7 @@
             $("#monto_doc_vef, #monto_doc_usd, #tasa_cambio, #vuelto, #saldo_doc, #total_cobrado").val(0)
             $("#nro_fa, #nro_ne").val(null).selectpicker('refresh')
 
-            $("#div_ret_iva").hide()
+            $("#ret_iva").prop("checked", false)
         }
 
         function CleanTableMontos() {
@@ -602,6 +602,12 @@
             $("#total_recibido").html(total_recibido.toFixed(2))
             const saldo_doc = parseFloat(monto_factura - total_cobrado - total_recibido + vuelto)
             $("#saldo_doc").val(saldo_doc.toFixed(2))
+
+            if ($("#tipo_doc_ne").prop("checked")) { // Si es nota de entrega calcular la tasa de cambio
+                const tasa_camb = parseFloat($("#monto_doc_vef").inputmask('unmaskedvalue') ?? 0) / total_recibido
+                $("#tasa_cambio").val(tasa_camb.toFixed(2))
+            }
+
         }
 
         function AddBilletes() {
@@ -779,6 +785,7 @@
                     $("#monto_doc_usd").val(montoFacturaUsd.toFixed(2))
                     $("#total_cobrado").val(resp.total_cobrado.toFixed(2))
 
+                    $("#ret_iva").prop("checked", resp.cliente.AGENTERET)
                     if (resp.cliente.AGENTERET) {
                         const impBruto = parseFloat(resp.IMPUBRUT);
                         const iva = parseFloat(resp.IMPU1);
@@ -787,13 +794,13 @@
                         $("#total_grav").val(impBruto.toFixed(2))
                         $("#monto_doc_ret").val(montoRet.toFixed(2))
 
-                        $("#div_ret_iva").show()
+                        // $("#div_ret_iva").show()
                     } else {
                         $("#total_grav").val(0)
                         $("#monto_doc_ret").val(0)
-
-                        $("#div_ret_iva").hide()
+                        // $("#div_ret_iva").hide()
                     }
+
 
                     $("#agente_ret").prop("checked", resp.cliente.AGENTERET)
 
