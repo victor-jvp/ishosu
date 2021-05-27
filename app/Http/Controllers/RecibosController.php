@@ -37,8 +37,10 @@ class RecibosController extends Controller
         $bolivares = "500000, 200000, 100000, 50000";
         $facturas  = Tfachisa::all();
         $notas     = Tfacnda::all();
+        $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
+        $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
 
-        return view('cobranzas.recibos.edit', compact('recibo', 'dolares', 'bolivares', 'facturas', 'notas'));
+        return view('cobranzas.recibos.edit', compact('recibo', 'dolares', 'bolivares', 'facturas', 'notas', 'banks_e', 'banks_r'));
     }
 
     public function create()
