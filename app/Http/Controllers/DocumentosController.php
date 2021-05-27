@@ -22,16 +22,16 @@ class DocumentosController extends Controller
 
         if ($tipo_doc == "FA") { // Si es Factura
             $data = Tfachisa::with([
-                'recibos.reciboDet',
+                'recibos',
                 'cliente',
                 'ruta'
-            ])->find($id);
+            ])->where('TIPODOCU', '=', 'FA')->find($id);
         } else {
             $data = Tfacnda::with([
-                'recibos.reciboDet',
+                'recibos',
                 'cliente',
                 'ruta'
-            ])->find($id);
+            ])->where('TIPODOCU', '=', 'NE')->find($id);
         }
 
         return response()->json($data);

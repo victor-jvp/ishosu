@@ -69,6 +69,11 @@
                                                    data-toggle="tooltip" data-placement="auto"
                                                    data-original-title="Detalles"><i class="material-icons">print</i>
                                                 </a>
+                                                <button type="button" onclick="DeleteRow({{ $item->id }})"
+                                                    class="btn btn-default btn-sm waves-effect" data-toggle="tooltip"
+                                                    data-placement="auto" data-original-title="Borrar"><i
+                                                        class="material-icons">delete</i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -120,5 +125,48 @@
             ]
         })
     })
+
+    function DeleteRow(id)
+    {
+        swal({
+            title: "Confirmar",
+            text: "Confirme eliminar el registro.",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#2b982b",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true,
+        }, function () {
+            $.ajax({
+                url: `{{ url("cobranzas/relaciones/") }}/${id}`,
+                dataType: 'JSON',
+                type: 'DELETE',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                timeout: 10000,
+                success: function (result) {
+                    swal({
+                        title: result.title,
+                        text: result.text,
+                        type: result.type,
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    }, function () {
+                        if (result.type == "success") window.location.href = result.goto
+                    });
+                },
+                error: function (error) {
+                    console.log(error.error)
+                    swal(error.title, error.message, error.result);
+                },
+                statusCode: {
+                    500: function () {
+                        swal('Error en el proceso', 'Error al procesar los datos. Intente nuevamente', 'error')
+                    }
+                }
+            })
+        });
+    }
 </script>
 @endsection

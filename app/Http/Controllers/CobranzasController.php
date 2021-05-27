@@ -71,6 +71,64 @@ class CobranzasController extends Controller
         return view("cobranzas.show", compact("relacion"));
     }
 
+    public function destroy($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            ReciboCab::where("id_relacion", $id)->update(["id_relacion" => NULL]);
+            Relacion::destroy($id);
+
+            DB::commit();
+            return response()->json([
+                'title' => "Aviso.",
+                "text"  => "Se ha guardado el registro con éxito.",
+                "type"  => "success",
+                "goto"  => route("cobranzas.index")
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollback();
+
+            return response()->json([
+                'title' => "Atención.",
+                "text"  => "Error en guardado del registro. Intente nuevamente.",
+                "type"  => "error",
+                "error" => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function remove_recibo($id_recibo)
+    {
+        try {
+            DB::beginTransaction();
+
+            $recibo              = ReciboCab::find($id_recibo);
+            $id                  = $recibo->id_relacion;
+            $recibo->id_relacion = null;
+            $recibo->save();
+
+            DB::commit();
+            return response()->json([
+                'title' => "Aviso.",
+                "text"  => "Se ha guardado el registro con éxito.",
+                "type"  => "success",
+                "goto"  => route("cobranzas.show", $id)
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollback();
+
+            return response()->json([
+                'title' => "Atención.",
+                "text"  => "Error en guardado del registro. Intente nuevamente.",
+                "type"  => "error",
+                "error" => $e->getMessage()
+            ]);
+        }
+    }
+
     public function print($id)
     {
         $relacion = Relacion::find($id);
