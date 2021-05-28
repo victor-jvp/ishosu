@@ -34,5 +34,5 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('cobranzas/recibos', RecibosController::class);
     Route::post('documentos/details', [DocumentosController::class, 'details'])->name('documentos.details');
 
-    Route::resource('config/users', UsersController::class);
+    Route::resource('config/users', UsersController::class)->names('config.users');
 });

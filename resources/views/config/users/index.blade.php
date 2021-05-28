@@ -35,7 +35,7 @@
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>
-                                <a href="{{ route('users.create') }}" data-toggle="tooltip" data-placement="auto"
+                                <a href="{{ route('config.users.create') }}" data-toggle="tooltip" data-placement="auto"
                                     data-original-title="Nuevo"
                                     class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
                                     <i class="material-icons">add_circle</i>
@@ -67,7 +67,7 @@
                                         <td></td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route("users.edit", $item->id) }}"
+                                                <a href="{{ route("config.users.edit", $item->id) }}"
                                                     class="btn btn-default btn-sm waves-effect" data-toggle="tooltip"
                                                     data-placement="auto" data-original-title="Detalles"><i
                                                         class="material-icons">edit</i>
