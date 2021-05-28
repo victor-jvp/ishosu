@@ -34,5 +34,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('cobranzas/recibos', RecibosController::class);
     Route::post('documentos/details', [DocumentosController::class, 'details'])->name('documentos.details');
 
-    Route::resource('config/users', UsersController::class)->names('config.users');
+    Route::resource('config/users', UsersController::class)->only(['index', 'create', 'store', 'edit', 'update'])->names('config.users');
+    Route::delete('config/users/delete/{id}', [UsersController::class, 'delete'])->name('config.users.delete');
 });

@@ -14,6 +14,10 @@ class CobranzasController extends Controller
     //
     public function index()
     {
+        if (!auth()->user()->can("relaciones.index")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         return view("cobranzas.index", [
             "relaciones" => Relacion::all()
         ]);
@@ -21,6 +25,10 @@ class CobranzasController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth()->user()->can("relaciones.create")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         try {
             DB::beginTransaction();
             $relacion = new Relacion();
@@ -64,7 +72,11 @@ class CobranzasController extends Controller
         }
     }
 
-    public function show($id) {
+    public function show($id)
+    {
+        if (!auth()->user()->can("relaciones.index")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
 
         $relacion = Relacion::with("recibos")->find($id);
 
@@ -73,6 +85,10 @@ class CobranzasController extends Controller
 
     public function destroy($id)
     {
+        if (!auth()->user()->can("relaciones.delete")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         try {
             DB::beginTransaction();
 
@@ -101,6 +117,10 @@ class CobranzasController extends Controller
 
     public function remove_recibo($id_recibo)
     {
+        if (!auth()->user()->can("relaciones.update")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         try {
             DB::beginTransaction();
 
@@ -131,6 +151,10 @@ class CobranzasController extends Controller
 
     public function print($id)
     {
+        if (!auth()->user()->can("relaciones.index")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         $relacion = Relacion::find($id);
         $pdf = \App::make('dompdf.wrapper');
         /* Careful: use "enable_php" option only with local html & script tags you control.

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Nuevo Recibo')
+@section('title', 'Nuevo Usuario')
 
 @section('content')
 
@@ -49,7 +49,7 @@
                                 <div class="body">
 
                                     <div class="row clearfix">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <label for="name">Nombres y Apellidos</label>
                                             <div class="form-group">
                                                 <div class="form-line">
@@ -57,11 +57,27 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <label for="email">Email</label>
                                             <div class="form-group">
                                                 <div class="form-line">
-                                                    <input type="email" class="form-control" id="email" name="email" required>
+                                                    <input type="email" class="form-control" id="email" name="email">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label for="estacion">Estación</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <select class="form-control show-tick" data-live-search="true"
+                                                        data-container="body" data-size="10"
+                                                        data-title="Seleccione..." name="estacion" id="estacion">
+                                                        @forelse ($estaciones as $item)
+                                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                        @empty
+                                                        <option value="" disabled>-Sin datos-</option>
+                                                        @endforelse
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -73,7 +89,7 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control" id="username"
-                                                        name="username">
+                                                        name="username" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -91,7 +107,7 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="password" class="form-control" id="password_confirmation"
-                                                        minlength="6" required name="password_confirmation">
+                                                        required name="password_confirmation">
                                                 </div>
                                             </div>
                                         </div>
@@ -149,6 +165,20 @@
 
     <script>
         $('#form_submit').validate({
+            rules:{
+                password:{
+                    minlength:  6
+                },
+                password_confirmation : {
+                    minlength : 6,
+                    equalTo : "#password"
+                }
+            },
+            messages:{
+                password_confirmation: {
+                    equalTo: "Las contraseñas no coinciden."
+                }
+            },
             highlight: function (input) {
                 $(input).parents('.form-line').addClass('error');
             },

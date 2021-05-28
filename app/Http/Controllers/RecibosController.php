@@ -18,6 +18,10 @@ class RecibosController extends Controller
     //
     public function index()
     {
+        if (!auth()->user()->can("recibos.index")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         $recibos = ReciboCab::whereNull("id_relacion")->where("created_by", auth()->user()->getAuthIdentifier())->get();
 
         return view('cobranzas.recibos.index', compact('recibos'));
@@ -25,12 +29,20 @@ class RecibosController extends Controller
 
     public function show($id)
     {
+        if (!auth()->user()->can("recibos.index")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         $recibo = ReciboCab::find($id);
         return view("cobranzas.recibos.show", compact("recibo"));
     }
 
     public function edit($id)
     {
+        if (!auth()->user()->can("recibos.update")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         $recibo = ReciboCab::find($id);
 
         $dolares   = "100, 50, 20, 10, 5, 1, 0.5";
@@ -45,6 +57,10 @@ class RecibosController extends Controller
 
     public function create()
     {
+        if (!auth()->user()->can("recibos.create")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         $dolares   = "100, 50, 20, 10, 5, 1, 0.5";
         $bolivares = "500000, 200000, 100000, 50000";
         $facturas  = Tfachisa::where('TIPODOCU', '=', 'FA')->get();
@@ -57,7 +73,9 @@ class RecibosController extends Controller
 
     public function store(Request $request)
     {
-//        dd($request->toArray());
+        if (!auth()->user()->can("recibos.create")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
 
         DB::beginTransaction();
         try {
@@ -127,6 +145,10 @@ class RecibosController extends Controller
 
     public function destroy($id)
     {
+        if (!auth()->user()->can("recibos.delete")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         try {
             DB::beginTransaction();
 
@@ -154,6 +176,10 @@ class RecibosController extends Controller
 
     public function print($id = null)
     {
+        if (!auth()->user()->can("recibos.index")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
         $recibo = ReciboCab::find($id);
 
         if($recibo->TIPO_MONEDA == "USD")

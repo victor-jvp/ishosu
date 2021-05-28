@@ -51,28 +51,30 @@
                                     <tr>
                                         <th>Usuario</th>
                                         <th>Nombre</th>
-                                        <th>Tipo</th>
+                                        <th>Roles</th>
                                         <th>Estacion</th>
-                                        <th>Estado</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($usuarios as $item)
+                                    @foreach($users as $user)
                                     <tr>
-                                        <td>{{ $item->username }}</td>
-                                        <td>{{ $item->name }}</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ $user->username }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>
+                                            @foreach ($user->roles as $rol)
+                                                {{ $rol->name }}<br>
+                                            @endforeach
+                                        </td>
                                         <td></td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route("config.users.edit", $item->id) }}"
+                                                <a href="{{ route("config.users.edit", $user->id) }}"
                                                     class="btn btn-default btn-sm waves-effect" data-toggle="tooltip"
-                                                    data-placement="auto" data-original-title="Detalles"><i
+                                                    data-placement="auto" data-original-title="Modificar"><i
                                                         class="material-icons">edit</i>
                                                 </a>
-                                                <button type="button" onclick="DeleteRow({{ $item->id }})"
+                                                <button type="button" onclick="DeleteRow('{{ route('config.users.delete', $user->id) }}')"
                                                     class="btn btn-default btn-sm waves-effect" data-toggle="tooltip"
                                                     data-placement="auto" data-original-title="Borrar"><i
                                                         class="material-icons">delete</i>
@@ -126,16 +128,16 @@
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ],
             columnDefs: [{
-                targets:    5,
+                targets:    4,
                 sorting: false
             }],
             sorting: [
-                [0, 'desc']
+                [0, 'asc']
             ]
         })
     })
 
-    function DeleteRow(id) {
+    function DeleteRow(url) {
         swal({
             title: "Confirmar",
             text: "Confirme eliminar el registro.",
@@ -148,7 +150,7 @@
             showLoaderOnConfirm: true,
         }, function () {
             $.ajax({
-                url: `{{ url("cobranzas/relaciones/") }}/${id}`,
+                url: url,
                 dataType: 'JSON',
                 type: 'DELETE',
                 headers: {

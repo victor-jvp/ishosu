@@ -44,27 +44,42 @@
                         <span>Inicio</span>
                     </a>
                 </li>
+                @canany([
+                    "recibos.index",
+                    "relaciones.index",
+                ])
                 <li class="{{ (request()->is('cobranzas/*')) ? 'active' : '' }}">
                     <a href="javascript:void(0);" class="menu-toggle">
                         <i class="material-icons">money</i>
                         <span>Cobranzas</span>
                     </a>
                     <ul class="ml-menu">
+                        @can("relaciones.index")
                         <li class="{{ (request()->is('cobranzas/relaciones*')) ? 'active' : '' }}">
                             <a href="{{ route("cobranzas.index") }}">Relaciones</a>
                         </li>
+                        @endcan
+                        @can("recibos.index")
                         <li class="{{ (request()->is('cobranzas/recibos*')) ? 'active' : '' }}">
                             <a href="{{ route("recibos.index") }}">Recibos</a>
                         </li>
+                        @endcan
                     </ul>
                 </li>
+                @endcanany
+                @canany([
+                    "config.users.index",
+                ])
                 <li class="header">CONFIGURACIONES</li>
+                @can('config.users.index')
                 <li class="{{ request()->is('config/users*') ? 'active' : '' }}">
                     <a href="{{ route('config.users.index') }}">
                         <i class="material-icons">group</i>
                         <span>Usuarios</span>
                     </a>
                 </li>
+                @endcan
+                @endcanany
             </ul>
         </div>
         <!-- #Menu -->
