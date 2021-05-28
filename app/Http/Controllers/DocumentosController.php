@@ -25,13 +25,13 @@ class DocumentosController extends Controller
                 'recibos',
                 'cliente',
                 'ruta'
-            ])->where('TIPODOCU', '=', 'FA')->find($id);
+            ])->find($id);
         } else {
             $data = Tfacnda::with([
                 'recibos',
                 'cliente',
                 'ruta'
-            ])->where('TIPODOCU', '=', 'NE')->find($id);
+            ])->find($id);
         }
 
         return response()->json($data);

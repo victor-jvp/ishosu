@@ -35,8 +35,8 @@ class RecibosController extends Controller
 
         $dolares   = "100, 50, 20, 10, 5, 1, 0.5";
         $bolivares = "500000, 200000, 100000, 50000";
-        $facturas  = Tfachisa::all();
-        $notas     = Tfacnda::all();
+        $facturas  = Tfachisa::where('TIPODOCU', '=', 'FA')->get();
+        $notas     = Tfacnda::where('TIPODOCU', '=', 'NE')->get();
         $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
         $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
 
@@ -47,8 +47,8 @@ class RecibosController extends Controller
     {
         $dolares   = "100, 50, 20, 10, 5, 1, 0.5";
         $bolivares = "500000, 200000, 100000, 50000";
-        $facturas  = Tfachisa::all();
-        $notas     = Tfacnda::all();
+        $facturas  = Tfachisa::where('TIPODOCU', '=', 'FA')->get();
+        $notas     = Tfacnda::where('TIPODOCU', '=', 'NE')->get();
         $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
         $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
 
