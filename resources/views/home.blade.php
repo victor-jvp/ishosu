@@ -2,13 +2,15 @@
 @section('title', 'Inicio')
 
 @section('content')
-    @if(session("info"))
+<section class="content">
+    @if(Session::has("info"))
     <div class="alert bg-red alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                 aria-hidden="true">×</span></button>
-        {{ session("info") }}
+        {{ Session::get("info") }}
     </div>
     @endif
+</section>
 @endsection
 
 @section('styles')
