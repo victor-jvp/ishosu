@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -12,6 +13,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
     use HasRoles;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -47,5 +49,25 @@ class User extends Authenticatable
     public function tuser()
     {
         return $this->hasOne(Tuser::class, "LOGIN", "username");
+    }
+
+    public function documentosCreatedBy()
+    {
+        return $this->hasMany(ReciboCab::class, "created_by");
+    }
+
+    public function documentosUpdatedBy()
+    {
+        return $this->hasMany(ReciboCab::class, "updated_by");
+    }
+
+    public function relacionesCreatedBy()
+    {
+        return $this->hasMany(ReciboCab::class, "created_by");
+    }
+
+    public function relacionesUpdatedBy()
+    {
+        return $this->hasMany(ReciboCab::class, "updated_by");
     }
 }

@@ -21,17 +21,17 @@ class RoleSeeder extends Seeder
 
         Permission::create(['name' => 'config.users.index'])->assignRole($role1);
         Permission::create(['name' => 'config.users.create'])->assignRole($role1);
-        Permission::create(['name' => 'config.users.edit'])->assignRole($role1);
+        Permission::create(['name' => 'config.users.update'])->assignRole($role1);
         Permission::create(['name' => 'config.users.delete'])->assignRole($role1);
 
         Permission::create(['name' => 'recibos.index'])->syncRoles([$role1, $role2, $role3]);
         Permission::create(['name' => 'recibos.create'])->syncRoles([$role1, $role2, $role3]);
-        Permission::create(['name' => 'recibos.edit'])->syncRoles([$role1, $role2, $role3]);
+        Permission::create(['name' => 'recibos.update'])->syncRoles([$role1, $role2, $role3]);
         Permission::create(['name' => 'recibos.delete'])->syncRoles([$role1, $role2, $role3]);
 
         Permission::create(['name' => 'relaciones.index'])->syncRoles([$role1, $role2, $role3]);
         Permission::create(['name' => 'relaciones.create'])->syncRoles([$role1, $role2, $role3]);
-        Permission::create(['name' => 'relaciones.edit'])->syncRoles([$role1, $role2, $role3]);
+        Permission::create(['name' => 'relaciones.update'])->syncRoles([$role1, $role2, $role3]);
         Permission::create(['name' => 'relaciones.delete'])->syncRoles([$role1, $role2, $role3]);
     }
 }
