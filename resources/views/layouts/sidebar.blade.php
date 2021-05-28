@@ -60,7 +60,7 @@
                 </li>
                 <li class="header">CONFIGURACIONES</li>
                 <li class="{{ request()->is('config/users*') ? 'active' : '' }}">
-                    <a href="{{ route('users.index') }}">
+                    <a href="{{ route('config.users.index') }}">
                         <i class="material-icons">group</i>
                         <span>Usuarios</span>
                     </a>
