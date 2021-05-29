@@ -78,6 +78,10 @@
                                         <input name="tipo_doc" type="radio" id="tipo_doc_ne" value="NE"
                                                class="tipo_doc with-gap radio-col-indigo"/>
                                         <label for="tipo_doc_ne">Nota de Entrega</label>
+
+                                        <input name="tipo_doc" type="radio" id="tipo_doc_nd" value="ND"
+                                               class="tipo_doc with-gap radio-col-indigo"/>
+                                        <label for="tipo_doc_nd">Nota de Débito</label>
                                     </div>
                                 </div>
 
@@ -299,10 +303,17 @@
                                         </table>
                                     </div>
                                     <div class="col-sm-6">
-                                        <div class="row">
 
-                                        </div>
                                         <div class="row">
+                                            <div class="col-sm-4">
+                                                <p><b>Tasa de Cambio Doc.</b></p>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="tasa_cambio"
+                                                            name="tasa_cambio" readonly value="0">
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="col-sm-4">
                                                 <p><b>Total Cobrado Doc $.</b></p>
                                                 <div class="form-group">
@@ -312,12 +323,52 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <p><b>Total a Cobrar</b></p>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto"
+                                                            id="total_por_cobrar" name="total_por_cobrar" readonly
+                                                            value="0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p><b>Tipo de cobro</b></p>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <select class="form-control show-tick" required
+                                                            data-container="body" data-title="Seleccione..."
+                                                            name="tipo_cobro" id="tipo_cobro">
+                                                            <option value="total">Total del Documento</option>
+                                                            <option value="desc">Descuento</option>
+                                                            <option value="espec">Negociación Especial</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <p><b>%</b></p>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto"
+                                                            id="porcentaje" name="porcentaje"
+                                                            value="0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
                                             <div class="col-sm-4">
                                                 <p><b>Total Monto Ret. Bs.</b></p>
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="text" class="form-control monto" id="monto_doc_ret"
-                                                            name="monto_doc_ret" readonly value="0">
+                                                        <input type="text" class="form-control monto" id="monto_ret_vef"
+                                                            name="monto_ret_vef" readonly value="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -325,8 +376,8 @@
                                                 <p><b>Total Monto Ret. $.</b></p>
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="text" class="form-control monto" id="monto_doc_ret"
-                                                            name="monto_doc_ret" readonly value="0">
+                                                        <input type="text" class="form-control monto" id="monto_ret_usd"
+                                                            name="monto_ret_usd" readonly value="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -531,6 +582,10 @@
                 UpdateMontos()
             })
 
+            $("#tipo_cobro").on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                UpdateTipoCobro($(this).val())
+            })
+
             $("#nro_ne, #nro_fa").on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
                 LoadDocData($(this).val())
             })
@@ -622,6 +677,24 @@
                 });
             }
         });
+
+        function UpdateTipoCobro()
+        {
+            $("#total_por_cobrar").prop("readonly", true)
+            tipo_cobro = $("#tipo_cobro").val()
+            moneda = ($("#tipo_moneda_usd").prop("checked")) ? "usd" : "vef"
+            if (tipo_cobro == "total") {
+                const total = $(`#total_${moneda}`).val()
+                $("#total_por_cobrar").val( total )
+            }
+            if (tipo_cobro == "desc") {
+                $("#total_por_cobrar").prop("readonly", false)
+            }
+            if (tipo_cobro == "espec") {
+                $("#total_por_cobrar").val( $(`#total_${moneda}`).val() )
+                $("#total_por_cobrar").prop("readonly", false)
+            }
+        }
 
         function ChangeTipoPago() {
             if ($("#tipo_pago_tran").prop("checked")) {
@@ -863,24 +936,24 @@
 
 
                     $("#id_ruta").val(resp.CODIRUTA)
-                    $("#ruta").val(resp.ruta.NOMBVEND)
+                    $("#ruta").val((resp.ruta) ? resp.ruta.NOMBVEND : "")
                     //Fill doc table data
-                    const baseImp = parseFloat(resp.IMPUBRUT);
-                    const iva = parseFloat(resp.IMPU1);
-                    const totalIva = baseImp * ( iva / 100);
+
+                    const totalIva = parseFloat(resp.IMPUBRUT);
+                    const baseImp = resp.TOTADOCU - totalIva
                     const montoRet = totalIva * (75 / 100);
-                    $("#subtotal_vef").val(resp.TOTABRUT.toFixed(2))
-                    $("#subtotal_usd").val((resp.TOTABRUT / resp.CAMBDOL).toFixed(3))
-                    $("#descuento_vef").val(resp.DESCUENTOG.toFixed(2))
-                    $("#descuento_usd").val((resp.DESCUENTOG / resp.CAMBDOL).toFixed(3))
+                    $("#subtotal_vef").val(resp.TOTABRUT)
+                    $("#subtotal_usd").val( toTrunc(resp.TOTABRUT / resp.CAMBDOL, 3))
+                    $("#descuento_vef").val(resp.DESCUENTOG)
+                    $("#descuento_usd").val( toTrunc(resp.DESCUENTOG / resp.CAMBDOL, 3))
                     $("#exento_vef").val()
                     $("#exento_usd").val()
-                    $("#base_vef").val(baseImp.toFixed(2))
-                    $("#base_usd").val( (baseImp / resp.CAMBDOL).toFixed(3) )
-                    $("#iva_vef").val(totalIva.toFixed(2))
-                    $("#iva_usd").val((totalIva / resp.CAMBDOL).toFixed(3))
-                    $("#total_vef").val(resp.TOTADOCU.toFixed(2))
-                    $("#total_usd").val((resp.TOTADOCU / resp.CAMBDOL).toFixed(3))
+                    $("#base_vef").val( baseImp.toFixed(2) )
+                    $("#base_usd").val( toTrunc(baseImp / resp.CAMBDOL, 3) )
+                    $("#iva_vef").val(totalIva)
+                    $("#iva_usd").val( toTrunc(totalIva / resp.CAMBDOL, 3))
+                    $("#total_vef").val(resp.TOTADOCU)
+                    $("#total_usd").val( toTrunc(resp.TOTADOCU / resp.CAMBDOL, 3))
 
                     $("#monto_doc_vef").val(resp.TOTADOCU)
                     $("#tasa_cambio").val(resp.CAMBDOL)
@@ -889,13 +962,11 @@
 
                     $("#ret_iva").prop("checked", resp.cliente.AGENTERET)
                     if (resp.cliente.AGENTERET) {
-
-                        $("#total_grav").val(baseImp.toFixed(2))
-                        $("#monto_doc_ret").val(montoRet.toFixed(2))
+                        $("#monto_ret_vef").val(montoRet.toFixed(2))
+                        $("#monto_ret_usd").val(toTrunc(montoRet / resp.CAMBDOL, 3))
 
                         // $("#div_ret_iva").show()
                     } else {
-                        $("#total_grav").val(0)
                         $("#monto_doc_ret").val(0)
                         // $("#div_ret_iva").hide()
                     }
@@ -916,6 +987,10 @@
 
                 }
             })
+        }
+
+        function toTrunc(value,n){
+            return Math.floor(value*Math.pow(10,n))/(Math.pow(10,n));
         }
     </script>
 @endsection

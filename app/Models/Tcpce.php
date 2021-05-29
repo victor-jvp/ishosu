@@ -5,18 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tuser extends Model
+class Tcpce extends Model
 {
     use HasFactory;
 
     // protected $connection   = "ishosu";
-    protected $table        = "tuser";
+    protected $table        = 'tcpce';
     public    $incrementing = false;
-    protected $primaryKey   = "LOGIN";
+    protected $primaryKey   = "CODICLIE";
     protected $keyType      = "string";
-
-    public function user()
-    {
-        return $this->hasOne(User::class, "username");
-    }
+    protected $casts        = [
+        "AGENTERET" => "boolean",
+    ];
 }
