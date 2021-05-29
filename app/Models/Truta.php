@@ -9,7 +9,7 @@ class Truta extends Model
 {
     use HasFactory;
 
-    // protected $connecion = "ishosu";
+    // protected $connection = "ishosu";
     protected $table        = 'truta';
     public    $incrementing = false;
     protected $primaryKey   = "CODIRUTA";

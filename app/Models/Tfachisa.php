@@ -12,7 +12,7 @@ class Tfachisa extends Model
 {
     use HasFactory;
 
-    // protected $connecion = "ishosu";
+    protected $connection   = "ishosu";
     protected $table        = "tfachisa";
     public    $incrementing = false;
     protected $primaryKey   = "NUMEDOCU";
@@ -20,7 +20,8 @@ class Tfachisa extends Model
     protected $casts        = [
         'FECHA'    => "datetime:Y-m-d",
         'TOTADOCU' => "double",
-        "CAMBDOL"  => "double"
+        "CAMBDOL"  => "double",
+        "TIPODOCU" => "string"
     ];
     protected $appends      = [
         "cobrado_usd",
