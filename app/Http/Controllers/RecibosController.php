@@ -37,6 +37,22 @@ class RecibosController extends Controller
         return view("cobranzas.recibos.show", compact("recibo"));
     }
 
+    public function create()
+    {
+        if (!auth()->user()->can("recibos.create")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
+        $dolares   = "100, 50, 20, 10, 5, 1, 0.5";
+        $bolivares = "500000, 200000, 100000, 50000";
+        $facturas  = Tfachisa::where('TIPODOCU', '=', 'FA')->orderBy('NUMEDOCU', 'desc')->limit(10000)->get();
+        $notas     = Tfacnda::where('TIPODOCU', '=', 'NE')->orderBy('NUMEDOCU', 'desc')->limit(10000)->get();
+        $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
+        $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
+
+        return view('cobranzas.recibos.create', compact('dolares', 'bolivares', 'facturas', 'notas', 'banks_e', 'banks_r'));
+    }
+
     public function edit($id)
     {
         if (!auth()->user()->can("recibos.update")) {
@@ -53,22 +69,6 @@ class RecibosController extends Controller
         $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
 
         return view('cobranzas.recibos.edit', compact('recibo', 'dolares', 'bolivares', 'facturas', 'notas', 'banks_e', 'banks_r'));
-    }
-
-    public function create()
-    {
-        if (!auth()->user()->can("recibos.create")) {
-            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
-        }
-
-        $dolares   = "100, 50, 20, 10, 5, 1, 0.5";
-        $bolivares = "500000, 200000, 100000, 50000";
-        $facturas  = Tfachisa::where('TIPODOCU', '=', 'FA')->orderBy('NUMEDOCU', 'desc')->get();
-        $notas     = Tfacnda::where('TIPODOCU', '=', 'NE')->orderBy('NUMEDOCU', 'desc')->get();
-        $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
-        $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
-
-        return view('cobranzas.recibos.create', compact('dolares', 'bolivares', 'facturas', 'notas', 'banks_e', 'banks_r'));
     }
 
     public function store(Request $request)

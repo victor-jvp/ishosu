@@ -10,11 +10,11 @@ class Tfacnda extends Model
 {
     use HasFactory;
 
-    protected $connection = "ishosu";
-    protected $table = "tfacnda";
-    public $incrementing = false;
+    // protected $connection = "ishosu";
+    protected $table      = "tfacnda";
+    public $incrementing  = false;
     protected $primaryKey = "NUMEDOCU";
-    protected $keyType = "string";
+    protected $keyType    = "string";
     protected $casts = [
         'FECHA'    => "datetime:Y-m-d",
         'TOTADOCU' => "double",
