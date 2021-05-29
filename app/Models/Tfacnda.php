@@ -10,7 +10,7 @@ class Tfacnda extends Model
 {
     use HasFactory;
 
-    // protected $connecion = "ishosu";
+    protected $connection = "ishosu";
     protected $table = "tfacnda";
     public $incrementing = false;
     protected $primaryKey = "NUMEDOCU";
@@ -19,6 +19,7 @@ class Tfacnda extends Model
         'FECHA'    => "datetime:Y-m-d",
         'TOTADOCU' => "double",
         "CAMBDOL"  => "double",
+        "TIPODOCU" => "string",
     ];
     protected $appends = [
         "total_cobrado"

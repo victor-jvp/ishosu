@@ -171,84 +171,170 @@
                                     </div>
                                 </div>
 
-                                <div class="row clearfix">
-                                    <div class="col-sm-2">
-                                        <p><b>Total Doc. Bs.</b></p>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control monto" id="monto_doc_vef"
-                                                       name="monto_doc_vef" readonly value="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <p><b>Total Doc. $</b></p>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control monto" id="monto_doc_usd"
-                                                       readonly name="monto_doc_usd" value="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <p><b>Tasa de Cambio</b></p>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control monto" id="tasa_cambio" readonly
-                                                       name="tasa_cambio" value="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <p><b>Vuelto</b></p>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control monto" id="vuelto" value="0"
-                                                       name="vuelto">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-2">
-                                        <p><b>Saldo Documento</b></p>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control monto" id="saldo_doc" readonly
-                                                       name="saldo_doc" value="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="row">
-                                    <div class="col-sm-2">
-                                        <p><b>Total Cobrado Doc $.</b></p>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control monto" id="total_cobrado"
-                                                       name="total_cobrado" readonly value="0">
-                                            </div>
-                                        </div>
+                                    <div class="col-sm-6">
+                                        <table class="table table-bordered table-hover table-condensed" style="width: 100%">
+                                            <thead class="bg-grey">
+                                                <th class="text-center">Datos del Documento</th>
+                                                <th class="text-center" style="width: 30%;">Bs.</th>
+                                                <th class="text-center" style="width: 30%;">$</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class="text-right">Subtotal</th>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="subtotal_vef" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="subtotal_usd" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-right">Descuento</th>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="descuento_vef" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="descuento_usd" value="0" disabled>
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-right">Exento</th>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="exento_vef" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="exento_usd" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-right">Base Imponible</th>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="base_vef" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="base_usd" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-right">Iva 16%</th>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="iva_vef" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="iva_usd" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-right">Total</th>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="total_vef" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-right" style="padding-bottom: 0px">
+                                                        <div class="form-group" style="margin-bottom: 0px">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control monto"
+                                                                    id="total_usd" value="0" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="col-sm-2">
-                                        <p><b>Total Gravable Bs.</b></p>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control monto" id="total_grav"
-                                                     readonly value="0">
-                                            </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+
                                         </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <p><b>Total Monto Ret. Bs.</b></p>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control monto" id="monto_doc_ret"
-                                                    name="monto_doc_ret" readonly value="0">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <p><b>Total Cobrado Doc $.</b></p>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="total_cobrado"
+                                                            name="total_cobrado" readonly value="0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p><b>Total Monto Ret. Bs.</b></p>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="monto_doc_ret"
+                                                            name="monto_doc_ret" readonly value="0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p><b>Total Monto Ret. $.</b></p>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="monto_doc_ret"
+                                                            name="monto_doc_ret" readonly value="0">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+
 
                                 <div class="row">
                                     <div class="col-sm-12 table-responsive" style="margin-bottom: 0px">
@@ -778,20 +864,33 @@
 
                     $("#id_ruta").val(resp.CODIRUTA)
                     $("#ruta").val(resp.ruta.NOMBVEND)
+                    //Fill doc table data
+                    const baseImp = parseFloat(resp.IMPUBRUT);
+                    const iva = parseFloat(resp.IMPU1);
+                    const totalIva = baseImp * ( iva / 100);
+                    const montoRet = totalIva * (75 / 100);
+                    $("#subtotal_vef").val(resp.TOTABRUT.toFixed(2))
+                    $("#subtotal_usd").val((resp.TOTABRUT / resp.CAMBDOL).toFixed(3))
+                    $("#descuento_vef").val(resp.DESCUENTOG.toFixed(2))
+                    $("#descuento_usd").val((resp.DESCUENTOG / resp.CAMBDOL).toFixed(3))
+                    $("#exento_vef").val()
+                    $("#exento_usd").val()
+                    $("#base_vef").val(baseImp.toFixed(2))
+                    $("#base_usd").val( (baseImp / resp.CAMBDOL).toFixed(3) )
+                    $("#iva_vef").val(totalIva.toFixed(2))
+                    $("#iva_usd").val((totalIva / resp.CAMBDOL).toFixed(3))
+                    $("#total_vef").val(resp.TOTADOCU.toFixed(2))
+                    $("#total_usd").val((resp.TOTADOCU / resp.CAMBDOL).toFixed(3))
+
                     $("#monto_doc_vef").val(resp.TOTADOCU)
                     $("#tasa_cambio").val(resp.CAMBDOL)
 
-                    const montoFacturaUsd = (resp.TOTADOCU / resp.CAMBDOL)
-                    $("#monto_doc_usd").val(montoFacturaUsd.toFixed(2))
                     $("#total_cobrado").val(resp.total_cobrado.toFixed(2))
 
                     $("#ret_iva").prop("checked", resp.cliente.AGENTERET)
                     if (resp.cliente.AGENTERET) {
-                        const impBruto = parseFloat(resp.IMPUBRUT);
-                        const iva = parseFloat(resp.IMPU1);
-                        const totalIva = impBruto * ( iva / 100);
-                        const montoRet = totalIva * (75 / 100);
-                        $("#total_grav").val(impBruto.toFixed(2))
+
+                        $("#total_grav").val(baseImp.toFixed(2))
                         $("#monto_doc_ret").val(montoRet.toFixed(2))
 
                         // $("#div_ret_iva").show()
@@ -801,10 +900,9 @@
                         // $("#div_ret_iva").hide()
                     }
 
-
                     $("#agente_ret").prop("checked", resp.cliente.AGENTERET)
 
-                    UpdateMontos();
+                    //UpdateMontos();
                 },
                 error: function (resp) {
 
