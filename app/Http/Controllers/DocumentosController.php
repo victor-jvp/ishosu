@@ -51,15 +51,16 @@ class DocumentosController extends Controller
             $result['results'] = Tcpce::select(
                     "NUMEDOCU AS text",
                     "NUMEDOCU AS id",
+                    "NUMEAFEC",
+                    "TIPOAFEC",
                     "FECHA",
                     "CODICLIE",
                     "MONTNOTA AS TOTADOCU",
                     "EXENTO",
                     "IMPUESTO AS TOTABRUT",
-                    "CAMBDOL",
                     "IMPU1 AS IVA",
                     "TIPODOCU"
-                )->with(['recibos', 'cliente', 'ruta'])
+                )->with(['recibos', 'cliente', 'faAfectada', 'neAfectada'])
                 ->where("TIPODOCU", "=", "ND")
                 ->where("NUMEDOCU", "LIKE", "%{$id}%")
                 ->orderby('NUMEDOCU', 'desc')
