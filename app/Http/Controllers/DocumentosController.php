@@ -10,54 +10,56 @@ use Illuminate\Support\Facades\DB;
 
 class DocumentosController extends Controller
 {
-    //
-    public function details(Request $request)
-    {
-        $data = [];
-
-        $id       = $request->input("id");
-        $tipo_doc = $request->input('tipo_doc');
-
-        if ($tipo_doc == "FA") { // Si es Factura
-            $data = Tfachisa::with([
-                'recibos',
-                'cliente',
-                'ruta'
-            ])->find($id);
-        } else {
-            $data = Tfacnda::with([
-                'recibos',
-                'cliente',
-                'ruta'
-            ])->find($id);
-        }
-
-        return response()->json($data);
-    }
-
     public function ajaxSearchById(Request $request)
     {
 
-        $id       = $request->get("id");
+        $id   = $request->get("id");
         $tipo = $request->get("tipo");
+        $select = array(
+            "NUMEDOCU AS text",
+            "NUMEDOCU AS id",
+            "FECHA",
+            "CODICLIE",
+            "CODIRUTA",
+            "IMPUBRUT",
+            "TOTADOCU",
+            "DESCUENTOG",
+            "TOTABRUT",
+            "CAMBDOL",
+            "IMPU1 AS IVA",
+            "TIPODOCU"
+        );
 
         $result = [];
         if ($tipo == "FA") {
-            $result['results'] = Tfachisa::select("NUMEDOCU AS text", "NUMEDOCU AS id")
+            $result['results'] = Tfachisa::select($select)
+                ->with(['recibos', 'cliente', 'ruta'])
                 ->where("TIPODOCU", "=", "FA")
                 ->where("NUMEDOCU", "LIKE", "%{$id}%")
                 ->orderby('NUMEDOCU', 'desc')
                 ->get()->toArray();
         }
         if ($tipo == "NE") {
-            $result['results'] = Tfacnda::select("NUMEDOCU AS text", "NUMEDOCU AS id")
+            $result['results'] = Tfacnda::select($select)
+                ->with(['recibos', 'cliente', 'ruta'])
                 ->where("TIPODOCU", "=", "NE")
                 ->where("NUMEDOCU", "LIKE", "%{$id}%")
                 ->orderby('NUMEDOCU', 'desc')
                 ->get()->toArray();
         }
         if ($tipo == "ND") {
-            $result['results'] = Tcpce::select("NUMEDOCU AS text", "NUMEDOCU AS id")
+            $result['results'] = Tcpce::select(
+                    "NUMEDOCU AS text",
+                    "NUMEDOCU AS id",
+                    "FECHA",
+                    "CODICLIE",
+                    "MONTNOTA AS TOTADOCU",
+                    "EXENTO",
+                    "IMPUESTO AS TOTABRUT",
+                    "CAMBDOL",
+                    "IMPU1 AS IVA",
+                    "TIPODOCU"
+                )->with(['recibos', 'cliente', 'ruta'])
                 ->where("TIPODOCU", "=", "ND")
                 ->where("NUMEDOCU", "LIKE", "%{$id}%")
                 ->orderby('NUMEDOCU', 'desc')
