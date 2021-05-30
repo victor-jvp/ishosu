@@ -83,10 +83,10 @@
     @endphp
     @foreach($relacion->recibos as $recibo)
         @php
-            $totalMontoDoc =+ $recibo->MONTO_DOC_USD;
-            $totalRecibidos =+ $recibo->montoRecibido;
-            $totalSaldoDoc =+ $recibo->SALDO_DOC;
-            $totalVuelto =+ $recibo->VUELTO;
+            $totalMontoDoc += $recibo->MONTO_DOC_USD;
+            $totalRecibidos += $recibo->montoRecibido;
+            $totalSaldoDoc += $recibo->SALDO_DOC;
+            $totalVuelto += $recibo->VUELTO;
         @endphp
         <tr>
             <td class="text-center" style="padding: 3px;">{{ $recibo->idZero }}</td>
