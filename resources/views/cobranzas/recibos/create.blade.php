@@ -359,6 +359,11 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-sm-4">
+                                            <input type="checkbox" id="md_checkbox_26" class="filled-in chk-col-blue"
+                                                checked="">
+                                            <label for="md_checkbox_26">Aplicar Monto de Retención</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -574,10 +579,6 @@
             UpdateTipoCobro($(this).val())
         })
 
-        $("#nro_ne, #nro_fa").on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-            LoadDocData($(this).val())
-        })
-
         $("#vuelto").change(function (e) {
             UpdateMontos()
         })
@@ -635,6 +636,11 @@
                 }
             }
         })
+    })
+
+    $("#nro_documento").on("select2:select", function(e){
+        let data = e.params.data
+        LoadDocData(data);
     })
 
     $('#form_submit').validate({
@@ -936,88 +942,57 @@
         $("#denominacion").html(options).selectpicker('refresh')
     }
 
-    function LoadDocData(nro_documento) {
-        if (nro_documento == "") {
-            return
+    function LoadDocData(resp) {
+        $("#fecha_documento").val(moment(resp.FECHA).format("YYYY-MM-DD"))
+        $("#id_cliente").val(resp.CODICLIE)
+        $("#cliente").val((resp.cliente.NOMBCLIE).trim())
+        $("#ret_iva").prop("checked", false);
+
+
+        $("#id_ruta").val( resp.CODIRUTA ?? null )
+        $("#vendedor").val( (resp.ruta) ? resp.ruta.NOMBVEND : null)
+        //Fill doc table data
+
+        const totalIva = resp.IMPUBRUT
+        const totalBrut = resp.TOTABRUT
+        const exento = (resp.TIPODOCU == "ND") ? resp.EXENTO : parseFloat( resp.TOTADOCU - resp.TOTABRUT )
+        const totalDocu = (resp.TIPODOCU == "ND") ? resp.EXENTO + resp.TOTABRUT : resp.TOTADOCU
+        const baseImp = totalDocu - totalIva
+        const montoRet = totalIva * (75 / 100);
+        const descuento = (resp.TIPODOCU != "ND") ? resp.DESCUENTOG : 0
+
+        $("#subtotal_vef").val(totalBrut)
+        $("#subtotal_usd").val(toTrunc(totalBrut / resp.CAMBDOL, 3))
+        $("#descuento_vef").val(descuento)
+        $("#descuento_usd").val(toTrunc(descuento / resp.CAMBDOL, 3))
+        $("#exento_vef").val(exento.toFixed(2))
+        $("#exento_usd").val( toTrunc(exento / resp.CAMBDOL, 3))
+        $("#base_vef").val(baseImp.toFixed(2))
+        $("#base_usd").val(toTrunc(baseImp / resp.CAMBDOL, 3))
+        $("#iva_vef").val(totalIva)
+        $("#iva_usd").val(toTrunc(totalIva / resp.CAMBDOL, 3))
+        $("#total_vef").val(totalDocu.toFixed(2))
+        $("#total_usd").val(toTrunc(totalDocu / resp.CAMBDOL, 3))
+
+        $("#monto_doc_vef").val()
+        $("#tasa_cambio").val(resp.CAMBDOL)
+
+        $("#total_cobrado").val(resp.total_cobrado.toFixed(2))
+
+        $("#ret_iva").prop("checked", resp.cliente.AGENTERET)
+        if (resp.cliente.AGENTERET) {
+            $("#monto_ret_vef").val(montoRet.toFixed(2))
+            $("#monto_ret_usd").val(toTrunc(montoRet / resp.CAMBDOL, 3))
+
+            // $("#div_ret_iva").show()
+        } else {
+            $("#monto_doc_ret").val(0)
+            // $("#div_ret_iva").hide()
         }
-        const tipo_doc = $("input[name=tipo_doc]:checked").val()
 
-        $.ajax({
-            url: "{{ route('documentos.details') }}",
-            dataType: 'JSON',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            data: {
-                id: nro_documento,
-                tipo_doc: tipo_doc,
-            },
-            success: function (resp) {
-                if (resp == null) {
-                    swal("Aviso", "La consulta del documento no tiene información. Intente nuevamente",
-                        "warning")
-                    return
-                }
+        $("#agente_ret").prop("checked", resp.cliente.AGENTERET)
 
-                $("#fecha_documento").val(moment(resp.FECHA).format("YYYY-MM-DD"))
-                $("#id_cliente").val(resp.CODICLIE)
-                $("#cliente").val((resp.cliente.NOMBCLIE).trim())
-                $("#ret_iva").prop("checked", false);
-
-
-                $("#id_ruta").val(resp.CODIRUTA)
-                $("#vendedor").val((resp.ruta) ? resp.ruta.NOMBVEND : "")
-                //Fill doc table data
-
-                const totalIva = parseFloat(resp.IMPUBRUT);
-                const baseImp = resp.TOTADOCU - totalIva
-                const montoRet = totalIva * (75 / 100);
-                $("#subtotal_vef").val(resp.TOTABRUT)
-                $("#subtotal_usd").val(toTrunc(resp.TOTABRUT / resp.CAMBDOL, 3))
-                $("#descuento_vef").val(resp.DESCUENTOG)
-                $("#descuento_usd").val(toTrunc(resp.DESCUENTOG / resp.CAMBDOL, 3))
-                $("#exento_vef").val()
-                $("#exento_usd").val()
-                $("#base_vef").val(baseImp.toFixed(2))
-                $("#base_usd").val(toTrunc(baseImp / resp.CAMBDOL, 3))
-                $("#iva_vef").val(totalIva)
-                $("#iva_usd").val(toTrunc(totalIva / resp.CAMBDOL, 3))
-                $("#total_vef").val(resp.TOTADOCU)
-                $("#total_usd").val(toTrunc(resp.TOTADOCU / resp.CAMBDOL, 3))
-
-                $("#monto_doc_vef").val(resp.TOTADOCU)
-                $("#tasa_cambio").val(resp.CAMBDOL)
-
-                $("#total_cobrado").val(resp.total_cobrado.toFixed(2))
-
-                $("#ret_iva").prop("checked", resp.cliente.AGENTERET)
-                if (resp.cliente.AGENTERET) {
-                    $("#monto_ret_vef").val(montoRet.toFixed(2))
-                    $("#monto_ret_usd").val(toTrunc(montoRet / resp.CAMBDOL, 3))
-
-                    // $("#div_ret_iva").show()
-                } else {
-                    $("#monto_doc_ret").val(0)
-                    // $("#div_ret_iva").hide()
-                }
-
-                $("#agente_ret").prop("checked", resp.cliente.AGENTERET)
-
-                //UpdateMontos();
-            },
-            error: function (resp) {
-
-                if (result == undefined || result == null) {
-                    swal('Error en el proceso',
-                        'Error al procesar los datos. Intente nuevamente',
-                        'error')
-                } else {
-                    swal(result.title, result.message, result.result);
-                }
-
-            }
-        })
+        UpdateMontos();
     }
 
     function toTrunc(value, n) {
