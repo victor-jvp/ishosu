@@ -48,6 +48,21 @@
                                 {{-- <h2 class="card-inside-title">Floating Label Examples</h2> --}}
                                 <div class="row clearfix">
                                     <div class="col-sm-4">
+                                        <p><b>Tipo de Documento</b></p>
+                                        <input name="tipo_doc" type="radio" id="tipo_doc_fa" value="FA"
+                                            class="tipo_doc with-gap radio-col-indigo" checked />
+                                        <label for="tipo_doc_fa">Factura</label>
+
+                                        <input name="tipo_doc" type="radio" id="tipo_doc_ne" value="NE"
+                                            class="tipo_doc with-gap radio-col-indigo" />
+                                        <label for="tipo_doc_ne">Nota de Entrega</label>
+
+                                        <input name="tipo_doc" type="radio" id="tipo_doc_nd" value="ND"
+                                            class="tipo_doc with-gap radio-col-indigo" />
+                                        <label for="tipo_doc_nd">Nota de Débito</label>
+                                    </div>
+
+                                    <div class="col-sm-4">
                                         <p><b>Moneda</b></p>
                                         <input name="tipo_moneda" type="radio" id="tipo_moneda_usd" value="USD"
                                                class="tipo_moneda with-gap radio-col-indigo" checked/>
@@ -69,54 +84,21 @@
                                         <label for="tipo_pago_tran">Transferencia</label>
                                     </div>
 
-                                    <div class="col-sm-4">
-                                        <p><b>Tipo de Documento</b></p>
-                                        <input name="tipo_doc" type="radio" id="tipo_doc_fa" value="FA"
-                                               class="tipo_doc with-gap radio-col-indigo" checked/>
-                                        <label for="tipo_doc_fa">Factura</label>
 
-                                        <input name="tipo_doc" type="radio" id="tipo_doc_ne" value="NE"
-                                               class="tipo_doc with-gap radio-col-indigo"/>
-                                        <label for="tipo_doc_ne">Nota de Entrega</label>
-
-                                        <input name="tipo_doc" type="radio" id="tipo_doc_nd" value="ND"
-                                               class="tipo_doc with-gap radio-col-indigo"/>
-                                        <label for="tipo_doc_nd">Nota de Débito</label>
-                                    </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-sm-3" id="div_fa">
-                                        <p><b>Nro. Factura</b></p>
+                                        <p><b>Nro. Documento</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <select class="form-control show-tick" data-live-search="true" required
                                                         data-container="body" data-size="10"
                                                         data-title="Seleccione..." name="nro_documento" id="nro_fa">
-                                                    @foreach ($facturas as $item)
-                                                        <option
-                                                            value="{{ $item->NUMEDOCU }}">{{ $item->NUMEDOCU }}</option>
-                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3" id="div_ne">
-                                        <p><b>Nro. Nota de Entrega</b></p>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <select class="form-control show-tick" data-live-search="true" required
-                                                        data-container="body" data-size="10"
-                                                        data-title="Seleccione..." name="nro_documento" id="nro_ne">
-                                                    @foreach ($notas as $item)
-                                                        <option
-                                                            value="{{ $item->NUMEDOCU }}">{{ $item->NUMEDOCU }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div class="col-sm-3">
                                         <p><b>Fecha Documento</b></p>
                                         <div class="form-group">
@@ -512,11 +494,18 @@
     <link href="{{ asset('plugins/bootstrap-select/css/bootstrap-select.css') }}" rel="stylesheet"/>
     <!-- JQuery DataTable Css -->
     <link href="{{ asset('plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css') }}" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/ajax-bootstrap-select/1.4.5/css/ajax-bootstrap-select.min.css"
+        integrity="sha512-k9D6Fzp2d9BxewMk+gYYmlGYxv7DLVC46DiCRv3DrAwBkbjSBZCnhBhWCugLuhkTS36QgQ3h7BwkkkfkJk7cXQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
 
 @section('scripts')
     <!-- Select Plugin Js -->
     <script src="{{ asset('plugins/bootstrap-select/js/bootstrap-select.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ajax-bootstrap-select/1.4.5/js/ajax-bootstrap-select.min.js"
+        integrity="sha512-HExUHcDgB9r00YwaaDe5z9lTFmTChuW9lDkPEnz+6/I26/mGtwg58OHI324cfqcnejphCl48MHR3SFQzIGXmOA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Jquery DataTable Plugin Js -->
     <script src="{{ asset('plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js') }}"></script>
@@ -615,6 +604,49 @@
                 groupSeparator: '.',
                 autoGroup: true,
             });
+
+            $("#nro_doc").selectpicker({
+                liveSearch: true
+            )}.ajaxSelectPicker({
+                    ajax: {
+                        url: '{{ route("documentos.ajaxSearchById") }}',
+                        data: function () {
+                            var params = {
+                                q: '{{{q}}}'
+                            };
+                            if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
+                                params.GroupID = gModel.selectedGroup().ContactGroupID;
+                            }
+                            return params;
+                        }
+                    },
+                    locale: {
+                        emptyTitle: 'Search for contact...'
+                    },
+                    preprocessData: function(data){
+                        var contacts = [];
+                        if(data.hasOwnProperty('Contacts')){
+                            var len = data.Contacts.length;
+                            for(var i = 0; i < len; i++){
+                                var curr = data.Contacts[i];
+                                contacts.push(
+                                    {
+                                        'value': curr.ContactID,
+                                        'text': curr.FirstName + ' ' + curr.LastName,
+                                        'data': {
+                                            'icon': 'icon-person',
+                                            'subtext': 'Internal'
+                                        },
+                                        'disabled': false
+                                    }
+                                );
+                            }
+                        }
+                        return contacts;
+                    },
+                    preserveSelected: false
+                });
+            })
         })
 
         $('#form_submit').validate({
@@ -714,13 +746,14 @@
         }
 
         function ChangeTipoDoc() {
-            if ($("#tipo_doc_fa").prop("checked")) { // Si es una factura
+            if ($("#tipo_doc_fa").prop("checked") || $("#tipo_doc_nd").prop("checked")) { // Si es una factura o una nota de debito
                 $("#div_fa").show();
                 $("#div_ne").hide();
                 $("#nro_fa").prop('disabled', false)
                 $("#nro_ne").prop('disabled', true)
                 $("#tasa_cambio").prop("readonly", false)
-            } else { // Si es una nota de entrega
+            }
+            if ($("#tipo_doc_ne").prop("checked")){ // Si es una nota de entrega
                 $("#div_fa").hide();
                 $("#div_ne").show();
                 $("#nro_fa").prop('disabled', true)

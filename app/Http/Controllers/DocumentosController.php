@@ -36,4 +36,9 @@ class DocumentosController extends Controller
 
         return response()->json($data);
     }
+
+    public function ajaxSearchById()
+    {
+
+    }
 }

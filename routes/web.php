@@ -33,6 +33,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cobranzas/recibos/print/{id}', [RecibosController::class, 'print'])->name('recibos.print');
     Route::resource('cobranzas/recibos', RecibosController::class);
     Route::post('documentos/details', [DocumentosController::class, 'details'])->name('documentos.details');
+    Route::post('documentos/ajaxSearchById', [DocumentosController::class, 'ajaxSearchById'])->name('documentos.ajaxSearchById');
 
     Route::resource('config/users', UsersController::class)->only(['index', 'create', 'store', 'edit', 'update'])->names('config.users');
     Route::delete('config/users/delete/{id}', [UsersController::class, 'delete'])->name('config.users.delete');
