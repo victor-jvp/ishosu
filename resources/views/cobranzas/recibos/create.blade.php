@@ -360,9 +360,8 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
-                                            <input type="checkbox" id="md_checkbox_26" class="filled-in chk-col-blue"
-                                                checked="">
-                                            <label for="md_checkbox_26">Aplicar Monto de Retención</label>
+                                            <input type="checkbox" id="chk_monto_ret" class="filled-in chk-col-blue">
+                                            <label for="chk_monto_ret">Aplicar Monto de Retención</label>
                                         </div>
                                     </div>
                                 </div>
@@ -761,10 +760,12 @@
     }
 
     function CleanDocFields() {
+        $("#nro_documento").val(null).trigger("change");
+
         $("#id_ruta, #vendedor, #cliente, #fecha_documento, #id_cliente").val(null)
         $("#monto_doc_vef, #monto_doc_usd, #tasa_cambio, #vuelto, #saldo_doc, #total_cobrado").val(0)
-        $("#nro_fa, #nro_ne").val(null).selectpicker('refresh')
-
+        $("#subtotal_vef, #subtotal_usd, #descuento_vef, #descuento_usd, #exento_vef, #exento_usd").val(0)
+        $("#base_vef, #base_usd, #iva_vef, #iva_usd, #total_vef, #total_usd").val(0)
         $("#ret_iva").prop("checked", false)
     }
 
@@ -943,6 +944,7 @@
     }
 
     function LoadDocData(resp) {
+        console.log(resp)
         $("#fecha_documento").val(moment(resp.FECHA).format("YYYY-MM-DD"))
         $("#id_cliente").val(resp.CODICLIE)
         $("#cliente").val((resp.cliente.NOMBCLIE).trim())
@@ -953,41 +955,51 @@
         $("#vendedor").val( (resp.ruta) ? resp.ruta.NOMBVEND : null)
         //Fill doc table data
 
-        const totalIva = resp.IMPUBRUT
+        const totalIva  = resp.IMPUBRUT
         const totalBrut = resp.TOTABRUT
-        const exento = (resp.TIPODOCU == "ND") ? resp.EXENTO : parseFloat( resp.TOTADOCU - resp.TOTABRUT )
+        const exento    = (resp.TIPODOCU == "ND") ? resp.EXENTO : parseFloat( resp.TOTADOCU - resp.TOTABRUT )
         const totalDocu = (resp.TIPODOCU == "ND") ? resp.EXENTO + resp.TOTABRUT : resp.TOTADOCU
-        const baseImp = totalDocu - totalIva
-        const montoRet = totalIva * (75 / 100);
+        const baseImp   = totalDocu - totalIva
+        const montoRet  = totalIva * (75 / 100);
         const descuento = (resp.TIPODOCU != "ND") ? resp.DESCUENTOG : 0
+        let cambdol     = 0;
+        if (resp.TIPODOCU == "ND") {
+            if (resp.TIPOAFEC == "FA") {
+                cambDol = resp.fa_afectada.CAMBDOL
+            }else{
+                cambDol = resp.ne_afectada.CAMBDOL
+            }
+        }else{
+            cambDol = resp.CAMBDOL
+        }
 
         $("#subtotal_vef").val(totalBrut)
-        $("#subtotal_usd").val(toTrunc(totalBrut / resp.CAMBDOL, 3))
+        $("#subtotal_usd").val(toTrunc(totalBrut / cambDol, 3))
         $("#descuento_vef").val(descuento)
-        $("#descuento_usd").val(toTrunc(descuento / resp.CAMBDOL, 3))
+        $("#descuento_usd").val(toTrunc(descuento / cambDol, 3))
         $("#exento_vef").val(exento.toFixed(2))
-        $("#exento_usd").val( toTrunc(exento / resp.CAMBDOL, 3))
+        $("#exento_usd").val( toTrunc(exento / cambDol, 3))
         $("#base_vef").val(baseImp.toFixed(2))
-        $("#base_usd").val(toTrunc(baseImp / resp.CAMBDOL, 3))
+        $("#base_usd").val(toTrunc(baseImp / cambDol, 3))
         $("#iva_vef").val(totalIva)
-        $("#iva_usd").val(toTrunc(totalIva / resp.CAMBDOL, 3))
+        $("#iva_usd").val(toTrunc(totalIva / cambDol, 3))
         $("#total_vef").val(totalDocu.toFixed(2))
-        $("#total_usd").val(toTrunc(totalDocu / resp.CAMBDOL, 3))
+        $("#total_usd").val(toTrunc(totalDocu / cambDol, 3))
 
         $("#monto_doc_vef").val()
-        $("#tasa_cambio").val(resp.CAMBDOL)
+        $("#tasa_cambio").val(cambDol)
 
         $("#total_cobrado").val(resp.total_cobrado.toFixed(2))
 
         $("#ret_iva").prop("checked", resp.cliente.AGENTERET)
         if (resp.cliente.AGENTERET) {
-            $("#monto_ret_vef").val(montoRet.toFixed(2))
-            $("#monto_ret_usd").val(toTrunc(montoRet / resp.CAMBDOL, 3))
+        $("#monto_ret_vef").val(montoRet.toFixed(2))
+        $("#monto_ret_usd").val(toTrunc(montoRet / cambDol, 3))
 
-            // $("#div_ret_iva").show()
+        // $("#div_ret_iva").show()
         } else {
-            $("#monto_doc_ret").val(0)
-            // $("#div_ret_iva").hide()
+        $("#monto_doc_ret").val(0)
+        // $("#div_ret_iva").hide()
         }
 
         $("#agente_ret").prop("checked", resp.cliente.AGENTERET)
