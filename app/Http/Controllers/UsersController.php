@@ -59,7 +59,7 @@ class UsersController extends Controller
                 'title' => "Aviso.",
                 "text"  => "Se ha guardado el registro con éxito.",
                 "type"  => "success",
-                "goto"  => route('config.users')
+                "goto"  => route('config.users.index')
             ];
             return response()->json($result);
         } catch (\Exception $e) {
@@ -117,7 +117,7 @@ class UsersController extends Controller
                 'title' => "Aviso.",
                 "text"  => "Se ha guardado el registro con éxito.",
                 "type"  => "success",
-                "goto"  => route('config.users')
+                "goto"  => route('config.users.index')
             ];
             return response()->json($result);
         } catch (\Exception $e) {
