@@ -885,7 +885,7 @@
                 return
             }
 
-            let cantidad = $("#cant_billetes").val()
+            let cantidad = $("#cant_billetes").inputmask("unmaskedvalue")
             if (cantidad == "") {
                 swal("Aviso", 'El campo "Cantidad" no puede ser vacio.', "warning")
                 return
@@ -907,7 +907,7 @@
             const total = parseFloat(cantidad * denominacion)
 
             table_montos.row.add([
-                parseInt(cantidad) + `<input type="hidden" name="bill_cant[]" value="${parseInt(cantidad)}">`,
+                parseFloat(cantidad) + `<input type="hidden" name="bill_cant[]" value="${parseFloat(cantidad)}">`,
                 parseFloat(denominacion) +
                 `${simbolo}<input type="hidden" name="bill_deno[]" value="${parseFloat(denominacion)}">`,
                 "",

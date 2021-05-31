@@ -177,26 +177,16 @@
                     @endphp
                     @foreach ($billetes as $item)
                     @php
-                    $cantidad = "";
-                    $denominacion = $item;
-                    $totalUsd = 0;
-                    $totalVef = 0;
+                        $denominacion = $item;
+                        $valCantidad = App\Models\ReciboDet::where("id_recibo", $recibo->id)->where("DENOMINACION", $item)->sum("CANTIDAD");
+                        $valDenominacion = App\Models\ReciboDet::where("id_recibo", $recibo->id)->where("DENOMINACION", $item)->max("DENOMINACION");
+                        $totalUsd = $valCantidad * $valDenominacion;
+                        $totalVef = $totalUsd * $recibo->TASA_CAMB;
+                        $sumTotalUsd += $totalUsd;
+                        $sumTotalVef += $totalVef;
                     @endphp
-                    @foreach($recibo->reciboDet as $bill)
-                    @if($bill->DENOMINACION == $item)
-                    @php
-                    $cantidad = $bill->CANTIDAD;
-                    $denominacion = $bill->DENOMINACION;
-                    $totalUsd = $bill->DENOMINACION * $bill->CANTIDAD;
-                    $totalVef = $totalUsd * $recibo->TASA_CAMB;
-
-                    $sumTotalUsd += $totalUsd;
-                    $sumTotalVef += $totalVef;
-                    @endphp
-                    @endif
-                    @endforeach
                     <tr class="text-center">
-                        <td>{{ $cantidad }}</td>
+                        <td>{{ $valCantidad }}</td>
                         <td>{{ number_format($denominacion, 2, ".", ",") }}</td>
                         <td>{{ number_format($totalUsd, 2) }}</td>
                         <td>{{ number_format($totalVef, 2) }}</td>

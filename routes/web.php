@@ -31,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('cobranzas/recibos/print/{id}', [RecibosController::class, 'print'])->name('recibos.print');
+    Route::get('cobranzas/recibos/marcar-vuelto/{id}', [RecibosController::class, 'marcar_vuelto'])->name('recibos.marcar_vuelto');
     Route::resource('cobranzas/recibos', RecibosController::class);
     Route::post('documentos/ajaxSearchById', [DocumentosController::class, 'ajaxSearchById'])->name('documentos.ajaxSearchById');
 

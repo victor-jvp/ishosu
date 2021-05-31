@@ -20,7 +20,14 @@ class RecibosController extends Controller
             return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
         }
 
-        $recibos = ReciboCab::whereNull("id_relacion")->where("created_by", auth()->user()->getAuthIdentifier())->get();
+        if (auth()->user()->hasRole(["Admin", "Supervisor"])) {
+            $recibos = ReciboCab::whereNull("id_relacion")
+                ->get();
+        }else{
+            $recibos = ReciboCab::whereNull("id_relacion")
+                ->where("created_by", auth()->user()->getAuthIdentifier())
+                ->get();
+        }
 
         return view('cobranzas.recibos.index', compact('recibos'));
     }
@@ -196,6 +203,39 @@ class RecibosController extends Controller
             $pdf = PDF::loadView('cobranzas.reports.recibo_vef', compact("recibo", "billetes"))->setPaper($paper_size);
             return $pdf->stream("Recibo {$recibo->idZero}.pdf");
 //            return view("cobranzas.reports.recibo_vef", compact("recibo", "billetes"));
+        }
+    }
+
+    public function marcar_vuelto($id)
+    {
+        if (!auth()->user()->can("recibos.update")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $recibo = ReciboCab::find($id);
+            $recibo->VUELTO_ENT = true;
+            $recibo->save();
+
+            DB::commit();
+            return response()->json([
+                'title' => "Aviso.",
+                "text"  => "Se ha guardado el registro con éxito.",
+                "type"  => "success",
+                "goto"  => route("recibos.index")
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollback();
+
+            return response()->json([
+                'title' => "Atención.",
+                "text"  => "Error en guardado del registro. Intente nuevamente.",
+                "type"  => "error",
+                "error" => $e->getMessage()
+            ]);
         }
     }
 }

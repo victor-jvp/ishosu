@@ -29,6 +29,7 @@ class CreateRecibosTables extends Migration
             $table->double("MONTO_RET")->default(0);
             $table->double("TASA_CAMB")->default(0);
             $table->double("VUELTO")->default(0);
+            $table->boolean("VUELTO_ENT")->default(false);
             $table->double("SALDO_DOC")->default(0);
 
 

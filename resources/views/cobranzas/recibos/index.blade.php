@@ -69,7 +69,10 @@
                                             <th>Monto Doc.</th>
                                             <th>Monto Recibo</th>
                                             <th>Saldo</th>
-                                            {{--                                        <th>Realizado por</th>--}}
+                                            <th>Vuelto</th>
+                                            @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
+                                            <th>Realizado por</th>
+                                            @endif
                                             <th>Opciones</th>
                                         </tr>
                                         </thead>
@@ -94,7 +97,24 @@
                                                 <td>{{number_format( ($item->TIPO_MONEDA == "USD") ? $item->MONTO_DOC_USD: $item->MONTO_DOC_VEF, 2, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->montoRecibido, 2, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->SALDO_DOC, 2, ".", "," ) }}</td>
-                                                {{--                                        <td>{{ $item->createdBy->name }}</td>--}}
+                                                <td>
+                                                    @if ($item->VUELTO >0)
+                                                        @if (!$item->VUELTO_ENT)
+                                                        <a href="javascript:void(0)" data-toggle="tooltip" onclick="EntregarVuelto({{ $item->id }})"
+                                                            data-placement="auto" data-original-title="Procesar Entrega">
+                                                            {{number_format( $item->VUELTO, 2, ".", "," ) }}
+                                                        </a>
+                                                        @else
+                                                        <span data-toggle="tooltip" data-placement="auto"
+                                                            data-original-title="Vuelto Entregado">{{number_format( $item->VUELTO, 2, ".", "," ) }}</span>
+                                                        @endif
+                                                    @else
+                                                        {{number_format( $item->VUELTO, 2, ".", "," ) }}
+                                                    @endif
+                                                </td>
+                                                @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
+                                                <td>{{ $item->createdBy->name }}</td>
+                                                @endif
                                                 <td>
                                                     <div class="btn-group" role="group">
                                                          <a href="{{ route("recibos.edit", $item->id) }}"
@@ -223,8 +243,8 @@
                     [0, 'desc']
                 ],
                 columnDefs: [
-                    {targets: [7,8,9], className: "dt-body-right"},
-                    {targets: 10, sorting: false, width: "15%"}
+                    {targets: [7,8,9,10], className: "dt-body-right"},
+                    {targets: {{ (Auth::user()->hasRole(["Admin", "Supervisor"])) ? 12 : 11 }}, sorting: false, width: "15%"}
                 ]
             })
             $("#btnModalRelacionar").click(function (e) {
@@ -318,6 +338,51 @@
                 })
             });
         }
+
+        function EntregarVuelto(id)
+        {
+            swal({
+                title: "Confirmar",
+                text: "Confirme registrar la entrega del vuelto.",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#2b982b",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true,
+            }, function () {
+                $.ajax({
+                    url: `{{ url("cobranzas/recibos/marcar-vuelto/") }}/${id}`,
+                    dataType: 'JSON',
+                    type: 'GET',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    timeout: 10000,
+                    success: function (result) {
+                        swal({
+                            title: result.title,
+                            text: result.text,
+                            type: result.type,
+                            showCancelButton: false,
+                            closeOnConfirm: true
+                        }, function () {
+                            if (result.type == "success") window.location.href = result.goto
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error.error)
+                        swal(error.title, error.message, error.result);
+                    },
+                    statusCode: {
+                        500: function () {
+                            swal('Error en el proceso', 'Error al procesar los datos. Intente nuevamente', 'error')
+                        }
+                    }
+                })
+            });
+        }
+
+
 
     </script>
 @endsection
