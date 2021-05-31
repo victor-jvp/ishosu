@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Bank;
 use App\Models\ReciboCab;
 use App\Models\ReciboDet;
-use App\Models\Tfachisa;
-use App\Models\Tfacnda;
 use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,18 +59,18 @@ class RecibosController extends Controller
         try {
             $reciboCab = new ReciboCab();
 
-            $reciboCab->FECHA         = date("Y-m-d H:i:s");
-            $reciboCab->TIPO_MONEDA   = $request->tipo_moneda;
-            $reciboCab->TIPO_PAGO     = $request->tipo_pago;
-            $reciboCab->TIPO_DOC      = $request->tipo_doc;
-            $reciboCab->NUMEDOCU      = $request->nro_documento;
-            $reciboCab->TIPO_COBRO    = $request->tipo_cobro;
-            $reciboCab->PORC          = ($request->tipo_cobro == "porc") ? Str::remove(",", $request->porcentaje) : null;
-            $reciboCab->MONTO_DOC     = Str::remove(",", $request->total_a_cobrar);
-            $reciboCab->MONTO_DOC_RET = Str::remove(",", $request->monto_ret);
-            $reciboCab->TASA_CAMB     = Str::remove(",", $request->tasa_cambio);
-            $reciboCab->VUELTO        = Str::remove(",", $request->vuelto);
-            $reciboCab->SALDO_DOC     = Str::remove(",", $request->saldo_doc);
+            $reciboCab->FECHA       = date("Y-m-d H:i:s");
+            $reciboCab->TIPO_MONEDA = $request->tipo_moneda;
+            $reciboCab->TIPO_PAGO   = $request->tipo_pago;
+            $reciboCab->TIPO_DOC    = $request->tipo_doc;
+            $reciboCab->NUMEDOCU    = $request->nro_documento;
+            $reciboCab->TIPO_COBRO  = $request->tipo_cobro;
+            $reciboCab->PORC        = ($request->tipo_cobro == "porc") ? Str::remove(",", $request->porcentaje) : 0;
+            $reciboCab->MONTO_DOC   = Str::remove(",", $request->total_a_cobrar);
+            $reciboCab->MONTO_RET   = Str::remove(",", $request->monto_ret);
+            $reciboCab->TASA_CAMB   = Str::remove(",", $request->tasa_cambio);
+            $reciboCab->VUELTO      = Str::remove(",", $request->vuelto);
+            $reciboCab->SALDO_DOC   = Str::remove(",", $request->saldo_doc);
 
             $reciboCab->save();
 

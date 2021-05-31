@@ -38,6 +38,11 @@ class ReciboCab extends Model
         return $this->belongsTo(Tfacnda::class, "NUMEDOCU")->orderBy('NUMEDOCU', 'desc');
     }
 
+    public function notaDebito()
+    {
+        return $this->belongsTo(Tcpce::class, "NUMEDOCU")->orderBy('NUMEDOCU', 'desc');
+    }
+
     public function reciboDet()
     {
         return $this->hasMany(ReciboDet::class, "id_recibo");
