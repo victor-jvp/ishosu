@@ -43,28 +43,12 @@ class RecibosController extends Controller
             return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
         }
 
-        $dolares   = "100, 50, 20, 10, 5, 1, 0.5";
+        $dolares   = "100, 50, 20, 10, 5, 1,Centimos...";
         $bolivares = "500000, 200000, 100000, 50000";
         $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
         $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
 
         return view('cobranzas.recibos.create', compact('dolares', 'bolivares', 'banks_e', 'banks_r'));
-    }
-
-    public function edit($id)
-    {
-        if (!auth()->user()->can("recibos.update")) {
-            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
-        }
-
-        $recibo = ReciboCab::find($id);
-
-        $dolares   = "100, 50, 20, 10, 5, 1, 0.5";
-        $bolivares = "500000, 200000, 100000, 50000";
-        $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
-        $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
-
-        return view('cobranzas.recibos.edit', compact('recibo', 'dolares', 'bolivares', 'banks_e', 'banks_r'));
     }
 
     public function store(Request $request)
@@ -82,8 +66,9 @@ class RecibosController extends Controller
             $reciboCab->TIPO_PAGO     = $request->tipo_pago;
             $reciboCab->TIPO_DOC      = $request->tipo_doc;
             $reciboCab->NUMEDOCU      = $request->nro_documento;
-            $reciboCab->MONTO_DOC_VEF = Str::remove(",", $request->monto_doc_vef);
-            $reciboCab->MONTO_DOC_USD = Str::remove(",", $request->monto_doc_usd);
+            $reciboCab->TIPO_COBRO    = $request->tipo_cobro;
+            $reciboCab->PORC          = Str::remove(",", $request->porcentaje);
+            $reciboCab->MONTO_DOC     = Str::remove(",", $request->total_a_cobrar);
             $reciboCab->MONTO_DOC_RET = Str::remove(",", $request->monto_doc_ret);
             $reciboCab->TASA_CAMB     = Str::remove(",", $request->tasa_cambio);
             $reciboCab->VUELTO        = Str::remove(",", $request->vuelto);
@@ -137,6 +122,27 @@ class RecibosController extends Controller
                 "error" => $e->getMessage()
             ]);
         }
+    }
+
+    public function edit($id)
+    {
+        if (!auth()->user()->can("recibos.update")) {
+            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
+        }
+
+        $recibo = ReciboCab::find($id);
+
+        $dolares   = "100, 50, 20, 10, 5, 1,Centimos...";
+        $bolivares = "500000, 200000, 100000, 50000";
+        $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
+        $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
+
+        return view('cobranzas.recibos.edit', compact('recibo', 'dolares', 'bolivares', 'banks_e', 'banks_r'));
+    }
+
+    public function update()
+    {
+
     }
 
     public function destroy($id)

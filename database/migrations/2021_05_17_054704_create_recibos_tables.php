@@ -8,7 +8,6 @@ class CreateRecibosTables extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
@@ -24,8 +23,9 @@ class CreateRecibosTables extends Migration
             $table->string("TIPO_PAGO", 1)->nullable();
             $table->string("TIPO_DOC", 6)->nullable();
             $table->string("NUMEDOCU", 10)->nullable();
-            $table->double("MONTO_DOC_VEF")->nullable()->default(null);
-            $table->double("MONTO_DOC_USD")->nullable()->default(null);
+            $table->string("TIPO_COBRO")->nullable()->default(null);
+            $table->double("PORC")->nullable()->default(null);
+            $table->double("MONTO_DOC")->nullable()->default(null);
             $table->double("MONTO_DOC_RET")->nullable()->default(null);
             $table->double("TASA_CAMB")->nullable()->default(null);
             $table->double("VUELTO")->nullable()->default(null);
@@ -58,7 +58,6 @@ class CreateRecibosTables extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
