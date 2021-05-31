@@ -46,15 +46,13 @@
 </head>
 
 <body>
-
-@for($x = 0; $x < $copies; $x++)
     <table class="table-bordered" style="width: 100%;">
         <tr>
             <th colspan="10" style="font-size: 10pt; background-color: lightgrey">COMPROBANTE DE PAGO</th>
         </tr>
         <tr>
-            <td class="text-center" rowspan="2" colspan="3"
-                style="width: 150px; font-size: 11pt; font-weight: bold">{{ $recibo->idZero }}</td>
+            <td class="text-center" rowspan="2" colspan="3" style="width: 150px; font-size: 11pt; font-weight: bold">
+                {{ $recibo->idZero }}</td>
             <td class="text-right">CLIENTE:</td>
             <td class="text-center" colspan="3">
                 <b>{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODICLIE : $recibo->notaEntrega->CODICLIE }}
@@ -89,24 +87,25 @@
         </tr>
         <tr>
             <td class="text-center">
-                <b>Bs. {{ number_format(($recibo->TIPO_DOC == "FA") ? $recibo->factura->TOTADOCU : $recibo->notaEntrega->TOTADOCU, 2, ".", ",") }}</b>
+                <b>Bs.
+                    {{ number_format(($recibo->TIPO_DOC == "FA") ? $recibo->factura->TOTADOCU : $recibo->notaEntrega->TOTADOCU, 2, ".", ",") }}</b>
             </td>
             <td class="text-center">
                 @php
-                    if($recibo->TIPO_DOC == "FA")
-                    {
-                        $facturaDolar = $recibo->factura->TOTADOCU / $recibo->factura->CAMBDOL;
-                    }else{
-                        $facturaDolar = $recibo->notaEntrega->TOTADOCU / $recibo->notaEntrega->CAMBDOL;
-                    }
+                if($recibo->TIPO_DOC == "FA" || $recibo->TIPO_DOC == "ND")
+                {
+                $facturaDolar = $recibo->factura->TOTADOCU / $recibo->factura->CAMBDOL;
+                }else{
+                $facturaDolar = $recibo->notaEntrega->TOTADOCU / $recibo->notaEntrega->CAMBDOL;
+                }
                 @endphp
                 <b>$ {{ number_format($facturaDolar, 2, ".", ",") }}</b>
             </td>
-            <td class="text-center"><b>{{ "0.00" }}</b></td>
+            <td class="text-center"><b>{{ number_format($recibo->MONTO_DOC - $recibo->MONTO_RET, 2) }}</b></td>
             <td class="text-right">{{ __("DIFERENCIA:") }}</td>
             <td class="text-right" colspan="2" style="font-size: 10pt">
                 @php
-                    $diferencia = $facturaDolar - $recibo->montoRecibido;
+                $diferencia = $facturaDolar - $recibo->montoRecibido;
                 @endphp
                 <b>$ {{ number_format($diferencia, 2, ".", ",") }}</b>
             </td>
@@ -120,23 +119,23 @@
                     </tr>
                     <tr class="text-center">
                         @if ($recibo->SALDO_DOC > 0)
-                           <th>{{ number_format($recibo->montoRecibido, 2) ?? "0.00" }}</th>
-                           <th>{{ number_format($recibo->SALDO_DOC, 2) ?? "0.00" }}</th>
+                        <th>{{ number_format($recibo->montoRecibido, 2) ?? "0.00" }}</th>
+                        <th>{{ number_format($recibo->SALDO_DOC, 2) ?? "0.00" }}</th>
                         @else
-                            <th>0.00</th>
-                            <th>0.00</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
                         @endif
                     </tr>
                 </table>
             </td>
             <td class="text-center">
                 RENTENCION IVA<br>
-                <input type="checkbox" id="si" style="display: inline;"/><label for="si">SI</label>
-                <input type="checkbox" id="no" style="display: inline;"/><label for="no">NO</label>
+                <input type="checkbox" id="si" style="display: inline;" /><label for="si">SI</label>
+                <input type="checkbox" id="no" style="display: inline;" /><label for="no">NO</label>
             </td>
             <td class="text-right">MONTO RETENIDO: {{ __("0.00") }} Bs.</td>
-{{--            <td class="text-right" colspan="2">VUELTO</td>--}}
-{{--            <td class="text-right">{{ __("0.00") }}</td>--}}
+            {{--            <td class="text-right" colspan="2">VUELTO</td>--}}
+            {{--            <td class="text-right">{{ __("0.00") }}</td>--}}
 
             <td colspan="4">
                 <table class="table-bordered" style="width: 100%;">
@@ -150,11 +149,15 @@
                     </tr>
                     <tr class="text-right">
                         <td>TOTAL CANCELADO $:</td>
-                        <td><b>$ {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado : $recibo->notaEntrega->total_cobrado, 2) }}</b></td>
+                        <td><b>$
+                                {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado : $recibo->notaEntrega->total_cobrado, 2) }}</b>
+                        </td>
                     </tr>
                     <tr class="text-right">
                         <td>TOTAL CANCELADO BS.:</td>
-                        <td><b>Bs. {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado * $recibo->TASA_CAMB : $recibo->notaEntrega->total_cobrado * $recibo->TASA_CAMB, 2) }}</b></td>
+                        <td><b>Bs.
+                                {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado * $recibo->TASA_CAMB : $recibo->notaEntrega->total_cobrado * $recibo->TASA_CAMB, 2) }}</b>
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -169,42 +172,42 @@
                         <td class="text-center"><b>{{ __("MONTO BS") }}</b></td>
                     </tr>
                     @php
-                        $sumTotalUsd = 0;
-                        $sumTotalVef = 0;
+                    $sumTotalUsd = 0;
+                    $sumTotalVef = 0;
                     @endphp
                     @foreach ($billetes as $item)
-                        @php
-                            $cantidad = "";
-                            $denominacion = $item;
-                            $totalUsd = 0;
-                            $totalVef = 0;
-                        @endphp
-                        @foreach($recibo->reciboDet as $bill)
-                            @if($bill->DENOMINACION == $item)
-                                @php
-                                    $cantidad = $bill->CANTIDAD;
-                                    $denominacion = $bill->DENOMINACION;
-                                    $totalUsd = $bill->DENOMINACION * $bill->CANTIDAD;
-                                    $totalVef = $totalUsd * $recibo->TASA_CAMB;
+                    @php
+                    $cantidad = "";
+                    $denominacion = $item;
+                    $totalUsd = 0;
+                    $totalVef = 0;
+                    @endphp
+                    @foreach($recibo->reciboDet as $bill)
+                    @if($bill->DENOMINACION == $item)
+                    @php
+                    $cantidad = $bill->CANTIDAD;
+                    $denominacion = $bill->DENOMINACION;
+                    $totalUsd = $bill->DENOMINACION * $bill->CANTIDAD;
+                    $totalVef = $totalUsd * $recibo->TASA_CAMB;
 
-                                $sumTotalUsd += $totalUsd;
-                                $sumTotalVef += $totalVef;
-                                @endphp
-                            @endif
-                        @endforeach
-                        <tr class="text-center">
-                            <td>{{ $cantidad }}</td>
-                            <td>{{ number_format($denominacion, 2, ".", ",") }}</td>
-                            <td>{{ number_format($totalUsd, 2) }}</td>
-                            <td>{{ number_format($totalVef, 2) }}</td>
-                        </tr>
+                    $sumTotalUsd += $totalUsd;
+                    $sumTotalVef += $totalVef;
+                    @endphp
+                    @endif
+                    @endforeach
+                    <tr class="text-center">
+                        <td>{{ $cantidad }}</td>
+                        <td>{{ number_format($denominacion, 2, ".", ",") }}</td>
+                        <td>{{ number_format($totalUsd, 2) }}</td>
+                        <td>{{ number_format($totalVef, 2) }}</td>
+                    </tr>
                     @endforeach
                     <tr>
                         <td colspan="2" class="text-center" style="font-size: 9pt; font-weight: bold">TOTAL</td>
-                        <td class="text-center"
-                            style="font-size: 9pt; font-weight: bold">{{ number_format($sumTotalUsd, 2) }}</td>
-                        <td class="text-center"
-                            style="font-size: 9pt; font-weight: bold">{{ number_format($sumTotalVef, 2) }}</td>
+                        <td class="text-center" style="font-size: 9pt; font-weight: bold">
+                            {{ number_format($sumTotalUsd, 2) }}</td>
+                        <td class="text-center" style="font-size: 9pt; font-weight: bold">
+                            {{ number_format($sumTotalVef, 2) }}</td>
                     </tr>
                 </table>
             </td>
@@ -221,11 +224,6 @@
             <td colspan="3" style="padding: 5px 5px 15px;">Firma y Nombre</td>
         </tr>
     </table>
-    @if($x < ($copies-1))
-        <hr style="border-top: 1px dotted; border-bottom: none;">
-    @endif
-@endfor
-
 </body>
 
 </html>

@@ -24,12 +24,12 @@ class CreateRecibosTables extends Migration
             $table->string("TIPO_DOC", 6)->nullable();
             $table->string("NUMEDOCU", 10)->nullable();
             $table->string("TIPO_COBRO")->nullable()->default(null);
-            $table->double("PORC")->nullable()->default(null);
-            $table->double("MONTO_DOC")->nullable()->default(null);
-            $table->double("MONTO_DOC_RET")->nullable()->default(null);
-            $table->double("TASA_CAMB")->nullable()->default(null);
-            $table->double("VUELTO")->nullable()->default(null);
-            $table->double("SALDO_DOC")->nullable()->default(null);
+            $table->double("PORC")->nullable()->default(0);
+            $table->double("MONTO_DOC")->nullable()->default(0);
+            $table->double("MONTO_RET")->nullable()->default(0);
+            $table->double("TASA_CAMB")->nullable()->default(0);
+            $table->double("VUELTO")->nullable()->default(0);
+            $table->double("SALDO_DOC")->nullable()->default(0);
 
 
             $table->unsignedBigInteger("created_by");

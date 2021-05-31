@@ -67,9 +67,9 @@ class RecibosController extends Controller
             $reciboCab->TIPO_DOC      = $request->tipo_doc;
             $reciboCab->NUMEDOCU      = $request->nro_documento;
             $reciboCab->TIPO_COBRO    = $request->tipo_cobro;
-            $reciboCab->PORC          = Str::remove(",", $request->porcentaje);
+            $reciboCab->PORC          = ($request->tipo_cobro == "porc") ? Str::remove(",", $request->porcentaje) : null;
             $reciboCab->MONTO_DOC     = Str::remove(",", $request->total_a_cobrar);
-            $reciboCab->MONTO_DOC_RET = Str::remove(",", $request->monto_doc_ret);
+            $reciboCab->MONTO_DOC_RET = Str::remove(",", $request->monto_ret);
             $reciboCab->TASA_CAMB     = Str::remove(",", $request->tasa_cambio);
             $reciboCab->VUELTO        = Str::remove(",", $request->vuelto);
             $reciboCab->SALDO_DOC     = Str::remove(",", $request->saldo_doc);
@@ -187,17 +187,17 @@ class RecibosController extends Controller
         if($recibo->TIPO_MONEDA == "USD")
         {
             $billetes   = [100, 50, 20, 10, 5, 1, 0.5];
-            $copies = 3;
-            $pdf = PDF::loadView('cobranzas.reports.recibo_usd', compact("recibo", "billetes", "copies"))->setPaper("Letter", "portrait");
+            $paper_size= [0,0,612,396];
+            $pdf = PDF::loadView('cobranzas.reports.recibo_usd', compact("recibo", "billetes"))->setPaper($paper_size);
             return $pdf->stream("Recibo {$recibo->idZero}.pdf");
-//            return view("cobranzas.reports.recibo_usd", compact("recibo", "billetes", "copies"));
+//            return view("cobranzas.reports.recibo_usd", compact("recibo", "billetes"));
 
         }else{
             $billetes = [500000, 200000, 100000, 50000];
-            $copies = 3;
-            $pdf = PDF::loadView('cobranzas.reports.recibo_vef', compact("recibo", "billetes", "copies"))->setPaper("Letter", "portrait");
+
+            $pdf = PDF::loadView('cobranzas.reports.recibo_vef', compact("recibo", "billetes"))->setPaper($paper_size);
             return $pdf->stream("Recibo {$recibo->idZero}.pdf");
-//            return view("cobranzas.reports.recibo_vef", compact("recibo", "billetes", "copies"));
+//            return view("cobranzas.reports.recibo_vef", compact("recibo", "billetes"));
         }
     }
 }
