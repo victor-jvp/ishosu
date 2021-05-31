@@ -69,11 +69,13 @@
                                                    data-toggle="tooltip" data-placement="auto"
                                                    data-original-title="Detalles"><i class="material-icons">print</i>
                                                 </a>
+                                                @can('relacion.delete')
                                                 <button type="button" onclick="DeleteRow({{ $item->id }})"
                                                     class="btn btn-default btn-sm waves-effect" data-toggle="tooltip"
                                                     data-placement="auto" data-original-title="Borrar"><i
                                                         class="material-icons">delete</i>
                                                 </button>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
