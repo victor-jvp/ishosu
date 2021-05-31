@@ -192,7 +192,7 @@ class RecibosController extends Controller
 
         }else{
             $billetes = [500000, 200000, 100000, 50000];
-
+            $paper_size = [0, 0, 612, 396];
             $pdf = PDF::loadView('cobranzas.reports.recibo_vef', compact("recibo", "billetes"))->setPaper($paper_size);
             return $pdf->stream("Recibo {$recibo->idZero}.pdf");
 //            return view("cobranzas.reports.recibo_vef", compact("recibo", "billetes"));
