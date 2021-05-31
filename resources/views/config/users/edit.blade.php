@@ -64,7 +64,7 @@
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <input type="email" class="form-control" id="email" name="email"
-                                                    required value="{{ $user->email }}">
+                                                    value="{{ $user->email }}">
                                             </div>
                                         </div>
                                     </div>
