@@ -24,22 +24,10 @@ class Tfachisa extends Model
         "TIPODOCU" => "string"
     ];
     protected $appends      = [
-        "cobrado_usd",
-        "cobrado_vef",
         "total_cobrado"
     ];
 
-    public function getCobradoUsdAttribute()
-    {
-        return $this->recibos->where("TIPO_MONEDA", "=", "USD")->sum("MontoRecibido");
-    }
-
-    public function getCobradoVefAttribute()
-    {
-        return $this->recibos->where("TIPO_MONEDA", "=", "VEF")->sum("MontoRecibido");
-    }
-
-   public function getTotalCobradoAttribute()
+    public function getTotalCobradoAttribute()
     {
         $totalCobrado = 0;
         foreach ($this->recibos as $item) {

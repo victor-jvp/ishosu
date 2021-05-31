@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ReciboCab;
 use App\Models\Tcpce;
 use App\Models\Tfacnda;
 use App\Models\Tfachisa;
@@ -16,6 +17,7 @@ class DocumentosController extends Controller
         $id   = $request->get("id");
         $tipo = $request->get("tipo");
         $select = array(
+            "NUMEDOCU",
             "NUMEDOCU AS text",
             "NUMEDOCU AS id",
             "FECHA",
@@ -49,6 +51,7 @@ class DocumentosController extends Controller
         }
         if ($tipo == "ND") {
             $result['results'] = Tcpce::select(
+                    "NUMEDOCU",
                     "NUMEDOCU AS text",
                     "NUMEDOCU AS id",
                     "NUMEAFEC",

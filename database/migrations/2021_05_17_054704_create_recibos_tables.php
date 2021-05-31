@@ -22,14 +22,14 @@ class CreateRecibosTables extends Migration
             $table->string("TIPO_MONEDA", 6)->nullable();
             $table->string("TIPO_PAGO", 1)->nullable();
             $table->string("TIPO_DOC", 6)->nullable();
-            $table->string("NUMEDOCU", 10)->nullable();
-            $table->string("TIPO_COBRO")->nullable()->default(null);
-            $table->double("PORC")->nullable()->default(0);
-            $table->double("MONTO_DOC")->nullable()->default(0);
-            $table->double("MONTO_RET")->nullable()->default(0);
-            $table->double("TASA_CAMB")->nullable()->default(0);
-            $table->double("VUELTO")->nullable()->default(0);
-            $table->double("SALDO_DOC")->nullable()->default(0);
+            $table->string("NUMEDOCU", 9)->nullable();
+            $table->string("TIPO_COBRO", 10)->nullable()->default(null);
+            $table->double("PORC")->default(0);
+            $table->double("MONTO_DOC")->default(0);
+            $table->double("MONTO_RET")->default(0);
+            $table->double("TASA_CAMB")->default(0);
+            $table->double("VUELTO")->default(0);
+            $table->double("SALDO_DOC")->default(0);
 
 
             $table->unsignedBigInteger("created_by");
@@ -47,7 +47,7 @@ class CreateRecibosTables extends Migration
 
             $table->unsignedBigInteger("id_recibo");
 
-            $table->integer("CANTIDAD")->nullable();
+            $table->double("CANTIDAD")->nullable();
             $table->double("DENOMINACION")->nullable();
             $table->string("REFERENCIA", 55)->nullable();
             $table->double("MONTO")->nullable();
