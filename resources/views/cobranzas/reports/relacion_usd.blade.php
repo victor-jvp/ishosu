@@ -83,7 +83,7 @@
     @endphp
     @foreach($relacion->recibos as $recibo)
         @php
-            $totalMontoDoc += $recibo->MONTO_DOC_USD;
+            $totalMontoDoc += $recibo->MONTO_DOC - $recibo->MONTO_RET;
             $totalRecibidos += $recibo->montoRecibido;
             $totalSaldoDoc += $recibo->SALDO_DOC;
             $totalVuelto += $recibo->VUELTO;
@@ -99,7 +99,7 @@
             <td>{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODIRUTA."-".$recibo->factura->ruta->NOMBVEND : $recibo->notaEntrega->CODIRUTA."-".$recibo->notaEntrega->ruta->NOMBVEND }}</td>
             <td class="text-center" style="padding: 3px;">{{ $recibo->NUMEDOCU }}</td>
             <td class="text-right">
-                {{ number_format($recibo->MONTO_DOC_USD, 2) }}
+                {{ number_format($recibo->MONTO_DOC - $recibo->MONTO_RET, 2) }}
             </td>
             <td class="text-right" style="padding: 3px;">{{ number_format( $recibo->montoRecibido, 2, ".", "," ) }}</td>
             <td class="text-right">{{ number_format($recibo->SALDO_DOC, 2) }}</td>

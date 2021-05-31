@@ -87,25 +87,25 @@
         </tr>
         <tr>
             <td class="text-center">
-                <b>Bs.
-                    {{ number_format(($recibo->TIPO_DOC == "FA") ? $recibo->factura->TOTADOCU : $recibo->notaEntrega->TOTADOCU, 2, ".", ",") }}</b>
+                <b>Bs. {{ number_format(($recibo->TIPO_DOC == "FA") ? $recibo->factura->TOTADOCU : $recibo->notaEntrega->TOTADOCU, 2, ".", ",") }}</b>
             </td>
             <td class="text-center">
                 @php
                 if($recibo->TIPO_DOC == "FA" || $recibo->TIPO_DOC == "ND")
                 {
-                $facturaDolar = $recibo->factura->TOTADOCU / $recibo->factura->CAMBDOL;
+                    $facturaDolar = $recibo->factura->TOTADOCU / $recibo->factura->CAMBDOL;
                 }else{
-                $facturaDolar = $recibo->notaEntrega->TOTADOCU / $recibo->notaEntrega->CAMBDOL;
+                    $facturaDolar = $recibo->notaEntrega->TOTADOCU / $recibo->notaEntrega->CAMBDOL;
                 }
+                $totalCobrar = $recibo->MONTO_DOC - $recibo->MONTO_RET;
                 @endphp
                 <b>$ {{ number_format($facturaDolar, 2, ".", ",") }}</b>
             </td>
-            <td class="text-center"><b>{{ number_format($recibo->MONTO_DOC - $recibo->MONTO_RET, 2) }}</b></td>
+            <td class="text-center"><b>{{ number_format($totalCobrar, 2) }}</b></td>
             <td class="text-right">{{ __("DIFERENCIA:") }}</td>
             <td class="text-right" colspan="2" style="font-size: 10pt">
                 @php
-                $diferencia = $facturaDolar - $recibo->montoRecibido;
+                $diferencia = $totalCobrar - $recibo->montoRecibido;
                 @endphp
                 <b>$ {{ number_format($diferencia, 2, ".", ",") }}</b>
             </td>

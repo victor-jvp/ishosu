@@ -39,10 +39,16 @@ class CobranzasController extends Controller
 
             $relacion->save();
 
-            $recibos = ReciboCab::where("tipo_moneda", $request->tipo_moneda)
-                                ->whereNull("id_relacion")
-                                ->where("created_by", auth()->user()->getAuthIdentifier())
-                                ->get();
+            if (auth()->user()->hasRole(['Admin', 'Supervisor'])) {
+                $recibos = ReciboCab::where("tipo_moneda", $request->tipo_moneda)
+                                    ->whereNull("id_relacion")
+                                    ->get();
+            }else{
+                $recibos = ReciboCab::where("tipo_moneda", $request->tipo_moneda)
+                    ->whereNull("id_relacion")
+                    ->where("created_by", auth()->user()->getAuthIdentifier())
+                    ->get();
+            }
 
             foreach ($recibos as $recibo)
             {

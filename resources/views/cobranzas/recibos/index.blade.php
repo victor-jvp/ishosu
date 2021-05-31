@@ -128,7 +128,7 @@
 
                                 <!-- Modal Small Size -->
                                 <div class="modal fade" id="relacionModal" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title" id="smallModalLabel">Datos de los recibos a
@@ -155,7 +155,7 @@
                                                             <div class="form-line">
                                                                 <textarea name="comentario" id="comentario"
                                                                           class="form-control no-resize"
-                                                                          rows="10" placeholder="..."></textarea>
+                                                                          rows="4" placeholder="..."></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
