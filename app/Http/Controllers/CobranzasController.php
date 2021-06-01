@@ -41,17 +41,16 @@ class CobranzasController extends Controller
 
             if (auth()->user()->hasRole(['Admin', 'Supervisor'])) {
                 $recibos = ReciboCab::where("tipo_moneda", $request->tipo_moneda)
-                                    ->whereNull("id_relacion")
-                                    ->get();
-            }else{
+                    ->whereIn("id", $request->recibos)
+                    ->get();
+            } else {
                 $recibos = ReciboCab::where("tipo_moneda", $request->tipo_moneda)
                     ->whereNull("id_relacion")
                     ->where("created_by", auth()->user()->getAuthIdentifier())
                     ->get();
             }
 
-            foreach ($recibos as $recibo)
-            {
+            foreach ($recibos as $recibo) {
                 $recibo->id_relacion = $relacion->id;
                 $recibo->save();
             }
@@ -64,7 +63,6 @@ class CobranzasController extends Controller
                 "type"  => "success",
                 "goto"  => route("recibos.index")
             ]);
-
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             DB::rollback();
@@ -167,16 +165,15 @@ class CobranzasController extends Controller
   used with remote html or scripts is a major security problem (remote php injection) */
         $pdf->getDomPDF()->set_option("enable_php", true);
 
-        if($relacion->TIPO_MONEDA == "USD")
-        {
+        if ($relacion->TIPO_MONEDA == "USD") {
             $pdf->loadView('cobranzas.reports.relacion_usd', compact("relacion"))->setPaper("Letter", "portrait");
             return $pdf->stream("Recibo {$relacion->idZero}.pdf");
-//            return view("cobranzas.reports.$relacion_usd", compact("relacion", "billetes", "copies"));
+            //            return view("cobranzas.reports.$relacion_usd", compact("relacion", "billetes", "copies"));
 
-        }else{
+        } else {
             $pdf->loadView('cobranzas.reports.relacion_vef', compact("relacion"))->setPaper("Letter", "landscape");
             return $pdf->stream("Recibo {$relacion->idZero}.pdf");
-//            return view("cobranzas.reports.recibo_vef", compact("$relacion", "billetes", "copies"));
+            //            return view("cobranzas.reports.recibo_vef", compact("$relacion", "billetes", "copies"));
         }
     }
 }
