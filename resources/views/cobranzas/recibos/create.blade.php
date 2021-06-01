@@ -777,7 +777,8 @@
                 total_a_cobrar = parseFloat($(`#total_${moneda}`).inputmask('unmaskedvalue'))
             }
             if (tipo_cobro == "desc") {
-                total_a_cobrar = parseFloat($(`#total_${moneda}`).inputmask('unmaskedvalue'))
+                total_a_cobrar = parseFloat($(`#subtotal_${moneda}`).inputmask('unmaskedvalue'))
+                $("#total_a_cobrar").prop("readonly", false)
                 $("#porcentaje").prop("disabled", false).val(0).focus()
             }
             if (tipo_cobro == "espec") {
