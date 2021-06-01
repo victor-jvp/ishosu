@@ -59,7 +59,7 @@
                     -
                     {{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}</b>
             </td>
-            <td class="text-left" colspan="3">RUTA: {{--TODO: NOMBRE DEL ASESOR DE VENTAS--}}
+            <td class="text-left" colspan="3">RUTA:
                 <b>{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODIRUTA."-".$recibo->factura->ruta->NOMBVEND : $recibo->notaEntrega->CODIRUTA."-".$recibo->notaEntrega->ruta->NOMBVEND }}</b>
             </td>
         </tr>
@@ -130,10 +130,10 @@
             </td>
             <td class="text-center">
                 RENTENCION IVA<br>
-                <input type="checkbox" id="si" style="display: inline;" /><label for="si">SI</label>
-                <input type="checkbox" id="no" style="display: inline;" /><label for="no">NO</label>
+                <input type="checkbox" id="si" {{ ($recibo->MONTO_RET > 0) ? "checked" : "" }} style="display: inline;"/><label for="si">SI</label>
+                <input type="checkbox" id="no" {{ ($recibo->MONTO_RET <= 0) ? "checked" : "" }} style="display: inline;" /><label for="no">NO</label>
             </td>
-            <td class="text-right">MONTO RETENIDO: {{ __("0.00") }} Bs.</td>
+            <td class="text-center">MONTO RETENIDO: <br><b>{{ number_format($recibo->MONTO_RET, 2) }} </b></td>
             {{--            <td class="text-right" colspan="2">VUELTO</td>--}}
             {{--            <td class="text-right">{{ __("0.00") }}</td>--}}
 
@@ -163,6 +163,21 @@
             </td>
         </tr>
         <tr>
+            <td colspan="4" class="text-right">Tipo de Cobro:</td>
+            <td colspan="6"><b>
+                @switch($recibo->TIPO_COBRO)
+                @case("total")
+                    Monto total del documento.
+                    @break
+                @case("desc")
+                    Descuento al {{ $recibo->PORC }} %
+                    @break
+                @default
+                    Negociación Especial.
+                @endswitch</b>
+            </td>
+        </tr>
+        <tr>
             <td colspan="7">
                 <table class="table-bordered" style="width: 100%">
                     <tr>
@@ -178,8 +193,17 @@
                     @foreach ($billetes as $item)
                     @php
                         $denominacion = $item;
-                        $valCantidad = App\Models\ReciboDet::where("id_recibo", $recibo->id)->where("DENOMINACION", $item)->sum("CANTIDAD");
-                        $valDenominacion = App\Models\ReciboDet::where("id_recibo", $recibo->id)->where("DENOMINACION", $item)->max("DENOMINACION");
+                        if ($item != "0.5") {
+                            $valCantidad = App\Models\ReciboDet::where("id_recibo", $recibo->id)->where("DENOMINACION", $item)->sum("CANTIDAD");
+                            $valDenominacion = App\Models\ReciboDet::where("id_recibo", $recibo->id)->where("DENOMINACION", $item)->max("DENOMINACION");
+                        }else{
+                            $valCantidad = 0;
+                            if (App\Models\ReciboDet::where("id_recibo", $recibo->id)->where("DENOMINACION", "<", 1)->count() > 0 ) {
+                                $valCantidad = 1;
+                                $valDenominacion = App\Models\ReciboDet::where("id_recibo",$recibo->id)->where("DENOMINACION", "<", 1)->max("DENOMINACION");
+                                $denominacion = $valDenominacion;
+                            }
+                        }
                         $totalUsd = $valCantidad * $valDenominacion;
                         $totalVef = $totalUsd * $recibo->TASA_CAMB;
                         $sumTotalUsd += $totalUsd;
@@ -206,6 +230,7 @@
                 RECIBI CONFORME
             </td>
         </tr>
+
         <tr style="font-size: 9pt">
             <td colspan="5" style="padding: 5px 5px 15px;">
                 Analista de Caja: <b>{{ $recibo->createdBy->name }}</b>
