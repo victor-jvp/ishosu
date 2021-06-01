@@ -52,7 +52,7 @@
                             </ul>
                         </div>
                         <div class="body">
-                            <form action="{{ route('cobranzas.store') }}" method="post" id="form_submit">
+                            <form action="{{ route('cobranzas.store') }}" method="post" id="submit_relacion">
                                 @csrf()
                                 <div class="table-responsive">
                                     <table id="table" class="table table-striped table-hover dataTable js-exportable"
@@ -80,13 +80,17 @@
                                         @foreach($recibos as $item)
                                             <tr>
                                                 <td>
-                                                    {{--<input type="checkbox" id="md_checkbox_{{ $item->id }}"
-                                                           class="filled-in chk-col-indigo" checked=""
-                                                           value="{{ $item->id }}" name="recibos[]">
+                                                    @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
+                                                    <input type="checkbox" id="md_checkbox_{{ $item->id }}"
+                                                        class="filled-in chk-col-indigo" checked value="{{ $item->id }}"
+                                                        name="recibos[]">
                                                     <label for="md_checkbox_{{ $item->id }}">
                                                         <b>{{ str_pad($item->id,"6","0",STR_PAD_LEFT) }}</b>
-                                                    </label>--}}
+                                                    </label>
+                                                    @else
                                                     <b>{{ $item->idZero }}</b>
+                                                    <input type="hidden" name="recibos[]" value="{{ $item->id }}">
+                                                    @endif
                                                 </td>
                                                 <td>{{ $item->FECHA->format("d/m/Y") }}</td>
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? "Factura" : "Nota de Entrega" }}</td>
@@ -264,7 +268,7 @@
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true,
             }, function () {
-                const form = $("#form_submit")
+                const form = $("#submit_relacion")
                 $.ajax({
                     url: $(form).attr('action'),
                     dataType: 'JSON',
@@ -310,7 +314,7 @@
                 showLoaderOnConfirm: true,
             }, function () {
                 $.ajax({
-                    url: `{{ url("cobranzas/relaciones/") }}/${id}`,
+                    url: `{{ url("cobranzas/recibos/") }}/${id}`,
                     dataType: 'JSON',
                     type: 'DELETE',
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
