@@ -13,7 +13,6 @@ class DocumentosController extends Controller
 {
     public function ajaxSearchById(Request $request)
     {
-
         $id   = $request->get("id");
         $tipo = $request->get("tipo");
         $select = array(
