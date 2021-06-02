@@ -58,10 +58,6 @@ class RecibosController extends Controller
 
     public function store(Request $request)
     {
-        if (!auth()->user()->can("recibos.create")) {
-            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
-        }
-
         DB::beginTransaction();
         try {
             $reciboCab = new ReciboCab();
@@ -152,10 +148,6 @@ class RecibosController extends Controller
 
     public function destroy($id)
     {
-        if (!auth()->user()->can("recibos.delete")) {
-            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
-        }
-
         try {
             DB::beginTransaction();
 
@@ -208,10 +200,6 @@ class RecibosController extends Controller
 
     public function marcar_vuelto($id)
     {
-        if (!auth()->user()->can("recibos.update")) {
-            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
-        }
-
         try {
             DB::beginTransaction();
 

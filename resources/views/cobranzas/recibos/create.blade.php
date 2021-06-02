@@ -868,8 +868,12 @@
                 saldo_doc = parseFloat(total_a_cobrar - total_cobrado - total_recibido + vuelto)
                 console.log(total_a_cobrar, total_cobrado, total_recibido, vuelto)
             }
+            if ($("#tipo_moneda_usd").prop("checked")) { //si la moneda es usd, truncar a 3 decimales
+                $("#saldo_doc").val( toTrunc(saldo_doc, 3))
+            }else{ // si es vef redondear a 2
+                $("#saldo_doc").val( saldo_doc.toFixed(2))
+            }
 
-            $("#saldo_doc").val( saldo_doc.toFixed(2) )
 
             if ($("#tipo_doc_ne").prop("checked")) { // Si es nota de entrega calcular la tasa de cambio
                 const tasa_camb = parseFloat($("#total_vef").inputmask('unmaskedvalue') ?? 0) / total_recibido

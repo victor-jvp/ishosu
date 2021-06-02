@@ -66,8 +66,10 @@
                                             <th>Cod. Cliente</th>
                                             <th>Cliente</th>
                                             <th>Moneda</th>
-                                            <th>Monto Doc.</th>
-                                            <th>Monto Recibo</th>
+                                            <th class="text-center">Monto<br>Documento</th>
+                                            <th class="text-center">Monto<br>Recibo</th>
+                                            <th class="text-center">Monto<br>Retenido</th>
+                                            <th class="text-center">%<br>Descuento</th>
                                             <th>Saldo</th>
                                             <th>Vuelto</th>
                                             @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
@@ -98,8 +100,10 @@
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE : $item->notaEntrega->CODICLIE }}</td>
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE : $item->notaEntrega->cliente->NOMBCLIE }}</td>
                                                 <td>{{ $item->TIPO_MONEDA }}</td>
-                                                <td>{{number_format( ($item->TIPO_MONEDA == "USD") ? $item->MONTO_DOC_USD: $item->MONTO_DOC_VEF, 2, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->MONTO_DOC, 2, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->montoRecibido, 2, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->MONTO_RET, 2, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->PORC, 2, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->SALDO_DOC, 2, ".", "," ) }}</td>
                                                 <td>
                                                     @if ($item->VUELTO >0)
@@ -241,14 +245,14 @@
                 dom: 'Bfrtip',
                 responsive: true,
                 buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
+                    'copy', 'csv', 'excel'
                 ],
                 sorting: [
                     [0, 'desc']
                 ],
                 columnDefs: [
                     {targets: [7,8,9,10], className: "dt-body-right"},
-                    {targets: {{ (Auth::user()->hasRole(["Admin", "Supervisor"])) ? 12 : 11 }}, sorting: false, width: "15%"}
+                    {targets: {{ (Auth::user()->hasRole(["Admin", "Supervisor"])) ? 14 : 13 }}, sorting: false}
                 ]
             })
             $("#btnModalRelacionar").click(function (e) {
