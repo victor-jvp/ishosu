@@ -69,7 +69,7 @@
                                                    data-toggle="tooltip" data-placement="auto"
                                                    data-original-title="Detalles"><i class="material-icons">print</i>
                                                 </a>
-                                                @can('relaciones.delete')
+                                                @can('relacion.delete')
                                                 <button type="button" onclick="DeleteRow({{ $item->id }})"
                                                     class="btn btn-default btn-sm waves-effect" data-toggle="tooltip"
                                                     data-placement="auto" data-original-title="Borrar"><i
@@ -117,7 +117,7 @@
             dom: 'Bfrtip',
             responsive: true,
             buttons: [
-                'copy', 'csv', 'excel'
+                'copy', 'csv', 'excel', 'pdf', 'print'
             ],
             columnDefs: [
                 {targets: 5, sorting: false}
