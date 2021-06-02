@@ -24,7 +24,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('cobranzas/relaciones', [CobranzasController::class, "index"])->name("cobranzas.index");
     Route::delete('cobranzas/relaciones/{id}', [CobranzasController::class, "destroy"])->name("cobranzas.destroy");
-    Route::post('cobranzas/relaciones/create', [CobranzasController::class, 'store'])->name('cobranzas.store');
+    Route::post('cobranzas/relaciones', [CobranzasController::class, 'store'])->name('cobranzas.store');
     Route::get('cobranzas/relaciones/show/{id}', [CobranzasController::class, 'show'])->name('cobranzas.show');
     Route::delete('cobranzas/relaciones/delete-recibo/{id_recibo}', [CobranzasController::class, "remove_recibo"])->name("cobranzas.remove_recibo");
     Route::get('cobranzas/relaciones/print/{id}', [CobranzasController::class, 'print'])->name('cobranzas.print');

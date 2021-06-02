@@ -25,10 +25,6 @@ class CobranzasController extends Controller
 
     public function store(Request $request)
     {
-        if (!auth()->user()->can("relaciones.create")) {
-            return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
-        }
-
         try {
             DB::beginTransaction();
             $relacion = new Relacion();

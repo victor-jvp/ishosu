@@ -87,8 +87,8 @@ class RecibosController extends Controller
 
                     $reciboDet->FECHA_PAGO = $request->tran_fecha[$i];
                     $reciboDet->REFERENCIA = $request->tran_ref[$i];
-                    $reciboDet->REFERENCIA = $request->tran_ref[$i];
-                    $reciboDet->REFERENCIA = $request->tran_ref[$i];
+                    $reciboDet->bank_id_e  = $request->tran_bank_e[$i];
+                    $reciboDet->bank_id_r  = $request->tran_bank_r[$i];
                     $reciboDet->MONTO      = Str::remove(",", $request->tran_monto[$i]);
 
                     $reciboCab->reciboDet()->save($reciboDet);
