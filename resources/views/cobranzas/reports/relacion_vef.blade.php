@@ -82,9 +82,9 @@
         <td class="text-center" style="font-weight: bold;">FECHA ENTREGA</td>
         <td class="text-center" style="font-weight: bold;">FIRMA</td>
     </tr>
-
+    @php($sumMonto = 0)
     @foreach($relacion->recibos as $recibo)
-        <tr style="font-size: 6pt !important">
+        <tr style="font-size: 6.5pt !important">
             <td class="text-center" style="padding: 5px;">{{ $recibo->idZero }}</td>
             <td class="text-center" style="padding: 5px;">{{ $recibo->FECHA->format("d/m/Y") }}</td>
             <td class="text-right"
@@ -120,12 +120,14 @@
             <td style="padding: 5px; width: 6%"></td>
             <td style="padding: 5px; width: 6%"></td>
         </tr>
+
+        @php($sumMonto += $det->MONTO)
     @endforeach
 
     <tfoot>
     <tr class="text-right" style="">
         <td colspan="9" style="padding: 5px; font-size: 9pt;">TOTAL:</td>
-        <td style="padding: 5px; font-size: 9pt;">0.00</td>
+        <td style="padding: 5px; font-size: 8pt;">{{ number_format($sumMonto, 2) }}</td>
         <td colspan="2"></td>
     </tr>
     </tfoot>

@@ -95,7 +95,7 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $item->FECHA->format("d/m/Y") }}</td>
-                                                <td>{{ ($item->TIPO_DOC == "FA") ? "Factura" : "Nota de Entrega" }}</td>
+                                                <td>{{ $item->tipoDocumento->DESCR }}</td>
                                                 <td>{{ $item->NUMEDOCU }}</td>
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE : $item->notaEntrega->CODICLIE }}</td>
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE : $item->notaEntrega->cliente->NOMBCLIE }}</td>
