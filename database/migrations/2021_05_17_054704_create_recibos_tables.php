@@ -21,7 +21,7 @@ class CreateRecibosTables extends Migration
             $table->dateTime("FECHA");
             $table->string("TIPO_MONEDA", 6)->nullable();
             $table->string("TIPO_PAGO", 1)->nullable();
-            $table->string("TIPO_DOC", 6)->nullable();
+            $table->string("TIPO_DOC", 6);
             $table->string("NUMEDOCU", 9)->nullable();
             $table->string("TIPO_COBRO", 10)->nullable()->default(null);
             $table->double("PORC")->default(0);
@@ -39,6 +39,7 @@ class CreateRecibosTables extends Migration
             $table->foreign('id_relacion')->references('id')->on('relaciones');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('TIPO_DOC')->references('TIPO_DOC')->on('tipo_documento');
 
             $table->timestamps();
         });
