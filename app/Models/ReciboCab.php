@@ -48,6 +48,11 @@ class ReciboCab extends Model
         return $this->hasMany(ReciboDet::class, "id_recibo");
     }
 
+    public function tipoDocumento()
+    {
+        return $this->belongsTo(TipoDocumento::class, "TIPO_DOC", "TIPO_DOC");
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, "created_by");

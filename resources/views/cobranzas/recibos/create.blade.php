@@ -754,10 +754,19 @@
         });
 
         function UpdateTotalACobrar() {
-            const porc = $("#porcentaje").inputmask("unmaskedvalue")
-            const result = total_a_cobrar - (total_a_cobrar * (porc / 100))
-
             moneda = ($("#tipo_moneda_usd").prop("checked")) ? "usd" : "vef"
+
+            total_a_cobrar = parseFloat($(`#subtotal_${moneda}`).inputmask('unmaskedvalue'))
+            if (total_a_cobrar <= 0) {
+                total_a_cobrar = parseFloat($(`#total_${moneda}`).inputmask('unmaskedvalue'))
+            }
+            const porc = $("#porcentaje").inputmask("unmaskedvalue")
+
+            if (porc == null || porc == 0) {
+                result = total_a_cobrar
+            }else{
+                result = total_a_cobrar - (total_a_cobrar * (porc / 100))
+            }
 
             if (moneda = "usd") {
                 $("#total_a_cobrar").val(toTrunc(result, 3))
@@ -778,6 +787,9 @@
             }
             if (tipo_cobro == "desc") {
                 total_a_cobrar = parseFloat($(`#subtotal_${moneda}`).inputmask('unmaskedvalue'))
+                if (total_a_cobrar <= 0) {
+                    total_a_cobrar = parseFloat($(`#total_${moneda}`).inputmask('unmaskedvalue'))
+                }
                 $("#total_a_cobrar").prop("readonly", false)
                 $("#porcentaje").prop("disabled", false).val(0).focus()
             }
@@ -863,17 +875,15 @@
             if ($("#chk_monto_ret").prop("checked")) {
                 const monto_ret = parseFloat($("#monto_ret").inputmask('unmaskedvalue') ?? 0)
                 saldo_doc = parseFloat(total_a_cobrar - total_cobrado - total_recibido + vuelto - monto_ret)
-                console.log(total_a_cobrar, total_cobrado, total_recibido, vuelto, monto_ret)
             } else {
                 saldo_doc = parseFloat(total_a_cobrar - total_cobrado - total_recibido + vuelto)
-                console.log(total_a_cobrar, total_cobrado, total_recibido, vuelto)
             }
+            console.log(saldo_doc)
             if ($("#tipo_moneda_usd").prop("checked")) { //si la moneda es usd, truncar a 3 decimales
                 $("#saldo_doc").val( toTrunc(saldo_doc, 3))
             }else{ // si es vef redondear a 2
                 $("#saldo_doc").val( saldo_doc.toFixed(2))
             }
-
 
             if ($("#tipo_doc_ne").prop("checked")) { // Si es nota de entrega calcular la tasa de cambio
                 const tasa_camb = parseFloat($("#total_vef").inputmask('unmaskedvalue') ?? 0) / total_recibido
