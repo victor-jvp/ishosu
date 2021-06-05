@@ -124,7 +124,7 @@
                                             <div class="form-line">
                                                 <select class="form-control show-tick" data-live-search="true" required
                                                     data-container="body" data-size="10" data-title="Seleccione..."
-                                                    name="roles[]" id="roles" multiple>
+                                                    name="roles[]" id="roles">
                                                     @foreach ($roles as $item)
                                                     <option {{ ($user->hasRole($item->name)) ? "selected" : "" }}
                                                         value="{{ $item->id }}">{{ $item->name }}</option>

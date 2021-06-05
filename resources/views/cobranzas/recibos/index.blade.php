@@ -80,6 +80,7 @@
                                         </thead>
                                         <tbody>
                                         @foreach($recibos as $item)
+                                            @php($nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3)
                                             <tr>
                                                 <td>
                                                     @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
@@ -100,24 +101,24 @@
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE : $item->notaEntrega->CODICLIE }}</td>
                                                 <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE : $item->notaEntrega->cliente->NOMBCLIE }}</td>
                                                 <td>{{ $item->TIPO_MONEDA }}</td>
-                                                <td>{{number_format( $item->MONTO_DOC, 2, ".", "," ) }}</td>
-                                                <td>{{number_format( $item->montoRecibido, 2, ".", "," ) }}</td>
-                                                <td>{{number_format( $item->MONTO_RET, 2, ".", "," ) }}</td>
-                                                <td>{{number_format( $item->PORC, 2, ".", "," ) }}</td>
-                                                <td>{{number_format( $item->SALDO_DOC, 2, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->MONTO_DOC, $nDecimals, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->montoRecibido, $nDecimals, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->MONTO_RET, $nDecimals, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->PORC, $nDecimals, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->SALDO_DOC, $nDecimals, ".", "," ) }}</td>
                                                 <td>
                                                     @if ($item->VUELTO >0)
                                                         @if (!$item->VUELTO_ENT)
                                                         <a href="javascript:void(0)" data-toggle="tooltip" onclick="EntregarVuelto({{ $item->id }})"
                                                             data-placement="auto" data-original-title="Procesar Entrega">
-                                                            {{number_format( $item->VUELTO, 2, ".", "," ) }}
+                                                            {{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}
                                                         </a>
                                                         @else
                                                         <span data-toggle="tooltip" data-placement="auto"
-                                                            data-original-title="Vuelto Entregado">{{number_format( $item->VUELTO, 2, ".", "," ) }}</span>
+                                                            data-original-title="Vuelto Entregado">{{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}</span>
                                                         @endif
                                                     @else
-                                                        {{number_format( $item->VUELTO, 2, ".", "," ) }}
+                                                        {{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}
                                                     @endif
                                                 </td>
                                                 @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
@@ -130,16 +131,18 @@
                                                            data-toggle="tooltip" data-placement="auto"
                                                            data-original-title="Modificar"><i class="material-icons">edit</i>
                                                         </a> --}}
-                                                        <a href="{{ route("recibos.show", $item->id) }}"
+                                                        <a href="{{ route("recibos.show", $item->id) }}" target="_blank"
                                                            class="btn btn-default btn-sm waves-effect"
                                                            data-toggle="tooltip" data-placement="auto"
                                                            data-original-title="Detalles"><i class="material-icons">visibility</i>
                                                         </a>
+                                                        @if ($item->TIPO_MONEDA == "USD")
                                                         <a href="{{ route("recibos.print", $item->id) }}" target="_blank"
                                                            class="btn btn-default btn-sm waves-effect"
                                                            data-toggle="tooltip" data-placement="auto"
                                                            data-original-title="Imprimir"><i class="material-icons">print</i>
                                                         </a>
+                                                        @endif
                                                         <button type="button" onclick="DeleteRow({{ $item->id }})"
                                                             class="btn btn-default btn-sm waves-effect"
                                                             data-toggle="tooltip" data-placement="auto"

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Modificar Recibo')
+@section('title', 'Modificar Recibo '.$recibo->idZero)
 
 @section('content')
 

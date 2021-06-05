@@ -84,7 +84,6 @@
                                         <label for="tipo_pago_tran">Transferencia</label>
                                     </div>
 
-
                                 </div>
 
                                 <div class="row">
@@ -829,14 +828,14 @@
                 "checked")) { // Si es una factura o una nota de debito
                 $("#nro_fa").prop('disabled', false)
                 $("#nro_ne").prop('disabled', true)
-                $("#tasa_cambio").prop("readonly", false)
+                // $("#tasa_cambio").prop("readonly", false)
                 $("#tipo_cobro").prop("disabled", false).selectpicker("val", null)
                 $("#total_a_cobrar").prop("readonly", true)
             }
             if ($("#tipo_doc_ne").prop("checked")) { // Si es una nota de entrega
                 $("#nro_fa").prop('disabled', true)
                 $("#nro_ne").prop('disabled', false)
-                $("#tasa_cambio").prop("readonly", true)
+                // $("#tasa_cambio").prop("readonly", true)
                 $("#tipo_cobro").prop("disabled", true).selectpicker("val", "espec")
                 $("#total_a_cobrar").prop("readonly", false)
             }

@@ -45,6 +45,10 @@
 
 </head>
 
+@php
+    $nDecimals = ($recibo->TIPO_MONEDA == "VEF") ? 2 : 3;
+@endphp
+
 <body>
     <table class="table-bordered" style="width: 100%;">
         <tr>
@@ -70,24 +74,23 @@
             <td class="text-center"><b>{{ $recibo->NUMEDOCU }}</b></td>
             <td class="text-right" colspan="">{{ __("TASA:") }}</td>
             <td class="text-right" colspan="2" style="font-size: 10pt">
-                <b>{{number_format( $recibo->TASA_CAMB, 2, ".", "," ) }}</b>
+                <b>{{number_format( $recibo->TASA_CAMB, $nDecimals, ".", "," ) }}</b>
             </td>
         </tr>
         <tr>
-            <td class="text-right" colspan="4" rowspan="2">FECHA DE
-                RECIBO {{ $recibo->FECHA->format("d/m/Y h:i a") }}
+            <td class="text-right" colspan="4" rowspan="2">FECHA DE RECIBO {{ $recibo->FECHA->format("d/m/Y h:i a") }}
             </td>
             <td class="text-center">{{ __("MONTO DOC. Bs.") }}</td>
             <td class="text-center">{{ __("MONTO DOC. $") }}</td>
             <td class="text-center">{{ __("TOTAL A COBRAR") }}</td>
             <td class="text-right">{{ __("MONTO RECIBIDO $:") }}</td>
             <td class="text-right" colspan="2" style="font-size: 10pt">
-                <b>{{ __("$ ".number_format($recibo->montoRecibido, 2, ".", ",")) }}</b>
+                <b>{{ __("$ ".number_format($recibo->montoRecibido, $nDecimals, ".", ",")) }}</b>
             </td>
         </tr>
         <tr>
             <td class="text-center">
-                <b>Bs. {{ number_format(($recibo->TIPO_DOC == "FA") ? $recibo->factura->TOTADOCU : $recibo->notaEntrega->TOTADOCU, 2, ".", ",") }}</b>
+                <b>Bs. {{ number_format(($recibo->TIPO_DOC == "FA") ? $recibo->factura->TOTADOCU : $recibo->notaEntrega->TOTADOCU, $nDecimals, ".", ",") }}</b>
             </td>
             <td class="text-center">
                 @php
@@ -99,15 +102,15 @@
                 }
                 $totalCobrar = $recibo->MONTO_DOC - $recibo->MONTO_RET;
                 @endphp
-                <b>$ {{ number_format($facturaDolar, 2, ".", ",") }}</b>
+                <b>$ {{ number_format($facturaDolar, $nDecimals, ".", ",") }}</b>
             </td>
-            <td class="text-center"><b>{{ number_format($totalCobrar, 2) }}</b></td>
+            <td class="text-center"><b>{{ number_format($totalCobrar, $nDecimals) }}</b></td>
             <td class="text-right">{{ __("DIFERENCIA:") }}</td>
             <td class="text-right" colspan="2" style="font-size: 10pt">
                 @php
                 $diferencia = $totalCobrar - $recibo->montoRecibido;
                 @endphp
-                <b>$ {{ number_format($diferencia, 2, ".", ",") }}</b>
+                <b>$ {{ number_format($diferencia, $nDecimals, ".", ",") }}</b>
             </td>
         </tr>
         <tr>
@@ -119,8 +122,8 @@
                     </tr>
                     <tr class="text-center">
                         @if ($recibo->SALDO_DOC > 0)
-                        <th>{{ number_format($recibo->montoRecibido, 2) ?? "0.00" }}</th>
-                        <th>{{ number_format($recibo->SALDO_DOC, 2) ?? "0.00" }}</th>
+                        <th>{{ number_format($recibo->montoRecibido, $nDecimals) ?? "0.00" }}</th>
+                        <th>{{ number_format($recibo->SALDO_DOC, $nDecimals) ?? "0.00" }}</th>
                         @else
                         <th>0.00</th>
                         <th>0.00</th>
@@ -133,7 +136,7 @@
                 <input type="checkbox" id="si" {{ ($recibo->MONTO_RET > 0) ? "checked" : "" }} style="display: inline;"/><label for="si">SI</label>
                 <input type="checkbox" id="no" {{ ($recibo->MONTO_RET <= 0) ? "checked" : "" }} style="display: inline;" /><label for="no">NO</label>
             </td>
-            <td class="text-center">MONTO RETENIDO: <br><b>{{ number_format($recibo->MONTO_RET, 2) }} </b></td>
+            <td class="text-center">MONTO RETENIDO: <br><b>{{ number_format($recibo->MONTO_RET, $nDecimals) }} </b></td>
             {{--            <td class="text-right" colspan="2">VUELTO</td>--}}
             {{--            <td class="text-right">{{ __("0.00") }}</td>--}}
 
@@ -141,22 +144,22 @@
                 <table class="table-bordered" style="width: 100%;">
                     <tr class="text-right">
                         <td>VUELTO:</td>
-                        <td><b>$ {{ number_format($recibo->VUELTO, 2) ?? "0.00" }}</b></td>
+                        <td><b>$ {{ number_format($recibo->VUELTO, $nDecimals) ?? "0.00" }}</b></td>
                     </tr>
                     <tr class="text-right">
                         <td>SALDO DOCUMENTO:</td>
-                        <td><b>$ {{ number_format($recibo->SALDO_DOC, 2) ?? "0.00" }}</b></td>
+                        <td><b>$ {{ number_format($recibo->SALDO_DOC, $nDecimals) ?? "0.00" }}</b></td>
                     </tr>
                     <tr class="text-right">
                         <td>TOTAL CANCELADO $:</td>
                         <td><b>$
-                                {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado : $recibo->notaEntrega->total_cobrado, 2) }}</b>
+                                {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado : $recibo->notaEntrega->total_cobrado, $nDecimals) }}</b>
                         </td>
                     </tr>
                     <tr class="text-right">
                         <td>TOTAL CANCELADO BS.:</td>
                         <td><b>Bs.
-                                {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado * $recibo->TASA_CAMB : $recibo->notaEntrega->total_cobrado * $recibo->TASA_CAMB, 2) }}</b>
+                                {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado * $recibo->TASA_CAMB : $recibo->notaEntrega->total_cobrado * $recibo->TASA_CAMB, $nDecimals) }}</b>
                         </td>
                     </tr>
                 </table>
@@ -211,17 +214,17 @@
                     @endphp
                     <tr class="text-center">
                         <td>{{ $valCantidad }}</td>
-                        <td>{{ number_format($denominacion, 2, ".", ",") }}</td>
-                        <td>{{ number_format($totalUsd, 2) }}</td>
-                        <td>{{ number_format($totalVef, 2) }}</td>
+                        <td>{{ number_format($denominacion, $nDecimals, ".", ",") }}</td>
+                        <td>{{ number_format($totalUsd, $nDecimals) }}</td>
+                        <td>{{ number_format($totalVef, $nDecimals) }}</td>
                     </tr>
                     @endforeach
                     <tr>
                         <td colspan="2" class="text-center" style="font-size: 9pt; font-weight: bold">TOTAL</td>
                         <td class="text-center" style="font-size: 9pt; font-weight: bold">
-                            {{ number_format($sumTotalUsd, 2) }}</td>
+                            {{ number_format($sumTotalUsd, $nDecimals) }}</td>
                         <td class="text-center" style="font-size: 9pt; font-weight: bold">
-                            {{ number_format($sumTotalVef, 2) }}</td>
+                            {{ number_format($sumTotalVef, $nDecimals) }}</td>
                     </tr>
                 </table>
             </td>
