@@ -314,7 +314,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <p><b>Tipo de cobro</b></p>
                                             <div class="form-group">
                                                 <div class="form-line">
@@ -334,6 +334,15 @@
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="porcentaje"
                                                         name="porcentaje" value="{{ $recibo->PORC }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p><b>Monto Desc.</b></p>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control monto" id="monto_desc"
+                                                           name="monto_desc" value="{{ $recibo->MONTO_DESC }}" readonly value="0">
                                                 </div>
                                             </div>
                                         </div>
@@ -618,7 +627,12 @@
                 saldo_doc = parseFloat(total_a_cobrar  - total_recibido + vuelto)
             }
 
-            $("#saldo_doc").val( saldo_doc.toFixed(2) )
+            const moneda = ($("#tipo_moneda_usd").prop("checked")) ? "usd" : "vef"
+            if (moneda == "usd") {
+                $("#saldo_doc").val( toTrunc(saldo_doc, 3) )
+            }else{
+                $("#saldo_doc").val( saldo_doc.toFixed(2) )
+            }
 
             if ($("#tipo_doc_ne").prop("checked")) { // Si es nota de entrega calcular la tasa de cambio
                 const tasa_camb = parseFloat($("#total_vef").inputmask('unmaskedvalue') ?? 0) / total_recibido

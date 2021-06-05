@@ -336,7 +336,16 @@
                                                 <div class="form-group">
                                                     <div class="form-line">
                                                         <input type="text" class="form-control monto" id="porcentaje"
-                                                               name="porcentaje" value="" disabled>
+                                                               name="porcentaje" value="0" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <p><b>Monto Desc.</b></p>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="monto_desc"
+                                                               name="monto_desc" readonly value="0">
                                                     </div>
                                                 </div>
                                             </div>
@@ -763,17 +772,22 @@
                 total_a_cobrar = parseFloat($(`#total_${moneda}`).inputmask('unmaskedvalue'))
             }
             const porc = $("#porcentaje").inputmask("unmaskedvalue")
+            let monto_desc = 0
 
             if (porc == null || porc == 0) {
                 result = total_a_cobrar
             }else{
-                result = total_a_cobrar - (total_a_cobrar * (porc / 100))
+                console.log(monto_desc)
+                monto_desc = total_a_cobrar * (porc / 100)
+                result = total_a_cobrar - monto_desc
             }
 
             if (moneda = "usd") {
                 $("#total_a_cobrar").val(toTrunc(result, 3))
+                $("#monto_desc").val(toTrunc(monto_desc, 3))
             } else {
                 $("#total_a_cobrar").val(result.toFixed(2))
+                $("#monto_desc").val(monto_desc.toFixed(2))
             }
 
             UpdateMontos()
@@ -793,6 +807,7 @@
                     total_a_cobrar = parseFloat($(`#total_${moneda}`).inputmask('unmaskedvalue'))
                 }
                 $("#total_a_cobrar").prop("readonly", false)
+                $("#monto_desc").val(0)
                 $("#porcentaje").prop("disabled", false).val(0).focus()
             }
             if (tipo_cobro == "espec") {
@@ -1107,6 +1122,8 @@
             }else{
                 $("#total_cobrado").val(total_cobrado_vef.toFixed(2))
             }
+
+            $("#monto_doc").val(0)
 
             $("#ret_iva").prop("checked", resp.cliente.AGENTERET)
             $("#chk_monto_ret").prop("checked", false).prop("disabled", !resp.cliente.AGENTERET)

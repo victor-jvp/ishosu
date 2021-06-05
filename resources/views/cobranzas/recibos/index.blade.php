@@ -106,7 +106,7 @@
                                                 <td>{{number_format( $item->MONTO_DOC, $nDecimals, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->montoRecibido, $nDecimals, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->MONTO_RET, $nDecimals, ".", "," ) }}</td>
-                                                <td>{{number_format( $item->PORC, $nDecimals, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->PORC, 2) }}</td>
                                                 <td>{{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}</td>
                                                 <td>
                                                     @if ($item->TIPO_MONEDA == "VEF")

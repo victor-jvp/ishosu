@@ -47,6 +47,14 @@
 
 @php
     $nDecimals = ($recibo->TIPO_MONEDA == "VEF") ? 2 : 3;
+    $document = 0;
+    if ($recibo->TIPO_DOC == "FA"){
+        $document = $recibo->factura;
+    }else if($recibo->TIPO_DOC == "NE") {
+        $document = $recibo->notaEntrega;
+    }else{
+        $document = $recibo->notaDebito;
+    }
 @endphp
 
 <body>
@@ -59,12 +67,12 @@
                 {{ $recibo->idZero }}</td>
             <td class="text-right">CLIENTE:</td>
             <td class="text-center" colspan="3">
-                <b>{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODICLIE : $recibo->notaEntrega->CODICLIE }}
+                <b>{{ $document->CODICLIE }}
                     -
-                    {{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}</b>
+                    {{ ($recibo->TIPO_DOC == "FA") ? $document->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}</b>
             </td>
             <td class="text-left" colspan="3">RUTA:
-                <b>{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODIRUTA."-".$recibo->factura->ruta->NOMBVEND : $recibo->notaEntrega->CODIRUTA."-".$recibo->notaEntrega->ruta->NOMBVEND }}</b>
+                <b>{{ ($recibo->TIPO_DOC == "FA") ? $document->CODIRUTA."-".$document->ruta->NOMBVEND : $recibo->notaEntrega->CODIRUTA."-".$recibo->notaEntrega->ruta->NOMBVEND }}</b>
             </td>
         </tr>
         <tr>
@@ -73,7 +81,7 @@
             <td class="text-right">NUMERO DOC.:</td>
             <td class="text-center"><b>{{ $recibo->NUMEDOCU }}</b></td>
             <td class="text-right" colspan="">{{ __("TASA:") }}</td>
-            <td class="text-right" colspan="2" style="font-size: 10pt">
+            <td class="text-right" colspan="2" style="font-size: 10pt; width: 150px">
                 <b>{{number_format( $recibo->TASA_CAMB, $nDecimals, ".", "," ) }}</b>
             </td>
         </tr>
@@ -90,13 +98,13 @@
         </tr>
         <tr>
             <td class="text-center">
-                <b>Bs. {{ number_format(($recibo->TIPO_DOC == "FA") ? $recibo->factura->TOTADOCU : $recibo->notaEntrega->TOTADOCU, $nDecimals, ".", ",") }}</b>
+                <b>Bs. {{ number_format(($recibo->TIPO_DOC == "FA") ? $document->TOTADOCU : $recibo->notaEntrega->TOTADOCU, $nDecimals, ".", ",") }}</b>
             </td>
             <td class="text-center">
                 @php
                 if($recibo->TIPO_DOC == "FA" || $recibo->TIPO_DOC == "ND")
                 {
-                    $facturaDolar = $recibo->factura->TOTADOCU / $recibo->factura->CAMBDOL;
+                    $facturaDolar = $document->TOTADOCU / $document->CAMBDOL;
                 }else{
                     $facturaDolar = $recibo->notaEntrega->TOTADOCU / $recibo->notaEntrega->CAMBDOL;
                 }
@@ -153,13 +161,13 @@
                     <tr class="text-right">
                         <td>TOTAL CANCELADO $:</td>
                         <td><b>$
-                                {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado : $recibo->notaEntrega->total_cobrado, $nDecimals) }}</b>
+                                {{ number_format( ($recibo->TIPO_DOC == "FA") ? $document->total_cobrado : $recibo->notaEntrega->total_cobrado, $nDecimals) }}</b>
                         </td>
                     </tr>
                     <tr class="text-right">
                         <td>TOTAL CANCELADO BS.:</td>
                         <td><b>Bs.
-                                {{ number_format( ($recibo->TIPO_DOC == "FA") ? $recibo->factura->total_cobrado * $recibo->TASA_CAMB : $recibo->notaEntrega->total_cobrado * $recibo->TASA_CAMB, $nDecimals) }}</b>
+                                {{ number_format( ($recibo->TIPO_DOC == "FA") ? $document->total_cobrado * $recibo->TASA_CAMB : $recibo->notaEntrega->total_cobrado * $recibo->TASA_CAMB, $nDecimals) }}</b>
                         </td>
                     </tr>
                 </table>
@@ -167,7 +175,7 @@
         </tr>
         <tr>
             <td colspan="4" class="text-right">Tipo de Cobro:</td>
-            <td colspan="6"><b>
+            <td><b>
                 @switch($recibo->TIPO_COBRO)
                 @case("total")
                     Monto total del documento.
@@ -179,6 +187,13 @@
                     Negociación Especial.
                 @endswitch</b>
             </td>
+            @if ($recibo->TIPO_COBRO == "desc")
+            <td class="text-right">Monto Descuento:</td>
+            <td class="text-right"><b>{{ number_format($recibo->MONTO_DESC, $nDecimals) }}</b></td>
+            @else
+            <td colspan="2"></td>
+            @endif
+            <td colspan="3"></td>
         </tr>
         <tr>
             <td colspan="7">
