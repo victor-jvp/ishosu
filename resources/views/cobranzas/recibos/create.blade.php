@@ -291,12 +291,12 @@
                                                 <div class="form-group">
                                                     <div class="form-line">
                                                         <input type="text" class="form-control monto" id="tasa_cambio"
-                                                               name="tasa_cambio" readonly value="0">
+                                                               name="tasa_cambio" value="0">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <p><b>Total Cobrado Doc $.</b></p>
+                                                <p><b>Total Cobrado Doc.</b></p>
                                                 <div class="form-group">
                                                     <div class="form-line">
                                                         <input type="text" class="form-control monto" id="total_cobrado"
@@ -321,9 +321,9 @@
                                                 <p><b>Tipo de cobro</b></p>
                                                 <div class="form-group">
                                                     <div class="form-line">
+                                                        <input type="hidden" name="tipo_cobro" id="h_tipo_cobro">
                                                         <select class="form-control show-tick" required
-                                                                data-container="body" data-title="Seleccione..."
-                                                                name="tipo_cobro" id="tipo_cobro">
+                                                                data-container="body" data-title="Seleccione..." id="tipo_cobro">
                                                             <option value="total">Total del Documento</option>
                                                             <option value="desc">Descuento</option>
                                                             <option value="espec">Negociación Especial</option>
@@ -554,6 +554,8 @@
         var table_montos
         var simbolo
         var total_a_cobrar = 0
+        var total_cobrado_vef = 0
+        var total_cobrado_usd = 0
 
         $(document).ready(function () {
             table_montos = $("#table_montos").DataTable({
@@ -597,6 +599,7 @@
 
             $("#tipo_cobro").on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
                 UpdateTipoCobro($(this).val())
+                $("#h_tipo_cobro").val($(this).val())
             })
 
             $("#vuelto").change(function (e) {
@@ -877,7 +880,6 @@
             } else {
                 saldo_doc = parseFloat(total_a_cobrar - total_cobrado - total_recibido + vuelto)
             }
-            console.log(saldo_doc)
             if ($("#tipo_moneda_usd").prop("checked")) { //si la moneda es usd, truncar a 3 decimales
                 $("#saldo_doc").val( toTrunc(saldo_doc, 3))
             }else{ // si es vef redondear a 2
@@ -1037,9 +1039,11 @@
             if ($("#tipo_moneda_usd").prop('checked')) {
                 denominacion = dolares.split(",")
                 simbolo = "$"
+                $("#total_cobrado").val( toTrunc(total_cobrado_usd, 3) )
             } else {
                 denominacion = bolivares.split(",")
                 simbolo = "Bs"
+                $("#total_cobrado").val( total_cobrado_vef.toFixed(2) )
             }
             let options = ""
             $("#denominacion").html(null).selectpicker("refresh")
@@ -1066,6 +1070,7 @@
             const montoRet = totalIva * (75 / 100);
             const descuento = (resp.TIPODOCU != "ND") ? resp.DESCUENTOG : 0
             let cambdol = 0;
+
             if (resp.TIPODOCU == "ND") {
                 if (resp.TIPOAFEC == "FA") {
                     cambDol = resp.fa_afectada.CAMBDOL
@@ -1092,7 +1097,17 @@
             $("#monto_doc_vef").val()
             $("#tasa_cambio").val(cambDol)
 
-            $("#total_cobrado").val(resp.total_cobrado.toFixed(2))
+            const moneda = ($("#tipo_moneda_usd").prop("checked")) ? "usd" : "vef"
+            total_cobrado_usd = resp.total_cobrado
+            total_cobrado_vef = resp.total_cobrado * resp.CAMBDOL
+
+            if (moneda == "usd")
+            {
+                $("#total_cobrado").val(toTrunc(total_cobrado_usd, 3))
+            }else{
+                $("#total_cobrado").val(total_cobrado_vef.toFixed(2))
+            }
+
             $("#ret_iva").prop("checked", resp.cliente.AGENTERET)
             $("#chk_monto_ret").prop("checked", false).prop("disabled", !resp.cliente.AGENTERET)
 

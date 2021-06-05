@@ -44,14 +44,20 @@
                                         <th>Cod. Cliente</th>
                                         <th>Cliente</th>
                                         <th>Nro. Documento</th>
-                                        <th>Monto Documento</th>
-                                        <th>Monto Recibido</th>
-                                        <th>Saldo Cliente</th>
+                                        <th class="text-center">Monto<br>Documento</th>
+                                        <th class="text-center">Monto<br>Recibo</th>
+                                        <th class="text-center">Monto<br>Retenido</th>
+                                        <th class="text-center">%<br>Descuento</th>
+                                        <th>Saldo</th>
+                                        <th>Vuelto</th>
                                         <th>Opciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     @foreach($relacion->recibos as $item)
+
+                                        @php($nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3)
+
                                         <tr>
                                             <td><b>{{ $item->idZero }}</b></td>
                                             <td>{{ $item->FECHA->format("d/m/Y") }}</td>
@@ -59,9 +65,26 @@
                                             <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE : $item->notaEntrega->CODICLIE }}</td>
                                             <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE : $item->notaEntrega->cliente->NOMBCLIE }}</td>
                                             <td>{{ $item->NUMEDOCU }}</td>
-                                            <td>{{number_format( ($item->TIPO_MONEDA == "USD") ? $item->MONTO_DOC_USD: $item->MONTO_DOC_VEF, 2, ".", "," ) }}</td>
-                                            <td>{{number_format( $item->montoRecibido, 2, ".", "," ) }}</td>
-                                            <td>{{number_format( $item->SALDO_CLI, 2, ".", "," ) }}</td>
+                                            <td>{{number_format( $item->MONTO_DOC, $nDecimals, ".", "," ) }}</td>
+                                            <td>{{number_format( $item->montoRecibido, $nDecimals, ".", "," ) }}</td>
+                                            <td>{{number_format( $item->MONTO_RET, $nDecimals, ".", "," ) }}</td>
+                                            <td>{{number_format( $item->PORC, $nDecimals, ".", "," ) }}</td>
+                                            <td>{{number_format( $item->SALDO_DOC, $nDecimals, ".", "," ) }}</td>
+                                            <td>
+                                                @if ($item->VUELTO >0)
+                                                    @if (!$item->VUELTO_ENT)
+                                                        <a href="javascript:void(0)" data-toggle="tooltip" onclick="EntregarVuelto({{ $item->id }})"
+                                                           data-placement="auto" data-original-title="Procesar Entrega">
+                                                            {{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}
+                                                        </a>
+                                                    @else
+                                                        <span data-toggle="tooltip" data-placement="auto"
+                                                              data-original-title="Vuelto Entregado">{{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}</span>
+                                                    @endif
+                                                @else
+                                                    {{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}
+                                                @endif
+                                            </td>
                                             <td>
                                                 <div class="btn-group" role="group">
                                                     <a href="{{ route("recibos.show", $item->id) }}"
@@ -135,8 +158,8 @@
                     [0, 'desc']
                 ],
                 columnDefs: [
-                    {targets: [6, 7, 8], className: "dt-body-right"},
-                    {targets: 9, sorting: false}
+                    {targets: [6, 7, 8, 9, 10, 11], className: "dt-body-right"},
+                    {targets: 12, sorting: false}
                 ]
             })
             $("#btnModalRelacionar").click(function (e) {
@@ -161,6 +184,49 @@
                     url: `{{ url("cobranzas/relaciones/delete-recibo/") }}/${id}`,
                     dataType: 'JSON',
                     type: 'DELETE',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    timeout: 10000,
+                    success: function (result) {
+                        swal({
+                            title: result.title,
+                            text: result.text,
+                            type: result.type,
+                            showCancelButton: false,
+                            closeOnConfirm: true
+                        }, function () {
+                            if (result.type == "success") window.location.href = result.goto
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error.error)
+                        swal(error.title, error.message, error.result);
+                    },
+                    statusCode: {
+                        500: function () {
+                            swal('Error en el proceso', 'Error al procesar los datos. Intente nuevamente', 'error')
+                        }
+                    }
+                })
+            });
+        }
+
+        function EntregarVuelto(id)
+        {
+            swal({
+                title: "Confirmar",
+                text: "Confirme registrar la entrega del vuelto.",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#2b982b",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true,
+            }, function () {
+                $.ajax({
+                    url: `{{ url("cobranzas/recibos/marcar-vuelto/") }}/${id}`,
+                    dataType: 'JSON',
+                    type: 'GET',
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     timeout: 10000,
                     success: function (result) {

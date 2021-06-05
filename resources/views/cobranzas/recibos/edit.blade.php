@@ -219,7 +219,7 @@
 
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <p><b>Total Cobrado Doc $.</b></p>
+                                    <p><b>Total Cobrado Doc.</b></p>
                                     <div class="form-group">
                                         <div class="form-line">
                                             <input type="text" class="form-control monto" id="total_cobrado"

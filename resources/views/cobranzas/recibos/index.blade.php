@@ -70,8 +70,8 @@
                                             <th class="text-center">Monto<br>Recibo</th>
                                             <th class="text-center">Monto<br>Retenido</th>
                                             <th class="text-center">%<br>Descuento</th>
-                                            <th>Saldo</th>
                                             <th>Vuelto</th>
+                                            <th>Saldo</th>
                                             @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
                                             <th>Realizado por</th>
                                             @endif
@@ -80,7 +80,9 @@
                                         </thead>
                                         <tbody>
                                         @foreach($recibos as $item)
+
                                             @php($nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3)
+
                                             <tr>
                                                 <td>
                                                     @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
@@ -105,20 +107,12 @@
                                                 <td>{{number_format( $item->montoRecibido, $nDecimals, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->MONTO_RET, $nDecimals, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->PORC, $nDecimals, ".", "," ) }}</td>
-                                                <td>{{number_format( $item->SALDO_DOC, $nDecimals, ".", "," ) }}</td>
+                                                <td>{{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}</td>
                                                 <td>
-                                                    @if ($item->VUELTO >0)
-                                                        @if (!$item->VUELTO_ENT)
-                                                        <a href="javascript:void(0)" data-toggle="tooltip" onclick="EntregarVuelto({{ $item->id }})"
-                                                            data-placement="auto" data-original-title="Procesar Entrega">
-                                                            {{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}
-                                                        </a>
-                                                        @else
-                                                        <span data-toggle="tooltip" data-placement="auto"
-                                                            data-original-title="Vuelto Entregado">{{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}</span>
-                                                        @endif
+                                                    @if ($item->TIPO_MONEDA == "VEF")
+                                                        {{number_format( $item->SALDO_DOC / $item->TASA_CAMB, $nDecimals, ".", "," ) }}
                                                     @else
-                                                        {{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}
+                                                        {{number_format( $item->SALDO_DOC, $nDecimals, ".", "," ) }}
                                                     @endif
                                                 </td>
                                                 @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
@@ -254,7 +248,7 @@
                     [0, 'desc']
                 ],
                 columnDefs: [
-                    {targets: [7,8,9,10], className: "dt-body-right"},
+                    {targets: [7,8,9,10,11,12], className: "dt-body-right"},
                     {targets: {{ (Auth::user()->hasRole(["Admin", "Supervisor"])) ? 14 : 13 }}, sorting: false}
                 ]
             })
@@ -392,8 +386,6 @@
                 })
             });
         }
-
-
 
     </script>
 @endsection

@@ -17,4 +17,11 @@ class Tcpca extends Model
     protected $casts        = [
         "AGENTERET" => "boolean",
     ];
+
+    protected $visible = [
+        "CODICLIE",
+        "NOMBCLIE",
+        "RIF",
+        "AGENTERET"
+    ];
 }

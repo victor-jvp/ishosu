@@ -53,11 +53,11 @@
                                 <div class="col-sm-4">
 
                                     <p><b>Moneda</b></p>
-                                    <input type="radio" disabled
+                                    <input type="radio" disabled id="tipo_moneda_usd"
                                            class="tipo_moneda with-gap radio-col-indigo" {{ ($recibo->TIPO_MONEDA == "USD") ? "checked" : "" }}/>
                                     <label for="">Dolares</label>
 
-                                    <input type="radio" disabled
+                                    <input type="radio" disabled id="tipo_moneda_vef"
                                            class="tipo_moneda with-gap radio-col-indigo" {{ ($recibo->TIPO_MONEDA == "VEF") ? "checked" : "" }}/>
                                     <label for="">Bolivares</label>
                                 </div>
@@ -294,7 +294,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
-                                            <p><b>Total Cobrado Doc $.</b></p>
+                                            <p><b>Total Cobrado Doc.</b></p>
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="total_cobrado"
@@ -583,7 +583,17 @@
                     $("#monto_doc_vef").val()
                     $("#tasa_cambio").val(cambDol)
 
-                    $("#total_cobrado").val(resp.total_cobrado.toFixed(2))
+                    const moneda = ($("#tipo_moneda_usd").prop("checked")) ? "usd" : "vef"
+                    total_cobrado_usd = resp.total_cobrado
+                    total_cobrado_vef = resp.total_cobrado * resp.CAMBDOL
+
+                    if (moneda == "usd")
+                    {
+                        $("#total_cobrado").val(toTrunc(total_cobrado_usd, 3))
+                    }else{
+                        $("#total_cobrado").val(total_cobrado_vef.toFixed(2))
+                    }
+
                     $("#ret_iva").prop("checked", resp.cliente.AGENTERET)
 
                     UpdateMontos()

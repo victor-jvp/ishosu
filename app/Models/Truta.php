@@ -14,4 +14,10 @@ class Truta extends Model
     public    $incrementing = false;
     protected $primaryKey   = "CODIRUTA";
     protected $keyType      = "string";
+
+    protected $visible = [
+        "CODIRUTA",
+        "NOMBVEND",
+        "CEDUVEND"
+    ];
 }
