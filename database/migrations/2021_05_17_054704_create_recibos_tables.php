@@ -25,6 +25,7 @@ class CreateRecibosTables extends Migration
             $table->string("NUMEDOCU", 9)->nullable();
             $table->string("TIPO_COBRO", 10)->nullable()->default(null);
             $table->double("PORC")->default(0);
+            $table->double("MONTO_DESC")->default(0);
             $table->double("MONTO_DOC")->default(0);
             $table->double("MONTO_RET")->default(0);
             $table->double("TASA_CAMB")->default(0);
