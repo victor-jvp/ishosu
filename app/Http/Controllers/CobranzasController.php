@@ -72,7 +72,7 @@ class CobranzasController extends Controller
                 'title' => "Aviso.",
                 "text"  => "Se ha guardado el registro con éxito.",
                 "type"  => "success",
-                "goto"  => route("recibos.index")
+                "goto"  => route("cobranzas.show", $relacion->id)
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -107,8 +107,11 @@ class CobranzasController extends Controller
         try {
             DB::beginTransaction();
 
-            ReciboCab::where("id_relacion", $id)->update(["id_relacion" => NULL]);
-            Relacion::find($id)->delete();
+            // ReciboCab::where("id_relacion", $id)->update(["id_relacion" => NULL]);
+            $relacion = Relacion::with('recibos')->find($id);
+            $relacion->recibos()->delete();
+            $relacion->delete();
+
 
             DB::commit();
             return response()->json([

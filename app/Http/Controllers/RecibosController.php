@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bank;
 use App\Models\ReciboCab;
 use App\Models\ReciboDet;
+use App\Models\Relacion;
 use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -152,7 +153,17 @@ class RecibosController extends Controller
         try {
             DB::beginTransaction();
 
-            ReciboCab::find($id)->delete();
+            $recibo = ReciboCab::find($id);
+            $id_relacion = $recibo->id_relacion;
+            $recibo->delete();
+
+            if (!is_null($id_relacion))
+            {
+                $relacion = Relacion::find($id_relacion);
+                if($relacion->recibos->count() == 0){
+                    $relacion->delete();
+                }
+            }
 
             DB::commit();
             return response()->json([
