@@ -12,6 +12,7 @@ class ReciboCab extends Model
 {
     use SoftDeletes;
 
+    protected $connection   = "mysql";
     protected $table = 'recibos_cab';
     protected $dates = [
         "FECHA"
@@ -19,7 +20,7 @@ class ReciboCab extends Model
 
     public function getIdZeroAttribute()
     {
-        $estacion = $this->createdBy->estacion->codigo;
+        $estacion = (!is_null($this->createdBy->estacion)) ? $this->createdBy->estacion->codigo : "";
 
         return $estacion.str_pad($this->id, "6", "0", STR_PAD_LEFT);
     }

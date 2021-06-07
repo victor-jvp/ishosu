@@ -9,5 +9,6 @@ class Bank extends Model
 {
     use HasFactory;
 
+    protected $connection   = "mysql";
     protected $table = "banks";
 }

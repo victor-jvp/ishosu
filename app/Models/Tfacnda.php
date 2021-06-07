@@ -10,7 +10,7 @@ class Tfacnda extends Model
 {
     use HasFactory;
 
-    // protected $connection = "ishosu";
+    protected $connection = "ishosu";
     protected $table      = "tfacnda";
     public $incrementing  = false;
     protected $primaryKey = "NUMEDOCU";

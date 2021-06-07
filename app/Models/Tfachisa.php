@@ -12,7 +12,7 @@ class Tfachisa extends Model
 {
     use HasFactory;
 
-    // protected $connection   = "ishosu";
+    protected $connection   = "ishosu";
     protected $table        = "tfachisa";
     public    $incrementing = false;
     protected $primaryKey   = "NUMEDOCU";

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReciboDet extends Model
 {
+    protected $connection   = "mysql";
     public $timestamps = false;
     protected $table = "recibos_det";
     protected $dates = [

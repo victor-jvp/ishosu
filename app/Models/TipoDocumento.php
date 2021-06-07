@@ -9,6 +9,7 @@ class TipoDocumento extends Model
 {
     use HasFactory;
 
+    protected $connection   = "mysql";
     protected $table = "tipo_documento";
     public    $incrementing = false;
     protected $primaryKey   = "TIPO_DOC";

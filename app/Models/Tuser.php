@@ -9,7 +9,7 @@ class Tuser extends Model
 {
     use HasFactory;
 
-    // protected $connection   = "ishosu";
+    protected $connection   = "ishosu";
     protected $table        = "tuser";
     public    $incrementing = false;
     protected $primaryKey   = "LOGIN";

@@ -11,6 +11,7 @@ class Relacion extends Model
 {
     use SoftDeletes;
 
+    protected $connection   = "mysql";
     protected $table = "relaciones";
     protected $casts = [
         "FECHA" => "date:Y-m-d"

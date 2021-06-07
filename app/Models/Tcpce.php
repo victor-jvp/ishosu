@@ -9,7 +9,7 @@ class Tcpce extends Model
 {
     use HasFactory;
 
-    // protected $connection   = "ishosu";
+    protected $connection   = "ishosu";
     protected $table        = 'tcpce';
     public    $incrementing = false;
     protected $primaryKey   = "CODICLIE";

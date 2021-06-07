@@ -9,7 +9,7 @@ class Tcpca extends Model
 {
     use HasFactory;
 
-    // protected $connection   = "ishosu";
+    protected $connection   = "ishosu";
     protected $table        = 'tcpca';
     public    $incrementing = false;
     protected $primaryKey   = "CODICLIE";

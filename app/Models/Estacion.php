@@ -11,5 +11,6 @@ class Estacion extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $connection   = "mysql";
     protected $table = "estaciones";
 }
