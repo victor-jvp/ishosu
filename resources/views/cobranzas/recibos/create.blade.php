@@ -567,6 +567,12 @@
         var total_cobrado_usd = 0
 
         $(document).ready(function () {
+            $(window).keydown(function(event){
+                if(event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
             table_montos = $("#table_montos").DataTable({
                 language: table_es_lang,
                 info: false,
