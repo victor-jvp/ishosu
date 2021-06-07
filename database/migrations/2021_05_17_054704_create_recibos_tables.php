@@ -43,6 +43,7 @@ class CreateRecibosTables extends Migration
             $table->foreign('TIPO_DOC')->references('TIPO_DOC')->on('tipo_documento');
 
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('recibos_det', function (Blueprint $table) {
@@ -53,8 +54,13 @@ class CreateRecibosTables extends Migration
             $table->double("CANTIDAD")->nullable();
             $table->double("DENOMINACION")->nullable();
             $table->string("REFERENCIA", 55)->nullable();
+            $table->date("FECHA_PAGO")->nullable();
+            $table->unsignedBigInteger("bank_id_e")->nullable();
+            $table->unsignedBigInteger("bank_id_r")->nullable();
             $table->double("MONTO")->nullable();
 
+            $table->foreign('bank_id_e')->references('id')->on('banks');
+            $table->foreign('bank_id_r')->references('id')->on('banks');
             $table->foreign('id_recibo')->references('id')->on('recibos_cab')->onDelete('cascade');
         });
     }

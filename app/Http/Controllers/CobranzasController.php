@@ -108,7 +108,7 @@ class CobranzasController extends Controller
             DB::beginTransaction();
 
             ReciboCab::where("id_relacion", $id)->update(["id_relacion" => NULL]);
-            Relacion::destroy($id);
+            Relacion::find($id)->delete();
 
             DB::commit();
             return response()->json([

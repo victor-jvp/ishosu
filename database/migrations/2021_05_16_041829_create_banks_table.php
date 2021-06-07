@@ -25,16 +25,6 @@ class CreateBanksTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-
-        Schema::table('recibos_det', function (Blueprint $table) {
-            $table->date("FECHA_PAGO")->nullable()->after("REFERENCIA");
-            $table->unsignedBigInteger("bank_id_e")->nullable()->after("FECHA_PAGO");
-            $table->unsignedBigInteger("bank_id_r")->nullable()->after("bank_id_e");
-
-
-            $table->foreign('bank_id_e')->references('id')->on('banks');
-            $table->foreign('bank_id_r')->references('id')->on('banks');
-        });
     }
 
     /**
@@ -44,10 +34,6 @@ class CreateBanksTable extends Migration
      */
     public function down()
     {
-        Schema::dropColumns("recibos_det", "bank_id_e");
-        Schema::dropColumns("recibos_det", "bank_id_r");
-        Schema::dropColumns("recibos_det", "FECHA_PAGO");
-
         Schema::dropIfExists('banks');
     }
 }

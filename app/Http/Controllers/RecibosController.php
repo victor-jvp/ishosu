@@ -152,7 +152,7 @@ class RecibosController extends Controller
         try {
             DB::beginTransaction();
 
-            ReciboCab::destroy($id);
+            ReciboCab::find($id)->delete();
 
             DB::commit();
             return response()->json([
