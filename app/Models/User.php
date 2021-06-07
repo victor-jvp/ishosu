@@ -70,4 +70,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(ReciboCab::class, "updated_by");
     }
+
+    public function estacion()
+    {
+        return $this->belongsTo(Estacion::class, "estacion_id");
+    }
 }

@@ -24,6 +24,11 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'config.users.update'])->assignRole($role1);
         Permission::create(['name' => 'config.users.delete'])->assignRole($role1);
 
+        Permission::create(['name' => 'config.estaciones.index'])->assignRole($role1);
+        Permission::create(['name' => 'config.estaciones.create'])->assignRole($role1);
+        Permission::create(['name' => 'config.estaciones.update'])->assignRole($role1);
+        Permission::create(['name' => 'config.estaciones.delete'])->assignRole($role1);
+
         Permission::create(['name' => 'recibos.index'])->syncRoles([$role1, $role2, $role3]);
         Permission::create(['name' => 'recibos.create'])->syncRoles([$role1, $role2, $role3]);
         Permission::create(['name' => 'recibos.update'])->syncRoles([$role1, $role2]);

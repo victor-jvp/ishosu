@@ -1,13 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Modificar Usuario')
+@section('title', 'Modificar Estación')
 
 @section('content')
 
 <section class="content">
-    <form method="POST" action="{{ route("config.users.update", $user->id) }}" id="form_submit">
-        @csrf
-        @method("PUT")
-
         <div class="container-fluid">
             <div class="block-header">
                 <ol class="breadcrumb">
@@ -18,23 +14,24 @@
                     </li>
                     <li>
                         <a href="javascript:void(0);">
-                            Usuarios
+                            Estaciones
                         </a>
                     </li>
                     <li class="active">
-                        Nuevo
+                        Modificar
                     </li>
                 </ol>
             </div>
 
-            <form method="POST" action="{{ route('config.users.store') }}">
+            <form method="POST" action="{{ route('config.estaciones.update', $estacion->id) }}" id="form_submit">
                 @csrf
+
                 <div class="row clearfix">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <div class="card">
                             <div class="header">
                                 <h2>
-                                    Datos del Usuario: {{ $user->name }}
+                                    Datos de la Estación {{ $estacion->name }}
                                     {{-- <small>Description text here...</small> --}}
                                 </h2>
                                 <ul class="header-dropdown m-r-0">
@@ -50,88 +47,23 @@
                             <div class="body">
 
                                 <div class="row clearfix">
-                                    <div class="col-sm-4">
-                                        <label for="name">Nombres y Apellidos</label>
+                                    <div class="col-sm-6">
+                                        <label for="codigo">Codigo</label>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text" class="form-control" id="name" name="name" required
-                                                    value="{{ $user->name }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="email">Email</label>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="email" class="form-control" id="email" name="email"
-                                                    value="{{ $user->email }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="estacion_id">Estación</label>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <select class="form-control show-tick" data-live-search="true"
-                                                    data-container="body" data-size="10" data-title="Seleccione..."
-                                                    name="estacion_id" id="estacion_id">
-                                                    <option value="">-Ninguna-</option>
-                                                    @forelse ($estaciones as $item)
-                                                    <option {{ ($user->estacion_id == $item->id) ? "selected" : "" }}
-                                                        data-subtext="{{ $item->codigo }}"
-                                                        value="{{ $item->id }}">{{ $item->name }}</option>
-                                                    @empty
-                                                    <option value="" disabled>-Sin datos-</option>
-                                                    @endforelse
-                                                </select>
+                                                <input type="text" class="form-control" id="codigo" name="codigo" max="3"
+                                                    required value="{{ $estacion->codigo }}">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="row clearfix">
-                                    <div class="col-sm-4">
-                                        <label for="username">Usuario</label>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label for="name">Nombre de Estación</label>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text" class="form-control" id="username" name="username"
-                                                    required value="{{ $user->username }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="password">Contraseña</label>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="password" class="form-control" id="password"
-                                                    name="password">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="password_confirmation">Confirmar Contraseña</label>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="password" class="form-control" id="password_confirmation"
-                                                    minlength="6" name="password_confirmation">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row clearfix">
-                                    <div class="col-sm-4">
-                                        <label for="roles">Rol</label>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <select class="form-control show-tick" data-live-search="true" required
-                                                    data-container="body" data-size="10" data-title="Seleccione..."
-                                                    name="roles[]" id="roles">
-                                                    @foreach ($roles as $item)
-                                                    <option {{ ($user->hasRole($item->name)) ? "selected" : "" }}
-                                                        value="{{ $item->id }}">{{ $item->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <input type="text" class="form-control" id="name" name="name" value="{{ $estacion->name }}">
                                             </div>
                                         </div>
                                     </div>
@@ -142,7 +74,6 @@
                 </div>
             </form>
         </div>
-    </form>
 </section>
 
 @endsection
@@ -172,20 +103,6 @@
 
 <script>
     $('#form_submit').validate({
-        rules:{
-            password:{
-                minlength:  6
-            },
-            password_confirmation : {
-                minlength : 6,
-                equalTo : "#password"
-            }
-        },
-        messages:{
-            password_confirmation: {
-                equalTo: "Las contraseñas no coinciden."
-            }
-        },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');
         },
@@ -247,6 +164,5 @@
             });
         }
     });
-
 </script>
 @endsection

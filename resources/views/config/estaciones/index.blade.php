@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Usuarios')
+@section('title', 'Estaciones')
 
 @section('content')
 
@@ -19,7 +19,7 @@
                     </a>
                 </li>
                 <li class="active">
-                    Usuarios
+                    Estaciones
                 </li>
             </ol>
         </div>
@@ -30,13 +30,13 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            Lista de Usuarios Registrados
+                            Lista de Estaciones Registradas
                             {{-- <small>Description text here...</small> --}}
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>
-                                <a href="{{ route('config.users.create') }}" data-toggle="tooltip" data-placement="auto"
-                                    data-original-title="Nuevo"
+                                <a href="{{ route('config.estaciones.create') }}" data-toggle="tooltip" data-placement="auto"
+                                    data-original-title="Nueva"
                                     class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
                                     <i class="material-icons">add_circle</i>
                                 </a>
@@ -49,32 +49,25 @@
                                 width="100%">
                                 <thead class="bg-indigo">
                                     <tr>
-                                        <th>Usuario</th>
-                                        <th>Nombre</th>
-                                        <th>Roles</th>
+                                        <th>Codigo</th>
                                         <th>Estacion</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($users as $user)
+                                    @foreach($estaciones as $item)
                                     <tr>
-                                        <td>{{ $user->username }}</td>
-                                        <td>{{ $user->name }}</td>
-                                        <td>
-                                            @foreach ($user->roles as $rol)
-                                                {{ $rol->name }}<br>
-                                            @endforeach
-                                        </td>
-                                        <td>{{ $user->estacion->name ?? "" }}</td>
+                                        <td>{{ $item->codigo }}</td>
+                                        <td>{{ $item->name }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route("config.users.edit", $user->id) }}"
+                                                <a href="{{ route("config.estaciones.edit", $item->id) }}"
                                                     class="btn btn-default btn-sm waves-effect" data-toggle="tooltip"
                                                     data-placement="auto" data-original-title="Modificar"><i
                                                         class="material-icons">edit</i>
                                                 </a>
-                                                <button type="button" onclick="DeleteRow('{{ route('config.users.delete', $user->id) }}')"
+                                                <button type="button"
+                                                    onclick="DeleteRow('{{ route('config.estaciones.delete', $item->id) }}')"
                                                     class="btn btn-default btn-sm waves-effect" data-toggle="tooltip"
                                                     data-placement="auto" data-original-title="Borrar"><i
                                                         class="material-icons">delete</i>
@@ -128,7 +121,7 @@
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ],
             columnDefs: [{
-                targets:    4,
+                targets: 2,
                 sorting: false
             }],
             sorting: [

@@ -79,6 +79,14 @@
                     </a>
                 </li>
                 @endcan
+                @can('config.estaciones.index')
+                <li class="{{ request()->is('config/estaciones*') ? 'active' : '' }}">
+                    <a href="{{ route('config.estaciones.index') }}">
+                        <i class="material-icons">person_pin</i>
+                        <span>Estaciones</span>
+                    </a>
+                </li>
+                @endcan
                 @endcanany
             </ul>
         </div>

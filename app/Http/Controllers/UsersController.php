@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estacion;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +33,7 @@ class UsersController extends Controller
 
         return view("config.users.create", [
             "roles" => Role::all(),
-            "estaciones" => []
+            "estaciones" => Estacion::all()
         ]);
     }
 
@@ -46,10 +47,11 @@ class UsersController extends Controller
         try {
             $user = new User();
 
-            $user->name     = $request->name;
-            $user->username = $request->username;
-            $user->email    = $request->email;
-            $user->password = Hash::make($request->password);
+            $user->name        = $request->name;
+            $user->username    = $request->username;
+            $user->email       = $request->email;
+            $user->estacion_id = $request->estacion_id;
+            $user->password    = Hash::make($request->password);
             $user->save();
 
             $user->roles()->sync($request->roles);
@@ -83,7 +85,7 @@ class UsersController extends Controller
 
         $user       = User::find($id);
         $roles      = Role::all();
-        $estaciones = [];
+        $estaciones = Estacion::all();
 
         return view("config.users.edit", compact(
             "user",
@@ -102,9 +104,10 @@ class UsersController extends Controller
         try {
             $user = User::find($id);
 
-            $user->name     = $request->name;
-            $user->username = $request->username;
-            $user->email    = $request->email;
+            $user->name        = $request->name;
+            $user->username    = $request->username;
+            $user->estacion_id = $request->estacion_id;
+            $user->email       = $request->email;
             if (!empty($request->password)) {
                 $user->password = Hash::make($request->password);
             }
@@ -139,20 +142,41 @@ class UsersController extends Controller
             return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
         }
 
-        $user = User::find($id);
-        if(is_null($user)) return redirect()->route('config.users.edit', $user)->with("info", "Ha ocurrido un problema al encontrar el usuario");
+        DB::beginTransaction();
+        try {
+            $user = User::find($id);
+            if(is_null($user)) return redirect()->route('config.users.edit', $user)->with("info", "Ha ocurrido un problema al encontrar el usuario");
 
-        //Validate if users has more than one record created
-        $inRecords = $user->documentosCreatedBy->count() +
-        $user->documentosUpdatedBy->count() +
-        $user->relacionesCreatedBy->count() +
-        $user->relacionesUpdatedBy->count();
+            //Validate if users has more than one record created
+            $inRecords = $user->documentosCreatedBy->count() +
+            $user->documentosUpdatedBy->count() +
+            $user->relacionesCreatedBy->count() +
+            $user->relacionesUpdatedBy->count();
 
-        if ($inRecords > 0) { // if has more than one record delete it
-            $user->delete();
-        }else{ // if has no records then destroy it
-            $user->forceDelete();
+            if ($inRecords > 0) { // if has more than one record delete it
+                $user->delete();
+            }else{ // if has no records then destroy it
+                $user->forceDelete();
+            }
+
+            DB::commit();
+            $result = [
+                'title' => "Aviso.",
+                "text"  => "Usuario eliminado con exito",
+                "type"  => "success",
+                "goto"  => route('config.users.index')
+            ];
+            return response()->json($result);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollback();
+
+            return response()->json([
+                'title' => "Atención.",
+                "text"  => "Error en guardado del registro. Intente nuevamente.",
+                "type"  => "error",
+                "error" => $e->getMessage()
+            ]);
         }
-        return redirect()->route('config.users.edit', $user)->with("info", "Usuario eliminado con exito");
     }
 }

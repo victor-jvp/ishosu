@@ -5,6 +5,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RecibosController;
 use App\Http\Controllers\CobranzasController;
 use App\Http\Controllers\DocumentosController;
+use App\Http\Controllers\EstacionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('cobranzas/recibos', RecibosController::class);
     Route::post('documentos/ajaxSearchById', [DocumentosController::class, 'ajaxSearchById'])->name('documentos.ajaxSearchById');
 
-    Route::resource('config/users', UsersController::class)->only(['index', 'create', 'store', 'edit', 'update'])->names('config.users');
     Route::delete('config/users/delete/{id}', [UsersController::class, 'delete'])->name('config.users.delete');
+    Route::resource('config/users', UsersController::class)->only(['index', 'create', 'store', 'edit', 'update'])->names('config.users');
+
+    Route::delete('config/estaciones/delete/{id}', [EstacionController::class, 'delete'])->name('config.estaciones.delete');
+    Route::resource('config/estaciones', EstacionController::class)->only(['index', 'create', 'store', 'edit', 'update'])->names('config.estaciones');
 });
