@@ -97,12 +97,14 @@
                                                        data-toggle="tooltip" data-placement="auto"
                                                        data-original-title="Imprimir"><i class="material-icons">print</i>
                                                     </a>
+                                                    @can('recibos.delete')
                                                     <button type="button" onclick="DeleteRow({{ $item->id }})"
                                                             class="btn btn-default btn-sm waves-effect"
                                                             data-toggle="tooltip" data-placement="auto"
                                                             data-original-title="Borrar"><i
                                                             class="material-icons">delete</i>
                                                     </button>
+                                                    @endcan
                                                 </div>
                                             </td>
                                         </tr>
