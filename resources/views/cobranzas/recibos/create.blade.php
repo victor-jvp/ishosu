@@ -291,7 +291,7 @@
                                                 <div class="form-group">
                                                     <div class="form-line">
                                                         <input type="text" class="form-control monto" id="tasa_cambio"
-                                                               name="tasa_cambio" value="0">
+                                                               name="tasa_cambio" value="0" min="0.001" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -907,11 +907,11 @@
                 $("#saldo_doc").val( saldo_doc.toFixed(2))
             }
 
-            if ($("#tipo_doc_ne").prop("checked")) { // Si es nota de entrega calcular la tasa de cambio
-                const tasa_camb = parseFloat($("#total_vef").inputmask('unmaskedvalue') ?? 0) / total_recibido
-                // console.log(monto_factura, total_recibido, tasa_camb)
-                $("#tasa_cambio").val(tasa_camb.toFixed(2))
-            }
+            // if ($("#tipo_doc_ne").prop("checked")) { // Si es nota de entrega calcular la tasa de cambio
+            //     const tasa_camb = parseFloat($("#total_vef").inputmask('unmaskedvalue') ?? 0) / total_recibido
+            //     // console.log(monto_factura, total_recibido, tasa_camb)
+            //     $("#tasa_cambio").val(tasa_camb.toFixed(2))
+            // }
         }
 
         function AddBilletes() {

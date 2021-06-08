@@ -70,12 +70,13 @@ class RecibosController extends Controller
             $reciboCab->NUMEDOCU    = $request->nro_documento;
             $reciboCab->TIPO_COBRO  = $request->tipo_cobro;
             $reciboCab->PORC        = ($request->tipo_cobro == "desc") ? Str::remove(",", $request->porcentaje) : 0;
-            $reciboCab->MONTO_DESC  = Str::remove(",", $request->monto_desc);
-            $reciboCab->MONTO_DOC   = Str::remove(",", $request->total_a_cobrar);
-            $reciboCab->MONTO_RET   = Str::remove(",", $request->monto_ret);
-            $reciboCab->TASA_CAMB   = Str::remove(",", $request->tasa_cambio);
-            $reciboCab->VUELTO      = Str::remove(",", $request->vuelto);
-            $reciboCab->SALDO_DOC   = Str::remove(",", $request->saldo_doc);
+
+            $reciboCab->MONTO_DESC  = ($request->monto_desc != "") ? Str::remove(",", $request->monto_desc) : 0;
+            $reciboCab->MONTO_DOC   = ($request->total_a_cobrar != "") ? Str::remove(",", $request->total_a_cobrar) : 0;
+            $reciboCab->MONTO_RET   = ($request->monto_ret != "") ? Str::remove(",", $request->monto_ret) : 0;
+            $reciboCab->TASA_CAMB   = ($request->tasa_cambio != "") ? Str::remove(",", $request->tasa_cambio) : 0;
+            $reciboCab->VUELTO      = ($request->vuelto != "") ? Str::remove(",", $request->vuelto) : 0;
+            $reciboCab->SALDO_DOC   = ($request->saldo_doc != "") ? Str::remove(",", $request->saldo_doc) : 0;
 
             $reciboCab->save();
 

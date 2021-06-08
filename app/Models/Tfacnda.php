@@ -20,6 +20,7 @@ class Tfacnda extends Model
         'TOTADOCU' => "double",
         "CAMBDOL"  => "double",
         "TIPODOCU" => "string",
+        "CODICLIE" => "string",
     ];
     protected $appends = [
         "total_cobrado"

@@ -20,4 +20,9 @@ class Truta extends Model
         "NOMBVEND",
         "CEDUVEND"
     ];
+
+    public function getIdClienteAttribute()
+    {
+        return trim($this->CODICLIE);
+    }
 }

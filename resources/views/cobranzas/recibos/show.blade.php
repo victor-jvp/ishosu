@@ -3,6 +3,10 @@
 
 @section('content')
 
+@php
+    $nDecimals = ($recibo->TIPO_MONEDA == "USD") ? 3 : 2;
+@endphp
+
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
@@ -289,7 +293,7 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="tasa_cambio"
-                                                        name="tasa_cambio" disabled value="0">
+                                                        name="tasa_cambio" disabled value="{{ number_format($recibo->TASA_CAMB, $nDecimals) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -298,7 +302,8 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="total_cobrado"
-                                                        name="total_cobrado" disabled value="0">
+                                                        name="total_cobrado" disabled
+                                                        value="{{ number_format(($recibo->MONTO_DOC - $recibo->MONTO_RET), $nDecimals) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -310,7 +315,7 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="total_a_cobrar"
-                                                        name="total_a_cobrar" disabled value="0">
+                                                        name="total_a_cobrar" disabled value="{{ number_format($recibo->MONTO_DOC - $recibo->MONTO_RET, $nDecimals) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -321,9 +326,15 @@
                                                     <select class="form-control show-tick"
                                                         data-container="body" data-title="Seleccione..."
                                                         disabled id="tipo_cobro">
-                                                        <option value="total">Total del Documento</option>
-                                                        <option value="desc">Descuento</option>
-                                                        <option value="espec">Negociación Especial</option>
+                                                        <option {{ $recibo->TIPO_COBRO == "total" ? "selected" : "" }} value="total">Total del Documento</option>
+                                                        <option
+                                                            {{ $recibo->TIPO_COBRO == "desc" ? "selected" : "" }}
+                                                            value="desc">
+                                                            Descuento</option>
+                                                        <option
+                                                            {{ $recibo->TIPO_COBRO == "espec" ? "selected" : "" }}
+                                                            value="espec">
+                                                            Negociación Especial</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -342,7 +353,9 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="monto_desc"
-                                                           name="monto_desc" value="{{ $recibo->MONTO_DESC }}" readonly value="0">
+                                                           name="monto_desc"
+                                                           value="{{ number_format($recibo->MONTO_DESC, $nDecimals) }}" readonly
+                                                           value="0">
                                                 </div>
                                             </div>
                                         </div>
@@ -354,7 +367,8 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="monto_ret"
-                                                        name="monto_ret" disabled value="0">
+                                                        name="monto_ret" disabled
+                                                        value="{{ number_format($recibo->MONTO_RET, $nDecimals) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -371,7 +385,8 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="saldo_doc"
-                                                        name="saldo_doc" disabled value="0">
+                                                        name="saldo_doc" disabled
+                                                        value="{{ number_format( $recibo->SALDO_DOC, $nDecimals) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -380,7 +395,7 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="vuelto"
-                                                        name="vuelto" value="0" disabled>
+                                                        name="vuelto" value="{{ number_format($recibo->VUELTO, $nDecimals) }}" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -418,10 +433,10 @@
                                                 </tr>
                                             @else
                                                 <tr>
-                                                    <td>{{ $item->bank_e->name }}</td>
-                                                    <td>{{ $item->bank_r->name }}</td>
-                                                    <td>{{ $item->FECHA_PAGO }}</td>
-                                                    <td>{{ $item->REFERENCIA }}</td>
+                                                    <td class="text-center">{{ $item->bank_e->name }}</td>
+                                                    <td class="text-center">{{ $item->bank_r->name }}</td>
+                                                    <td class="text-center">{{ $item->FECHA_PAGO->format("d/m/Y") }}</td>
+                                                    <td class="text-center">{{ $item->REFERENCIA }}</td>
                                                     <td class="text-right">{{ number_format($item->MONTO, 2, ".", ",") }}</td>
                                                 </tr>
                                             @endif
@@ -544,12 +559,7 @@
                 success: (result) => {
                     let resp = result.results[0]
 
-                    $("#tipo_cobro").selectpicker("val", "{{ $recibo->TIPO_COBRO }}")
                     $("#chk_monto_ret").prop("checked", "{{ ($recibo->MONTO_RET > 0) ? true : false }}")
-                    $("#total_a_cobrar").val("{{ $recibo->MONTO_DOC }}")
-                    $("#monto_ret").val("{{ $recibo->MONTO_RET }}")
-                    $("#porcentaje").val("{{ $recibo->PORC }}")
-                    $("#vuelto").val("{{ $recibo->VUELTO }}")
 
                     $("#fecha_documento").val(moment(resp.FECHA).format("YYYY-MM-DD"))
                     $("#id_cliente").val(resp.CODICLIE)
@@ -589,23 +599,23 @@
                     $("#total_vef").val(totalDocu.toFixed(2))
                     $("#total_usd").val(toTrunc(totalDocu / cambDol, 3))
 
-                    $("#monto_doc_vef").val()
-                    $("#tasa_cambio").val(cambDol)
+                    // $("#monto_doc_vef").val()
+                    // $("#tasa_cambio").val(cambDol)
 
-                    const moneda = ($("#tipo_moneda_usd").prop("checked")) ? "usd" : "vef"
-                    total_cobrado_usd = resp.total_cobrado
-                    total_cobrado_vef = resp.total_cobrado * resp.CAMBDOL
+                    // const moneda = ($("#tipo_moneda_usd").prop("checked")) ? "usd" : "vef"
+                    // total_cobrado_usd = resp.total_cobrado
+                    // total_cobrado_vef = resp.total_cobrado * resp.CAMBDOL
 
-                    if (moneda == "usd")
-                    {
-                        $("#total_cobrado").val(toTrunc(total_cobrado_usd, 3))
-                    }else{
-                        $("#total_cobrado").val(total_cobrado_vef.toFixed(2))
-                    }
+                    // if (moneda == "usd")
+                    // {
+                    //     $("#total_cobrado").val(toTrunc(total_cobrado_usd, 3))
+                    // }else{
+                    //     $("#total_cobrado").val(total_cobrado_vef.toFixed(2))
+                    // }
 
                     $("#ret_iva").prop("checked", resp.cliente.AGENTERET)
 
-                    UpdateMontos()
+                    // UpdateMontos()
                 }
             })
         }
@@ -615,7 +625,7 @@
             const total_recibido = parseFloat(table_montos.column(2).data().sum())
             $("#total_recibido").html(total_recibido.toFixed(2))
 
-            const total_cobrado = parseFloat( $("#total_cobrado").inputmask('unmaskedvalue') )
+            /* const total_cobrado = parseFloat( $("#total_cobrado").inputmask('unmaskedvalue') )
             total_a_cobrar = parseFloat($("#total_a_cobrar").inputmask('unmaskedvalue'))
 
             let saldo_doc = 0
@@ -632,7 +642,7 @@
                 $("#saldo_doc").val( toTrunc(saldo_doc, 3) )
             }else{
                 $("#saldo_doc").val( saldo_doc.toFixed(2) )
-            }
+            } */
 
             if ($("#tipo_doc_ne").prop("checked")) { // Si es nota de entrega calcular la tasa de cambio
                 const tasa_camb = parseFloat($("#total_vef").inputmask('unmaskedvalue') ?? 0) / total_recibido

@@ -21,7 +21,8 @@ class Tfachisa extends Model
         'FECHA'    => "datetime:Y-m-d",
         'TOTADOCU' => "double",
         "CAMBDOL"  => "double",
-        "TIPODOCU" => "string"
+        "TIPODOCU" => "string",
+        "CODICLIE" => "string",
     ];
     protected $appends      = [
         "total_cobrado"

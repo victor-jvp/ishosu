@@ -16,6 +16,7 @@ class Tcpce extends Model
     protected $keyType      = "string";
     protected $casts        = [
         "AGENTERET" => "boolean",
+        "CODICLIE" => "string",
     ];
 
     protected $appends      = [

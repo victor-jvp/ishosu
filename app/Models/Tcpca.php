@@ -24,4 +24,9 @@ class Tcpca extends Model
         "RIF",
         "AGENTERET"
     ];
+
+    public function getIdClienteAttribute()
+    {
+        return trim($this->CODICLIE);
+    }
 }
