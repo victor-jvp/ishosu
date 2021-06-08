@@ -177,7 +177,8 @@
         </td>
     </tr>
     <tr>
-        <td colspan="4" class="text-right">Tipo de Cobro:</td>
+        {{-- <td colspan="4" class="text-right">Tipo de Cobro:</td> --}}
+        <td colspan="4"></td>
         @switch($recibo->TIPO_COBRO)
             @case("total")
             <td><b> Monto total del documento.</b></td>
@@ -189,19 +190,20 @@
             <td class="text-right"><b>{{ number_format($recibo->MONTO_DESC, $nDecimals) }}</b></td>
             @break
             @default
-            <td><b>Negociación Especial.</b></td>
+            {{-- <td><b>Negociación Especial.</b></td> --}}
+            <td></td>
             @if ($recibo->TIPO_MONEDA == "USD")
                 @php
                     $montoNota = ($document->TOTADOCU / $recibo->TASA_CAMB) - $recibo->montoRecibido;
                     if ($montoNota < 0) {
                         $titleNota = "Nota de Debito:";
-                        $montoNota = abs($montoNota);
+                        $montoNota = $montoNota;
                     }else{
                         $titleNota = "Nota de Crédito:";
-                        $montoNota = abs($montoNota);
+                        $montoNota = $montoNota;
                     }
                 @endphp
-                <td class="text-right">{{ $titleNota }}</td>
+                <td class="text-right"></td>
                 <td class="text-right"><b>{{ number_format($montoNota, $nDecimals) }}</b></td>
             @else
                 @php
@@ -212,9 +214,9 @@
                         $titleNota = "Nota de Crédito:";
 
                     }
-                    $montoNota = abs($montoNota);
+                    $montoNota = $montoNota;
                 @endphp
-                <td class="text-right">{{ $titleNota }}</td>
+                <td class="text-right"></td>
                 <td class="text-right"><b>{{ number_format($montoNota, $nDecimals) }}</b></td>
             @endif
 

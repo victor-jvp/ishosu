@@ -291,7 +291,7 @@
                                                 <div class="form-group">
                                                     <div class="form-line">
                                                         <input type="text" class="form-control monto" id="tasa_cambio"
-                                                               name="tasa_cambio" value="0" min="0.001" required>
+                                                               name="tasa_cambio" value="0" required>
                                                     </div>
                                                 </div>
                                             </div>
