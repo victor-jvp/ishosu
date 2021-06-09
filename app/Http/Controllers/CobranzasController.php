@@ -109,7 +109,7 @@ class CobranzasController extends Controller
 
             // ReciboCab::where("id_relacion", $id)->update(["id_relacion" => NULL]);
             $relacion = Relacion::with('recibos')->find($id);
-            $relacion->recibos()->delete();
+            $relacion->recibos()->update(["id_relacion" => null]);
             $relacion->delete();
 
 

@@ -156,11 +156,11 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-5">
                                         <table class="table table-bordered table-hover table-condensed"
                                                style="width: 100%">
                                             <thead class="bg-grey">
-                                            <th class="text-center">Datos del Documento</th>
+                                            <th class="text-center" width="20%">Datos del Documento</th>
                                             <th class="text-center" style="width: 30%;">Bs.</th>
                                             <th class="text-center" style="width: 30%;">$</th>
                                             </thead>
@@ -283,7 +283,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-sm-6" style="margin-bottom: -20px">
+                                    <div class="col-sm-7" style="margin-bottom: -20px">
 
                                         <div class="row">
                                             <div class="col-sm-4">

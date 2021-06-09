@@ -100,8 +100,8 @@
                                                 <td>{{ $item->FECHA->format("d/m/Y") }}</td>
                                                 <td>{{ $item->tipoDocumento->DESCR }}</td>
                                                 <td>{{ $item->NUMEDOCU }}</td>
-                                                <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE : $item->notaEntrega->CODICLIE }}</td>
-                                                <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE : $item->notaEntrega->cliente->NOMBCLIE }}</td>
+                                                <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE ?? "" : $item->notaEntrega->CODICLIE ?? "" }}</td>
+                                                <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE ?? "" : $item->notaEntrega->cliente->NOMBCLIE ?? "" }}</td>
                                                 <td>{{ $item->TIPO_MONEDA }}</td>
                                                 <td>{{number_format( $item->MONTO_DOC, $nDecimals, ".", "," ) }}</td>
                                                 <td>{{number_format( $item->montoRecibido, $nDecimals, ".", "," ) }}</td>
