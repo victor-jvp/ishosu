@@ -3,9 +3,16 @@
 
 @section('content')
 
-@php
-    $nDecimals = ($recibo->TIPO_MONEDA == "USD") ? 3 : 2;
-@endphp
+    @php
+        $nDecimals = ($recibo->TIPO_MONEDA == "USD") ? 3 : 2;
+         if ($recibo->TIPO_DOC == "FA") {
+            $document = $recibo->factura;
+        }else if($recibo->TIPO_DOC == "NE"){
+            $document = $recibo->notaEntrega;
+        }else {
+            $document = $recibo->notaDebito;
+        }
+    @endphp
 
     <section class="content">
         <div class="container-fluid">
@@ -36,16 +43,16 @@
                                 {{-- <small>Different sizes and widths</small> --}}
                             </h2>
                             <ul class="header-dropdown m-r-0">
-                                @if ($recibo->TIPO_)
-
+                                @if ($recibo->TIPO_PAGO == "E")
+                                    <li>
+                                        <a href="{{ route('recibos.print', $recibo->id) }}" data-toggle="tooltip"
+                                           data-placement="auto"
+                                           data-original-title="Imprimir Recibo" target="_blank"
+                                           class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
+                                            <i class="material-icons">print</i>
+                                        </a>
+                                    </li>
                                 @endif
-                                <li>
-                                    <a href="{{ route('recibos.print', $recibo->id) }}" data-toggle="tooltip" data-placement="auto"
-                                        data-original-title="Imprimir Recibo" target="_blank"
-                                        class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
-                                        <i class="material-icons">print</i>
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                         <div class="body">
@@ -54,15 +61,15 @@
                                 <div class="col-sm-4">
                                     <p><b>Tipo de Documento</b></p>
                                     <input type="radio" {{ ($recibo->TIPO_DOC == "FA") ? "checked" : "" }} disabled
-                                        class="tipo_doc with-gap radio-col-indigo" />
+                                           class="tipo_doc with-gap radio-col-indigo"/>
                                     <label for="tipo_doc_fa">Factura</label>
 
                                     <input type="radio" {{ ($recibo->TIPO_DOC == "NE") ? "checked" : "" }} disabled
-                                        class="tipo_doc with-gap radio-col-indigo" />
+                                           class="tipo_doc with-gap radio-col-indigo"/>
                                     <label for="tipo_doc_ne">Nota de Entrega</label>
 
                                     <input type="radio" {{ ($recibo->TIPO_DOC == "ND") ? "checked" : "" }} disabled
-                                        class="tipo_doc with-gap radio-col-indigo" />
+                                           class="tipo_doc with-gap radio-col-indigo"/>
                                     <label for="tipo_doc_nd">Nota de Débito</label>
                                 </div>
 
@@ -81,7 +88,7 @@
                                 <div class="col-sm-4">
                                     <p><b>Tipo de Pago</b></p>
                                     <input type="radio" {{ ($recibo->TIPO_PAGO == "E") ? "checked" : "" }} disabled
-                                        class="tipo_pago with-gap radio-col-indigo" />
+                                           class="tipo_pago with-gap radio-col-indigo"/>
                                     <label for="">Efectivo</label>
 
 
@@ -118,7 +125,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" class="form-control"
-                                                   value="{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODICLIE : $recibo->notaEntrega->CODICLIE }}"
+                                                   value="{{ $document->CODICLIE ?? '' }}"
                                                    disabled>
                                             <label class="form-label">Codigo Cliente</label>
                                         </div>
@@ -142,7 +149,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" class="form-control"
-                                                   value="{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODIRUTA : $recibo->notaEntrega->CODIRUTA }}"
+                                                   value="{{ $document->CODIRUTA ?? '' }}"
                                                    disabled>
                                             <label class="form-label">Codigo Ruta</label>
                                         </div>
@@ -152,7 +159,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" class="form-control"
-                                                   value="{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->ruta->NOMBVEND : $recibo->notaEntrega->ruta->NOMBVEND }}"
+                                                   value="{{ $document->ruta->NOMBVEND ?? '' }}"
                                                    disabled>
                                             <label class="form-label">Vendedor</label>
                                         </div>
@@ -162,7 +169,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" class="form-control"
-                                                   value="{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}"
+                                                   value="{{ $document->cliente->NOMBCLIE ?? '' }}"
                                                    disabled>
                                             <label class="form-label">Codigo Cliente</label>
                                         </div>
@@ -174,126 +181,126 @@
                                 <div class="col-sm-6">
                                     <table class="table table-bordered table-hover table-condensed" style="width: 100%">
                                         <thead class="bg-grey">
-                                            <th class="text-center">Datos del Documento</th>
-                                            <th class="text-center" style="width: 30%;">Bs.</th>
-                                            <th class="text-center" style="width: 30%;">$</th>
+                                        <th class="text-center">Datos del Documento</th>
+                                        <th class="text-center" style="width: 30%;">Bs.</th>
+                                        <th class="text-center" style="width: 30%;">$</th>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <th class="text-right">Subtotal</th>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto"
-                                                                id="subtotal_vef" value="0" disabled>
-                                                        </div>
+                                        <tr>
+                                            <th class="text-right">Subtotal</th>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto"
+                                                               id="subtotal_vef" value="0" disabled>
                                                     </div>
-                                                </td>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto"
-                                                                id="subtotal_usd" value="0" disabled>
-                                                        </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto"
+                                                               id="subtotal_usd" value="0" disabled>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-right">Descuento</th>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto"
-                                                                id="descuento_vef" value="0" disabled>
-                                                        </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-right">Descuento</th>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto"
+                                                               id="descuento_vef" value="0" disabled>
                                                     </div>
-                                                </td>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto"
-                                                                id="descuento_usd" value="0" disabled>
-                                                        </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto"
+                                                               id="descuento_usd" value="0" disabled>
                                                     </div>
+                                                </div>
 
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-right">Exento</th>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto"
-                                                                id="exento_vef" value="0" disabled>
-                                                        </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-right">Exento</th>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto"
+                                                               id="exento_vef" value="0" disabled>
                                                     </div>
-                                                </td>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto"
-                                                                id="exento_usd" value="0" disabled>
-                                                        </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto"
+                                                               id="exento_usd" value="0" disabled>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-right">Base Imponible</th>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto" id="base_vef"
-                                                                value="0" disabled>
-                                                        </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-right">Base Imponible</th>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="base_vef"
+                                                               value="0" disabled>
                                                     </div>
-                                                </td>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto" id="base_usd"
-                                                                value="0" disabled>
-                                                        </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="base_usd"
+                                                               value="0" disabled>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-right">Iva 16%</th>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto" id="iva_vef"
-                                                                value="0" disabled>
-                                                        </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-right">Iva 16%</th>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="iva_vef"
+                                                               value="0" disabled>
                                                     </div>
-                                                </td>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto" id="iva_usd"
-                                                                value="0" disabled>
-                                                        </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="iva_usd"
+                                                               value="0" disabled>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-right">Total</th>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto" id="total_vef"
-                                                                value="0" disabled>
-                                                        </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-right">Total</th>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="total_vef"
+                                                               value="0" disabled>
                                                     </div>
-                                                </td>
-                                                <td class="text-right" style="padding-bottom: 0px">
-                                                    <div class="form-group" style="margin-bottom: 0px">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control monto" id="total_usd"
-                                                                value="0" disabled>
-                                                        </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-right" style="padding-bottom: 0px">
+                                                <div class="form-group" style="margin-bottom: 0px">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control monto" id="total_usd"
+                                                               value="0" disabled>
                                                     </div>
-                                                </td>
-                                            </tr>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -305,7 +312,8 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="tasa_cambio"
-                                                        name="tasa_cambio" disabled value="{{ number_format($recibo->TASA_CAMB, $nDecimals) }}">
+                                                           name="tasa_cambio" disabled
+                                                           value="{{ number_format($recibo->TASA_CAMB, $nDecimals) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -314,8 +322,8 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="total_cobrado"
-                                                        name="total_cobrado" disabled
-                                                        value="{{ number_format(($recibo->MONTO_DOC - $recibo->MONTO_RET), $nDecimals) }}">
+                                                           name="total_cobrado" disabled
+                                                           value="{{ number_format(($recibo->MONTO_DOC - $recibo->MONTO_RET), $nDecimals) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -327,7 +335,8 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="total_a_cobrar"
-                                                        name="total_a_cobrar" disabled value="{{ number_format($recibo->MONTO_DOC - $recibo->MONTO_RET, $nDecimals) }}">
+                                                           name="total_a_cobrar" disabled
+                                                           value="{{ number_format($recibo->MONTO_DOC - $recibo->MONTO_RET, $nDecimals) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -336,17 +345,22 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <select class="form-control show-tick"
-                                                        data-container="body" data-title="Seleccione..."
-                                                        disabled id="tipo_cobro">
-                                                        <option {{ $recibo->TIPO_COBRO == "total" ? "selected" : "" }} value="total">Total del Documento</option>
+                                                            data-container="body" data-title="Seleccione..."
+                                                            disabled id="tipo_cobro">
+                                                        <option
+                                                            {{ $recibo->TIPO_COBRO == "total" ? "selected" : "" }} value="total">
+                                                            Total del Documento
+                                                        </option>
                                                         <option
                                                             {{ $recibo->TIPO_COBRO == "desc" ? "selected" : "" }}
                                                             value="desc">
-                                                            Descuento</option>
+                                                            Descuento
+                                                        </option>
                                                         <option
                                                             {{ $recibo->TIPO_COBRO == "espec" ? "selected" : "" }}
                                                             value="espec">
-                                                            Negociación Especial</option>
+                                                            Negociación Especial
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -356,7 +370,7 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="porcentaje"
-                                                        name="porcentaje" value="{{ $recibo->PORC }}" disabled>
+                                                           name="porcentaje" value="{{ $recibo->PORC }}" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -366,7 +380,8 @@
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="monto_desc"
                                                            name="monto_desc"
-                                                           value="{{ number_format($recibo->MONTO_DESC, $nDecimals) }}" readonly
+                                                           value="{{ number_format($recibo->MONTO_DESC, $nDecimals) }}"
+                                                           readonly
                                                            value="0">
                                                 </div>
                                             </div>
@@ -379,14 +394,14 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="monto_ret"
-                                                        name="monto_ret" disabled
-                                                        value="{{ number_format($recibo->MONTO_RET, $nDecimals) }}">
+                                                           name="monto_ret" disabled
+                                                           value="{{ number_format($recibo->MONTO_RET, $nDecimals) }}">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-4" style="margin-bottom: 0px">
                                             <input type="checkbox" id="chk_monto_ret" class="filled-in chk-col-blue"
-                                                disabled {{ ($recibo->MONTO_RET > 0) ? "checked" : "" }}>
+                                                   disabled {{ ($recibo->MONTO_RET > 0) ? "checked" : "" }}>
                                             <label for="chk_monto_ret">Aplicar Monto de Retención</label>
                                         </div>
                                     </div>
@@ -397,8 +412,8 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="saldo_doc"
-                                                        name="saldo_doc" disabled
-                                                        value="{{ number_format( $recibo->SALDO_DOC, $nDecimals) }}">
+                                                           name="saldo_doc" disabled
+                                                           value="{{ number_format( $recibo->SALDO_DOC, $nDecimals) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -407,14 +422,15 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control monto" id="vuelto"
-                                                        name="vuelto" value="{{ number_format($recibo->VUELTO, $nDecimals) }}" disabled>
+                                                           name="vuelto"
+                                                           value="{{ number_format($recibo->VUELTO, $nDecimals) }}"
+                                                           disabled>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
 
 
                             <div class="row">
@@ -589,13 +605,13 @@
                     const descuento = (resp.TIPODOCU != "ND") ? resp.DESCUENTOG : 0
                     let cambdol = 0;
                     if (resp.TIPODOCU == "ND") {
-                    if (resp.TIPOAFEC == "FA") {
-                    cambDol = resp.fa_afectada.CAMBDOL
+                        if (resp.TIPOAFEC == "FA") {
+                            cambDol = resp.fa_afectada.CAMBDOL
+                        } else {
+                            cambDol = resp.ne_afectada.CAMBDOL
+                        }
                     } else {
-                    cambDol = resp.ne_afectada.CAMBDOL
-                    }
-                    } else {
-                    cambDol = resp.CAMBDOL
+                        cambDol = resp.CAMBDOL
                     }
 
                     $("#subtotal_vef").val(totalBrut)
@@ -633,7 +649,7 @@
         }
 
         function UpdateMontos() {
-            let vuelto = parseFloat( $("#vuelto").inputmask('unmaskedvalue') ?? 0 )
+            let vuelto = parseFloat($("#vuelto").inputmask('unmaskedvalue') ?? 0)
             const total_recibido = parseFloat(table_montos.column(2).data().sum())
             $("#total_recibido").html(total_recibido.toFixed(2))
 

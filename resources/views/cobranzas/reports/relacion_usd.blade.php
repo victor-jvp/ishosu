@@ -83,20 +83,32 @@
     @endphp
     @foreach($relacion->recibos as $recibo)
         @php
+
+            $nDecimals = ($recibo->TIPO_MONEDA == "VEF") ? 2 : 3;
+            $document = 0;
+            if ($recibo->TIPO_DOC == "FA"){
+                $document = $recibo->factura;
+            }else if($recibo->TIPO_DOC == "NE") {
+                $document = $recibo->notaEntrega;
+            }else{
+                $document = $recibo->notaDebito;
+            }
+
             $totalMontoDoc += $recibo->MONTO_DOC - $recibo->MONTO_RET;
             $totalRecibidos += $recibo->montoRecibido;
             $totalSaldoDoc += $recibo->SALDO_DOC;
             $totalVuelto += $recibo->VUELTO;
         @endphp
+
         <tr>
             <td class="text-center" style="padding: 3px;">{{ $recibo->idZero }}</td>
             <td class="text-center" style="padding: 3px;">{{ $recibo->FECHA->format("d/m/Y") }}
                 <br>{{ $recibo->FECHA->format("h:i a") }}</td>
             <td class="text-right"
-                style="padding: 3px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODICLIE : $recibo->notaEntrega->CODICLIE }}</td>
+                style="padding: 3px;">{{ $document->CODICLIE ?? '' }}</td>
             <td class=""
-                style="padding: 3px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}</td>
-            <td>{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODIRUTA."-".$recibo->factura->ruta->NOMBVEND : $recibo->notaEntrega->CODIRUTA."-".$recibo->notaEntrega->ruta->NOMBVEND }}</td>
+                style="padding: 3px;">{{ $document->cliente->NOMBCLIE ?? '' }}</td>
+            <td>{{ ($document) ? $document->CODIRUTA." - ". $document->ruta->NOMBVEND : "" }}</td>
             <td class="text-center" style="padding: 3px;">{{ $recibo->NUMEDOCU }}</td>
             <td class="text-right">
                 {{ number_format($recibo->MONTO_DOC - $recibo->MONTO_RET, 2) }}

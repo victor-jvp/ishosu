@@ -28,9 +28,18 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="header">
-                            <h2>Relación Nro. <b>{{ $relacion->idZero }}</b></h2>
-                            <h2>Moneda: <b>{{ $relacion->TIPO_MONEDA }}</b></h2>
-                            <h2>Realizado por: <b>{{ $relacion->createdBy->name }}</b></h2>
+                            <h2>Relación Nro. <b>{{ $relacion->idZero }}</b><br>
+                                Moneda: <b>{{ $relacion->TIPO_MONEDA }}</b><br>
+                                Realizado por: <b>{{ $relacion->createdBy->name }}</b></h2>
+                            <ul class="header-dropdown m-r-0">
+                                <li>
+                                    <a href="{{ route("cobranzas.print", $relacion->id) }}" target="_blank"
+                                       class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float"
+                                       data-toggle="tooltip" data-placement="auto"
+                                       data-original-title="Imprimir Relacion"><i class="material-icons">print</i>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -82,7 +91,8 @@
                                             <td>
                                                 @if ($item->VUELTO >0)
                                                     @if (!$item->VUELTO_ENT)
-                                                        <a href="javascript:void(0)" data-toggle="tooltip" onclick="EntregarVuelto({{ $item->id }})"
+                                                        <a href="javascript:void(0)" data-toggle="tooltip"
+                                                           onclick="EntregarVuelto({{ $item->id }})"
                                                            data-placement="auto" data-original-title="Procesar Entrega">
                                                             {{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}
                                                         </a>
@@ -101,18 +111,21 @@
                                                        data-toggle="tooltip" data-placement="auto"
                                                        data-original-title="Detalles"><i class="material-icons">visibility</i>
                                                     </a>
-                                                    <a href="{{ route("recibos.print", $item->id) }}" target="_blank"
-                                                       class="btn btn-default btn-sm waves-effect"
-                                                       data-toggle="tooltip" data-placement="auto"
-                                                       data-original-title="Imprimir"><i class="material-icons">print</i>
-                                                    </a>
+                                                    @if ($item->TIPO_PAGO == "E")
+                                                        <a href="{{ route("recibos.print", $item->id) }}"
+                                                           target="_blank"
+                                                           class="btn btn-default btn-sm waves-effect"
+                                                           data-toggle="tooltip" data-placement="auto"
+                                                           data-original-title="Imprimir"><i class="material-icons">print</i>
+                                                        </a>
+                                                    @endif
                                                     @can('recibos.delete')
-                                                    <button type="button" onclick="DeleteRow({{ $item->id }})"
-                                                            class="btn btn-default btn-sm waves-effect"
-                                                            data-toggle="tooltip" data-placement="auto"
-                                                            data-original-title="Borrar"><i
-                                                            class="material-icons">delete</i>
-                                                    </button>
+                                                        <button type="button" onclick="DeleteRow({{ $item->id }})"
+                                                                class="btn btn-default btn-sm waves-effect"
+                                                                data-toggle="tooltip" data-placement="auto"
+                                                                data-original-title="Borrar"><i
+                                                                class="material-icons">delete</i>
+                                                        </button>
                                                     @endcan
                                                 </div>
                                             </td>
@@ -178,8 +191,7 @@
             })
         })
 
-        function DeleteRow(id)
-        {
+        function DeleteRow(id) {
             swal({
                 title: "Confirmar",
                 text: "Confirme eliminar el registro.",
@@ -221,8 +233,7 @@
             });
         }
 
-        function EntregarVuelto(id)
-        {
+        function EntregarVuelto(id) {
             swal({
                 title: "Confirmar",
                 text: "Confirme registrar la entrega del vuelto.",

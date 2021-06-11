@@ -84,13 +84,26 @@
     </tr>
     @php($sumMonto = 0)
     @foreach($relacion->recibos as $recibo)
+
+        @php
+            $nDecimals = ($recibo->TIPO_MONEDA == "VEF") ? 2 : 3;
+            $document = 0;
+            if ($recibo->TIPO_DOC == "FA"){
+                $document = $recibo->factura;
+            }else if($recibo->TIPO_DOC == "NE") {
+                $document = $recibo->notaEntrega;
+            }else{
+                $document = $recibo->notaDebito;
+            }
+        @endphp
+
         <tr style="font-size: 6.5pt !important">
             <td class="text-center" style="padding: 5px;">{{ $recibo->idZero }}</td>
             <td class="text-center" style="padding: 5px;">{{ $recibo->FECHA->format("d/m/Y") }}</td>
             <td class="text-right"
-                style="padding: 5px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->CODICLIE : $recibo->notaEntrega->CODICLIE }}</td>
+                style="padding: 5px;">{{ $document->CODICLIE ?? "" }}</td>
             <td class=""
-                style="padding: 5px;">{{ ($recibo->TIPO_DOC == "FA") ? $recibo->factura->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}</td>
+                style="padding: 5px;">{{ $document->cliente->NOMBCLIE ?? "" }}</td>
             <td class="text-center" style="padding: 5px;">{{ $recibo->NUMEDOCU }}</td>
             <td class="text-center">
                 @foreach ($recibo->reciboDet as $det)
@@ -114,14 +127,13 @@
             </td>
             <td class="text-right">
                 @foreach ($recibo->reciboDet as $det)
-                {{ number_format($det->MONTO, 2) ?? "" }}<br>
+                    @php $sumMonto += $det->MONTO; @endphp
+                    {{ number_format($det->MONTO, 2) ?? "" }}<br>
                 @endforeach
             </td>
             <td style="padding: 5px; width: 6%"></td>
             <td style="padding: 5px; width: 6%"></td>
         </tr>
-
-        @php($sumMonto += $det->MONTO)
     @endforeach
 
     <tfoot>
@@ -132,12 +144,10 @@
     </tr>
     </tfoot>
 </table>
-<br><br>
-<hr>
 
 <table style="width: 100%">
     <tr>
-        <td>ANALISTA DE CAJA:</td>
+        <td>ANALISTA DE CAJA: <b>{{ $relacion->createdBy->name }}</b></td>
         <td>ANALISTA DE CONFIRMACION: __________________________</td>
     <tr>
         <td>FECHA Y HORA: {{ date("d/m/Y h:i a") }}</td>

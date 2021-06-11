@@ -80,7 +80,16 @@
                                     <tbody>
                                     @foreach($recibos as $item)
 
-                                        @php($nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3)
+                                        @php
+                                            $nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3;
+                                            if ($item->TIPO_DOC == "FA") {
+                                                $document = $item->factura;
+                                            }else if($item->TIPO_DOC == "NE"){
+                                                $document = $item->notaEntrega;
+                                            }else {
+                                                $document = $item->notaDebito;
+                                            }
+                                        @endphp
 
                                         <tr>
                                             <td>
@@ -99,8 +108,8 @@
                                             <td>{{ $item->FECHA->format("d/m/Y") }}</td>
                                             <td>{{ $item->tipoDocumento->DESCR }}</td>
                                             <td>{{ $item->NUMEDOCU }}</td>
-                                            <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE ?? "" : $item->notaEntrega->CODICLIE ?? "" }}</td>
-                                            <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE ?? "" : $item->notaEntrega->cliente->NOMBCLIE ?? "" }}</td>
+                                            <td>{{ $document->CODICLIE ?? "" }}</td>
+                                            <td>{{ $document->cliente->NOMBCLIE ?? "" }}</td>
                                             <td>{{ $item->TIPO_MONEDA }}</td>
                                             <td>{{number_format( $item->MONTO_DOC, $nDecimals, ".", "," ) }}</td>
                                             <td>{{number_format( $item->montoRecibido, $nDecimals, ".", "," ) }}</td>
@@ -129,7 +138,7 @@
                                                         data-toggle="tooltip" data-placement="auto"
                                                         data-original-title="Detalles"><i class="material-icons">visibility</i>
                                                     </a>
-                                                    @if ($item->TIPO_MONEDA == "USD")
+                                                    @if ($item->TIPO_PAGO == "E")
                                                     <a href="{{ route("recibos.print", $item->id) }}" target="_blank"
                                                         class="btn btn-default btn-sm waves-effect"
                                                         data-toggle="tooltip" data-placement="auto"

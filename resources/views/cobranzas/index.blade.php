@@ -67,7 +67,7 @@
                                                 <a href="{{ route("cobranzas.print", $item->id) }}" target="_blank"
                                                    class="btn btn-default btn-sm waves-effect"
                                                    data-toggle="tooltip" data-placement="auto"
-                                                   data-original-title="Detalles"><i class="material-icons">print</i>
+                                                   data-original-title="Imprimir Relación"><i class="material-icons">print</i>
                                                 </a>
                                                 @can('relaciones.delete')
                                                 <button type="button" onclick="DeleteRow({{ $item->id }})"

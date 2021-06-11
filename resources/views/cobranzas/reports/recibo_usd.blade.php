@@ -71,7 +71,7 @@
         <td class="text-center" colspan="5">
             <b>{{ $document->CODICLIE ." - ". $document->cliente->NOMBCLIE }}</b>
         </td>
-        <td class="text-center" rowspan="2" colspan="3" style="width: 250px;">FECHA: <b>{{ $recibo->FECHA->format("d/m/Y") }}<br>{{ $recibo->FECHA->format("h:i a") }}</b></td>
+        <td class="text-center" rowspan="2" colspan="3" style="width: 300px;">FECHA: <b>{{ $recibo->FECHA->format("d/m/Y") }}<br>{{ $recibo->FECHA->format("h:i a") }}</b></td>
     </tr>
     <tr>
         <td class="text-right" style="padding-right: 3px">RUTA:</td>
@@ -98,8 +98,8 @@
         <td class="text-right" style="padding-right: 5px;">{{ __("FECHA DE EMISION:") }}</td>
         <td class="text-center"><b>{{ $document->FECHA->format("d/m/Y") }}</b></td>
         <td class="text-center">{{ __("MONTO Bs.: ") }}<b>Bs. {{ number_format($document->TOTADOCU, 2) }}</b></td>
-        <td class="text-center">{{ __("MONTO $: ") }}<b>$ {{ number_format($document->TOTADOCU / $document->CAMBDOL, $nDecimals) }}</b></td>
-        <td class="text-center" >{{ __("NEG.ESP.: ") }}<br><b>$ {{ number_format($recibo->MONTO_DOC, $nDecimals) }}</b></td>
+        <td class="text-center">{{ __("MONTO $: ") }}<b>$ {{ bcdiv($document->TOTADOCU / $document->CAMBDOL, 1, 3) }}</b></td>
+        <td class="text-center" >{{ __("NEG.ESP.: ") }}<br><b>$ {{ number_format($recibo->MONTO_DOC, 3) }}</b></td>
         <td class="text-center" colspan="3">{{ __("ND / NC: ") }}<br><b>$ {{ number_format( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, $nDecimals) }}</b></td>
     </tr>
     <tr>
@@ -183,22 +183,22 @@
                     <td style="padding-right: 1%;">VUELTO:</td>
                     <td style="padding-right: 1%;"><b>$ {{ number_format($recibo->VUELTO ?? 0, 3)  }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs.
-                            {{ number_format($recibo->VUELTO * $recibo->TASA_CAMB ?? 0, 3)  }}</b></td>
+                            {{ number_format($recibo->VUELTO * $recibo->TASA_CAMB ?? 0, 2)  }}</b></td>
                 </tr>
                 <tr class="text-right">
                     <td style="padding-right: 1%;">TOTAL CANCELADO $:</td>
                     <td style="padding-right: 1%;"><b>$
-                            {{ number_format( $recibo->montoRecibido - $recibo->MONTO_RET - $recibo->VUELTO , 3) ?? "0.00" }}</b>
+                            {{ number_format( $recibo->montoRecibido - $recibo->MONTO_RET - $recibo->VUELTO , 3)}}</b>
                     </td>
                     <td style="padding-right: 1%;"><b>Bs.
-                            {{ number_format( ($recibo->montoRecibido - $recibo->MONTO_RET - $recibo->VUELTO) * $recibo->TASA_CAMB , 3) ?? "0.00" }}</b>
+                            {{ number_format( ($recibo->montoRecibido - $recibo->MONTO_RET - $recibo->VUELTO) * $recibo->TASA_CAMB , 2) }}</b>
                     </td>
                 </tr>
                 <tr class="text-right">
                     <td style="padding-right: 1%;">SALDO:</td>
-                    <td style="padding-right: 1%;"><b>$ {{ number_format($recibo->SALDO_DOC, 3) ?? "0.00" }}</b></td>
+                    <td style="padding-right: 1%;"><b>$ {{ number_format($recibo->SALDO_DOC, 3)}}</b></td>
                     <td style="padding-right: 1%;"><b>Bs.
-                            {{ number_format($recibo->SALDO_DOC * $recibo->TASA_CAMB, 3) ?? "0.00" }}</b></td>
+                            {{ number_format($recibo->SALDO_DOC * $recibo->TASA_CAMB, 2)  }}</b></td>
                 </tr>
                 <tr>
                     <td colspan="3" style="text-align: center;font-size: 9pt;font-weight: bold;text-decoration: underline; border: none;">RECIBI CONFORME</td>
