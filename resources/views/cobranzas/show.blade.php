@@ -56,14 +56,23 @@
                                     <tbody>
                                     @foreach($relacion->recibos as $item)
 
-                                        @php($nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3)
+                                        @php
+                                            $nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3;
+                                            if ($item->TIPO_DOC == "FA") {
+                                                $document = $item->factura;
+                                            }else if($item->TIPO_DOC == "NE"){
+                                                $document = $item->notaEntrega;
+                                            }else {
+                                                $document = $item->notaDebito;
+                                            }
+                                        @endphp
 
                                         <tr>
                                             <td><b>{{ $item->idZero }}</b></td>
                                             <td>{{ $item->FECHA->format("d/m/Y") }}</td>
-                                            <td>{{ ($item->TIPO_DOC == "FA") ? "Factura" : "Nota de Entrega" }}</td>
-                                            <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE : $item->notaEntrega->CODICLIE }}</td>
-                                            <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE : $item->notaEntrega->cliente->NOMBCLIE }}</td>
+                                            <td>{{ $item->tipoDocumento->DESCR }}</td>
+                                            <td>{{ $document->CODICLIE ?? "" }}</td>
+                                            <td>{{ $document->cliente->NOMBCLIE ?? "" }}</td>
                                             <td>{{ $item->NUMEDOCU }}</td>
                                             <td>{{number_format( $item->MONTO_DOC, $nDecimals, ".", "," ) }}</td>
                                             <td>{{number_format( $item->montoRecibido, $nDecimals, ".", "," ) }}</td>

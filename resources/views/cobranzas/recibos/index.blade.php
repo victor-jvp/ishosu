@@ -52,156 +52,153 @@
                             </ul>
                         </div>
                         <div class="body">
-                            <form action="{{ route('cobranzas.store') }}" method="post" id="submit_relacion">
-                                @csrf()
-                                <div class="table-responsive">
-                                    <table id="table" class="table table-striped table-hover dataTable js-exportable"
-                                           width="100%">
-                                        <thead class="bg-indigo">
+
+                            <div class="table-responsive">
+                                <table id="table" class="table table-striped table-hover dataTable js-exportable"
+                                        width="100%">
+                                    <thead class="bg-indigo">
+                                    <tr>
+                                        <th>Nro.</th>
+                                        <th>Fecha</th>
+                                        <th>Tipo Doc.</th>
+                                        <th>Nro. Doc.</th>
+                                        <th>Cod. Cliente</th>
+                                        <th>Cliente</th>
+                                        <th>Moneda</th>
+                                        <th class="text-center">Monto<br>Documento</th>
+                                        <th class="text-center">Monto<br>Recibo</th>
+                                        <th class="text-center">Monto<br>Retenido</th>
+                                        <th class="text-center">%<br>Descuento</th>
+                                        <th>Vuelto</th>
+                                        <th>Saldo</th>
+                                        @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
+                                        <th>Realizado por</th>
+                                        @endif
+                                        <th>Opciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($recibos as $item)
+
+                                        @php($nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3)
+
                                         <tr>
-                                            <th>Nro.</th>
-                                            <th>Fecha</th>
-                                            <th>Tipo Doc.</th>
-                                            <th>Nro. Doc.</th>
-                                            <th>Cod. Cliente</th>
-                                            <th>Cliente</th>
-                                            <th>Moneda</th>
-                                            <th class="text-center">Monto<br>Documento</th>
-                                            <th class="text-center">Monto<br>Recibo</th>
-                                            <th class="text-center">Monto<br>Retenido</th>
-                                            <th class="text-center">%<br>Descuento</th>
-                                            <th>Vuelto</th>
-                                            <th>Saldo</th>
-                                            @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
-                                            <th>Realizado por</th>
-                                            @endif
-                                            <th>Opciones</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($recibos as $item)
-
-                                            @php($nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3)
-
-                                            <tr>
-                                                <td>
-                                                    @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
-                                                    <input type="checkbox" id="md_checkbox_{{ $item->id }}"
-                                                        class="filled-in chk-col-indigo" checked value="{{ $item->id }}"
-                                                        name="recibos[]">
-                                                    <label for="md_checkbox_{{ $item->id }}">
-                                                        <b>{{ str_pad($item->id,"6","0",STR_PAD_LEFT) }}</b>
-                                                    </label>
-                                                    @else
-                                                    <b>{{ $item->idZero }}</b>
-                                                    <input type="hidden" name="recibos[]" value="{{ $item->id }}">
-                                                    @endif
-                                                </td>
-                                                <td>{{ $item->FECHA->format("d/m/Y") }}</td>
-                                                <td>{{ $item->tipoDocumento->DESCR }}</td>
-                                                <td>{{ $item->NUMEDOCU }}</td>
-                                                <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE ?? "" : $item->notaEntrega->CODICLIE ?? "" }}</td>
-                                                <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE ?? "" : $item->notaEntrega->cliente->NOMBCLIE ?? "" }}</td>
-                                                <td>{{ $item->TIPO_MONEDA }}</td>
-                                                <td>{{number_format( $item->MONTO_DOC, $nDecimals, ".", "," ) }}</td>
-                                                <td>{{number_format( $item->montoRecibido, $nDecimals, ".", "," ) }}</td>
-                                                <td>{{number_format( $item->MONTO_RET, $nDecimals, ".", "," ) }}</td>
-                                                <td>{{number_format( $item->PORC, 2) }}</td>
-                                                <td>{{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}</td>
-                                                <td>
-                                                    @if ($item->TIPO_MONEDA == "VEF")
-                                                        {{number_format( $item->SALDO_DOC / $item->TASA_CAMB, $nDecimals, ".", "," ) }}
-                                                    @else
-                                                        {{number_format( $item->SALDO_DOC, $nDecimals, ".", "," ) }}
-                                                    @endif
-                                                </td>
+                                            <td>
                                                 @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
-                                                <td>{{ $item->createdBy->name }}</td>
+                                                <input type="checkbox" id="md_checkbox_{{ $item->id }}"
+                                                    class="filled-in chk-col-indigo" checked value="{{ $item->id }}"
+                                                    name="recibos[]">
+                                                <label for="md_checkbox_{{ $item->id }}">
+                                                    <b>{{ str_pad($item->id,"6","0",STR_PAD_LEFT) }}</b>
+                                                </label>
+                                                @else
+                                                <b>{{ $item->idZero }}</b>
+                                                <input type="hidden" name="recibos[]" value="{{ $item->id }}">
                                                 @endif
-                                                <td>
-                                                    <div class="btn-group" role="group">
-                                                         {{-- <a href="{{ route("recibos.edit", $item->id) }}"
-                                                           class="btn btn-default btn-sm waves-effect"
-                                                           data-toggle="tooltip" data-placement="auto"
-                                                           data-original-title="Modificar"><i class="material-icons">edit</i>
-                                                        </a> --}}
-                                                        <a href="{{ route("recibos.show", $item->id) }}" target="_blank"
-                                                           class="btn btn-default btn-sm waves-effect"
-                                                           data-toggle="tooltip" data-placement="auto"
-                                                           data-original-title="Detalles"><i class="material-icons">visibility</i>
-                                                        </a>
-                                                        @if ($item->TIPO_MONEDA == "USD")
-                                                        <a href="{{ route("recibos.print", $item->id) }}" target="_blank"
-                                                           class="btn btn-default btn-sm waves-effect"
-                                                           data-toggle="tooltip" data-placement="auto"
-                                                           data-original-title="Imprimir"><i class="material-icons">print</i>
-                                                        </a>
-                                                        @endif
-                                                        @can('recibos.delete')
-                                                        <button type="button" onclick="DeleteRow({{ $item->id }})"
-                                                            class="btn btn-default btn-sm waves-effect"
-                                                            data-toggle="tooltip" data-placement="auto"
-                                                            data-original-title="Borrar"><i
-                                                                class="material-icons">delete</i>
-                                                        </button>
-                                                        @endcan
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </td>
+                                            <td>{{ $item->FECHA->format("d/m/Y") }}</td>
+                                            <td>{{ $item->tipoDocumento->DESCR }}</td>
+                                            <td>{{ $item->NUMEDOCU }}</td>
+                                            <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->CODICLIE ?? "" : $item->notaEntrega->CODICLIE ?? "" }}</td>
+                                            <td>{{ ($item->TIPO_DOC == "FA") ? $item->factura->cliente->NOMBCLIE ?? "" : $item->notaEntrega->cliente->NOMBCLIE ?? "" }}</td>
+                                            <td>{{ $item->TIPO_MONEDA }}</td>
+                                            <td>{{number_format( $item->MONTO_DOC, $nDecimals, ".", "," ) }}</td>
+                                            <td>{{number_format( $item->montoRecibido, $nDecimals, ".", "," ) }}</td>
+                                            <td>{{number_format( $item->MONTO_RET, $nDecimals, ".", "," ) }}</td>
+                                            <td>{{number_format( $item->PORC, 2) }}</td>
+                                            <td>{{number_format( $item->VUELTO, $nDecimals, ".", "," ) }}</td>
+                                            <td>
+                                                @if ($item->TIPO_MONEDA == "VEF")
+                                                    {{number_format( $item->SALDO_DOC / $item->TASA_CAMB, $nDecimals, ".", "," ) }}
+                                                @else
+                                                    {{number_format( $item->SALDO_DOC, $nDecimals, ".", "," ) }}
+                                                @endif
+                                            </td>
+                                            @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
+                                            <td>{{ $item->createdBy->name }}</td>
+                                            @endif
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                        {{-- <a href="{{ route("recibos.edit", $item->id) }}"
+                                                        class="btn btn-default btn-sm waves-effect"
+                                                        data-toggle="tooltip" data-placement="auto"
+                                                        data-original-title="Modificar"><i class="material-icons">edit</i>
+                                                    </a> --}}
+                                                    <a href="{{ route("recibos.show", $item->id) }}" target="_blank"
+                                                        class="btn btn-default btn-sm waves-effect"
+                                                        data-toggle="tooltip" data-placement="auto"
+                                                        data-original-title="Detalles"><i class="material-icons">visibility</i>
+                                                    </a>
+                                                    @if ($item->TIPO_MONEDA == "USD")
+                                                    <a href="{{ route("recibos.print", $item->id) }}" target="_blank"
+                                                        class="btn btn-default btn-sm waves-effect"
+                                                        data-toggle="tooltip" data-placement="auto"
+                                                        data-original-title="Imprimir"><i class="material-icons">print</i>
+                                                    </a>
+                                                    @endif
+                                                    @can('recibos.delete')
+                                                    <button type="button" onclick="DeleteRow({{ $item->id }})"
+                                                        class="btn btn-default btn-sm waves-effect"
+                                                        data-toggle="tooltip" data-placement="auto"
+                                                        data-original-title="Borrar"><i
+                                                            class="material-icons">delete</i>
+                                                    </button>
+                                                    @endcan
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
 
-                                <!-- Modal Small Size -->
-                                <div class="modal fade" id="relacionModal" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title" id="smallModalLabel">Datos de los recibos a
-                                                    relacionar</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="col-xs-12">
-                                                        <p><b>Tipo de relación</b></p>
-                                                        <input name="tipo_moneda" type="radio" id="tipo_moneda_usd"
-                                                               value="USD" class="tipo_moneda with-gap radio-col-indigo"
-                                                               checked/>
-                                                        <label for="tipo_moneda_usd">Dolares</label>
+                            <!-- Modal Small Size -->
+                            <div class="modal fade" id="relacionModal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="smallModalLabel">Datos de los recibos a
+                                                relacionar</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <p><b>Tipo de relación</b></p>
+                                                    <input name="tipo_moneda" type="radio" id="tipo_moneda_usd"
+                                                            value="USD" class="tipo_moneda with-gap radio-col-indigo"
+                                                            checked/>
+                                                    <label for="tipo_moneda_usd">Dolares</label>
 
-                                                        <input name="tipo_moneda" type="radio" id="tipo_moneda_vef"
-                                                               value="VEF"
-                                                               class="tipo_moneda with-gap radio-col-indigo"/>
-                                                        <label for="tipo_moneda_vef">Bolivares</label>
-                                                    </div>
+                                                    <input name="tipo_moneda" type="radio" id="tipo_moneda_vef"
+                                                            value="VEF"
+                                                            class="tipo_moneda with-gap radio-col-indigo"/>
+                                                    <label for="tipo_moneda_vef">Bolivares</label>
+                                                </div>
 
-                                                    <div class="col-xs-12">
-                                                        <p><b>Comentarios</b></p>
-                                                        <div class="form-group">
-                                                            <div class="form-line">
-                                                                <textarea name="comentario" id="comentario"
-                                                                          class="form-control no-resize"
-                                                                          rows="4" placeholder="..."></textarea>
-                                                            </div>
+                                                <div class="col-xs-12">
+                                                    <p><b>Comentarios</b></p>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <textarea name="comentario" id="comentario"
+                                                                        class="form-control no-resize"
+                                                                        rows="4" placeholder="..."></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-link waves-effect"
-                                                        onclick="RelacionarRecibos()">
-                                                    PROCESAR
-                                                </button>
-                                                <button type="button" class="btn btn-link waves-effect"
-                                                        data-dismiss="modal">CANCELAR
-                                                </button>
-                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-link waves-effect"
+                                                    onclick="RelacionarRecibos()">
+                                                PROCESAR
+                                            </button>
+                                            <button type="button" class="btn btn-link waves-effect"
+                                                    data-dismiss="modal">CANCELAR
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -271,13 +268,23 @@
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true,
             }, function () {
-                const form = $("#submit_relacion")
+
+                let data = table.$('input,select,textarea').serializeArray();
+                data.push({
+                    name: "tipo_moneda",
+                    value: ( $("#tipo_moneda_vef").prop("checked")) ? "VEF" : "USD"
+                })
+                data.push({
+                    name: "comentario",
+                    value: $("#comentario").val()
+                })
+
                 $.ajax({
-                    url: $(form).attr('action'),
+                    url: `{{ route('cobranzas.store') }}`,
                     dataType: 'JSON',
                     type: 'POST',
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    data: $(form).serialize(),
+                    data: data,
                     timeout: 10000,
                     success: function (result) {
                         swal({

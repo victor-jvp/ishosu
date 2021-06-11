@@ -18,6 +18,7 @@
 
         table {
             font-size: x-small;
+            border-collapse: collapse;
         }
 
         tfoot tr td {
@@ -29,10 +30,10 @@
             background-color: lightgray
         }
 
-        .table-bordered, .table-bordered tr td {
+        .table-bordered td {
             border-style: solid;
             border-width: 0.1px;
-            border-collapse: collapse;
+            padding: 0px;
         }
 
         .text-right {
@@ -61,171 +62,56 @@
 <body>
 <table class="table-bordered" style="width: 100%;">
     <tr>
-        <th colspan="10" style="font-size: 10pt; background-color: lightgrey">COMPROBANTE DE PAGO</th>
+        <th colspan="10" style="font-size: 10pt; background-color: lightgrey; border: solid; border-color: black; border-width: 0.1px;">COMPROBANTE DE PAGO</th>
     </tr>
     <tr>
-        <td class="text-center" rowspan="2" colspan="3" style="width: 150px; font-size: 11pt; font-weight: bold">
+        <td class="text-center" rowspan="2" style="font-size: 11pt; font-weight: bold">
             {{ $recibo->idZero }}</td>
-        <td class="text-right">CLIENTE:</td>
-        <td class="text-center" colspan="3">
-            <b>{{ $document->CODICLIE }}
-                -
-                {{ ($recibo->TIPO_DOC == "FA") ? $document->cliente->NOMBCLIE : $recibo->notaEntrega->cliente->NOMBCLIE }}</b>
+        <td class="text-right" style="padding-right: 3px">CLIENTE:</td>
+        <td class="text-center" colspan="5">
+            <b>{{ $document->CODICLIE ." - ". $document->cliente->NOMBCLIE }}</b>
         </td>
-        <td class="text-left" colspan="3">RUTA:
-            <b>{{ ($recibo->TIPO_DOC == "FA") ? $document->CODIRUTA."-".$document->ruta->NOMBVEND : $recibo->notaEntrega->CODIRUTA."-".$recibo->notaEntrega->ruta->NOMBVEND }}</b>
+        <td class="text-center" rowspan="2" colspan="3" style="width: 250px;">FECHA: <b>{{ $recibo->FECHA->format("d/m/Y") }}<br>{{ $recibo->FECHA->format("h:i a") }}</b></td>
+    </tr>
+    <tr>
+        <td class="text-right" style="padding-right: 3px">RUTA:</td>
+        <td class="text-center" colspan="5">
+            <b>{{ $document->CODIRUTA." - ".$document->ruta->NOMBVEND }}</b>
         </td>
     </tr>
     <tr>
-        <td class="text-right">{{ __("FECHA DOC.:") }}</td>
-        <td class="text-center"><b>{{ $recibo->FECHA->format("d/m/Y") }}</b></td>
-        <td class="text-right">NUMERO DOC.:</td>
-        <td class="text-center"><b>{{ $recibo->NUMEDOCU }}</b></td>
-        <td class="text-right" colspan="">{{ __("TASA:") }}</td>
-        <td class="text-right" colspan="2" style="font-size: 10pt; width: 150px">
-            <b>{{number_format( $recibo->TASA_CAMB, $nDecimals, ".", "," ) }}</b>
-        </td>
-    </tr>
-    <tr>
-        <td class="text-right" colspan="4" rowspan="2">FECHA DE RECIBO {{ $recibo->FECHA->format("d/m/Y h:i a") }}
-        </td>
-        <td class="text-center">{{ __("MONTO DOC. Bs.") }}</td>
-        <td class="text-center">{{ __("MONTO DOC. $") }}</td>
-        <td class="text-center">{{ __("TOTAL A PAGAR") }}</td>
-        <td class="text-right">{{ __("MONTO RECIBIDO $:") }}</td>
-        <td class="text-right" colspan="2" style="font-size: 10pt">
-            <b>{{ __("$ ".number_format($recibo->montoRecibido, $nDecimals, ".", ",")) }}</b>
-        </td>
-    </tr>
-    <tr>
-        <td class="text-center">
-            <b>Bs. {{ number_format(($recibo->TIPO_DOC == "FA") ? $document->TOTADOCU : $recibo->notaEntrega->TOTADOCU, $nDecimals, ".", ",") }}</b>
-        </td>
-        <td class="text-center">
-            @php
-                if($recibo->TIPO_DOC == "FA" || $recibo->TIPO_DOC == "ND")
-                {
-                    $facturaDolar = $document->TOTADOCU / $document->CAMBDOL;
-                }else{
-                    $facturaDolar = $recibo->notaEntrega->TOTADOCU / $recibo->notaEntrega->CAMBDOL;
-                }
-                $totalCobrar = $recibo->MONTO_DOC - $recibo->MONTO_RET;
-            @endphp
-            <b>$ {{ number_format($facturaDolar, $nDecimals, ".", ",") }}</b>
-        </td>
-        <td class="text-center"><b>{{ number_format($totalCobrar, $nDecimals) }}</b></td>
-        <td class="text-right">{{ __("DIFERENCIA:") }}</td>
-        <td class="text-right" colspan="2" style="font-size: 10pt">
-            @php
-                $diferencia = $totalCobrar - $recibo->montoRecibido;
-            @endphp
-            <b>$ {{ number_format($diferencia, $nDecimals, ".", ",") }}</b>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="4">
-            <table style="width: 100%; border-collapse: collapse; max-height: 100%;">
-                <tr class="text-center">
-                    <th>ABONO</th>
-                    <th>RESTA</th>
-                </tr>
-                <tr class="text-center">
-                    @if ($recibo->SALDO_DOC > 0)
-                        <th>{{ number_format($recibo->montoRecibido, $nDecimals) ?? "0.00" }}</th>
-                        <th>{{ number_format($recibo->SALDO_DOC, $nDecimals) ?? "0.00" }}</th>
-                    @else
-                        <th>0.00</th>
-                        <th>0.00</th>
-                    @endif
-                </tr>
-            </table>
-        </td>
-        <td class="text-center">
-            RENTENCION IVA<br>
+        <td class="text-right" style="padding: 4px 4px">CONDICIONES: </td>
+        <td class="text-center" colspan="2">
+            RET. IVA:
             <input type="checkbox" id="si"
                    {{ ($recibo->MONTO_RET > 0) ? "checked" : "" }} style="display: inline;"/><label for="si">SI</label>
             <input type="checkbox" id="no"
                    {{ ($recibo->MONTO_RET <= 0) ? "checked" : "" }} style="display: inline;"/><label for="no">NO</label>
         </td>
-        <td class="text-center">MONTO RETENIDO: <br><b>{{ number_format($recibo->MONTO_RET, $nDecimals) }} </b></td>
-        {{--            <td class="text-right" colspan="2">VUELTO</td>--}}
-        {{--            <td class="text-right">{{ __("0.00") }}</td>--}}
-
+        <td colspan="2" class="text-center"><label>NEGOCIACION ESPECIAL: </label><input type="checkbox" {{ ($recibo->MONTO_RET > 0) ? "checked" : "" }} style="display: inline;"/></td>
+        <td colspan="2" class="text-center"><label> DESCUENTO: </label><input type="checkbox" {{ ($recibo->MONTO_RET > 0) ? "checked" : "" }} style="display: inline;"/></td>
+        <td colspan="3" class="text-center"><label style="font-size: 6pt">TASA CAMBIO:</label><br><b style="font-size: 9pt">Bs. {{number_format( $recibo->TASA_CAMB, 2, ".", "," ) }}</b></td>
+    </tr>
+    <tr>
+        <td class="text-right" style="padding-right: 5px">{{ strtoupper($recibo->tipoDocumento->DESCR) }}:</td>
+        <td class="text-center"><b>{{ $recibo->NUMEDOCU }}</b></td>
+        <td class="text-right" style="padding-right: 5px;">{{ __("FECHA DE EMISION:") }}</td>
+        <td class="text-center"><b>{{ $document->FECHA->format("d/m/Y") }}</b></td>
+        <td class="text-center">{{ __("MONTO Bs.: ") }}<b>Bs. {{ number_format($document->TOTADOCU, 2) }}</b></td>
+        <td class="text-center">{{ __("MONTO $: ") }}<b>$ {{ number_format($document->TOTADOCU / $document->CAMBDOL, $nDecimals) }}</b></td>
+        <td class="text-center" >{{ __("NEG.ESP.: ") }}<br><b>$ {{ number_format($recibo->MONTO_DOC, $nDecimals) }}</b></td>
+        <td class="text-center" colspan="3">{{ __("ND / NC: ") }}<br><b>$ {{ number_format( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, $nDecimals) }}</b></td>
+    </tr>
+    <tr>
+        <td class="text-right" style="padding-right: 5px">{{ __("FORMA DE PAGO: ") }}</td>
+        <td class="text-center" colspan="3"><b style="padding: 3px;">{{ $recibo->TIPO_MONEDA }} -
+                {{ ($recibo->TIPO_PAGO == "T") ? "TRANSFERENCIA" : "EFECTIVO" }}</b>
+        </td>
+        <td class="text-center" colspan="6" style="padding: 5px 5px;"><b><u>DESGLOSE DE PAGO</u></b></td>
+    </tr>
+    <tr>
         <td colspan="4">
             <table class="table-bordered" style="width: 100%;">
-                <tr class="text-right">
-                    <td>VUELTO:</td>
-                    <td><b>$ {{ number_format($recibo->VUELTO, $nDecimals) ?? "0.00" }}</b></td>
-                </tr>
-                <tr class="text-right">
-                    <td>SALDO DOCUMENTO:</td>
-                    <td><b>$ {{ number_format($recibo->SALDO_DOC, $nDecimals) ?? "0.00" }}</b></td>
-                </tr>
-                <tr class="text-right">
-                    <td>TOTAL CANCELADO $:</td>
-                    <td><b>$
-                            {{ number_format($totalCobrar, $nDecimals) }}</b>
-                    </td>
-                </tr>
-                <tr class="text-right">
-                    <td>TOTAL CANCELADO BS.:</td>
-                    <td><b>Bs.
-                            {{ number_format($totalCobrar * $recibo->TASA_CAMB, $nDecimals) }}</b>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        {{-- <td colspan="4" class="text-right">Tipo de Cobro:</td> --}}
-        <td colspan="4"></td>
-        @switch($recibo->TIPO_COBRO)
-            @case("total")
-            <td><b> Monto total del documento.</b></td>
-            <td colspan="2"></td>
-            @break
-            @case("desc")
-            <td><b>Descuento al {{ $recibo->PORC }} %</b></td>
-            <td class="text-right">Monto Descuento:</td>
-            <td class="text-right"><b>{{ number_format($recibo->MONTO_DESC, $nDecimals) }}</b></td>
-            @break
-            @default
-            {{-- <td><b>Negociación Especial.</b></td> --}}
-            <td></td>
-            @if ($recibo->TIPO_MONEDA == "USD")
-                @php
-                    $montoNota = ($document->TOTADOCU / $recibo->TASA_CAMB) - $recibo->montoRecibido;
-                    if ($montoNota < 0) {
-                        $titleNota = "Nota de Debito:";
-                        $montoNota = $montoNota;
-                    }else{
-                        $titleNota = "Nota de Crédito:";
-                        $montoNota = $montoNota;
-                    }
-                @endphp
-                <td class="text-right"></td>
-                <td class="text-right"><b>{{ number_format($montoNota, $nDecimals) }}</b></td>
-            @else
-                @php
-                    $montoNota = $document->TOTADOCU - $recibo->montoRecibido;
-                    if ($montoNota < 0) {
-                        $titleNota = "Nota de Debito:";
-                    }else{
-                        $titleNota = "Nota de Crédito:";
-
-                    }
-                    $montoNota = $montoNota;
-                @endphp
-                <td class="text-right"></td>
-                <td class="text-right"><b>{{ number_format($montoNota, $nDecimals) }}</b></td>
-            @endif
-
-        @endswitch
-        <td colspan="3"></td>
-    </tr>
-    <tr>
-        <td colspan="7">
-            <table class="table-bordered" style="width: 100%">
                 <tr>
                     <td class="text-center"><b>{{ __("Nº") }}</b></td>
                     <td class="text-center"><b>{{ __("DENOM.") }}</b></td>
@@ -257,32 +143,76 @@
                     @endphp
                     <tr class="text-center">
                         <td>{{ $valCantidad }}</td>
-                        <td>{{ number_format($denominacion, $nDecimals, ".", ",") }}</td>
-                        <td>{{ number_format($totalUsd, $nDecimals) }}</td>
-                        <td>{{ number_format($totalVef, $nDecimals) }}</td>
+                        <td>{{ number_format($denominacion, 2, ".", ",") }}</td>
+                        <td>{{ number_format($totalUsd, 3) }}</td>
+                        <td>{{ number_format($totalVef, 2) }}</td>
                     </tr>
                 @endforeach
                 <tr>
                     <td colspan="2" class="text-center" style="font-size: 9pt; font-weight: bold">TOTAL</td>
                     <td class="text-center" style="font-size: 9pt; font-weight: bold">
-                        {{ number_format($sumTotalUsd, $nDecimals) }}</td>
+                        {{ number_format($sumTotalUsd, 3) }}</td>
                     <td class="text-center" style="font-size: 9pt; font-weight: bold">
-                        {{ number_format($sumTotalVef, $nDecimals) }}</td>
+                        {{ number_format($sumTotalVef, 2) }}</td>
                 </tr>
             </table>
         </td>
-        <td colspan="3"
-            style="text-align: center; font-size: 10pt; font-weight: bold; vertical-align: baseline; text-decoration: underline">
-            RECIBI CONFORME
+        <td colspan="6" style="vertical-align: baseline;">
+            <table style="width: 100%;">
+                <tr class="text-right">
+                    <td style="padding-right: 1%; width: 40%;">MONTO. RET.: </td>
+                    <td style="padding-right: 1%; width: 20%;"><b>$ {{ number_format(($recibo->MONTO_RET *-1) ?? 0, 3)  }}</b></td>
+                    <td style="padding-right: 1%; width: 30%;"><b>Bs.
+                            {{ number_format(($recibo->MONTO_RET * $recibo->TASA_CAMB *-1) ?? 0, 2)  }}</b></td>
+                </tr>
+                <tr class="text-right">
+                    <td style="padding-right: 1%;">TOTAL A PAGAR: </td>
+                    <td style="padding-right: 1%;"><b>$
+                            {{ number_format(( $recibo->MONTO_DOC - $recibo->MONTO_RET) ?? 0, 3)  }}</b></td>
+                    <td style="padding-right: 1%;"><b>Bs.
+                            {{ number_format(( ($recibo->MONTO_DOC - $recibo->MONTO_RET) * $recibo->TASA_CAMB) ?? 0, 2)  }}</b>
+                    </td>
+                </tr>
+                <tr class="text-right">
+                    <td style="padding-right: 1%;">MONTO RECIBIDO: </td>
+                    <td style="padding-right: 1%;"><b>$ {{ number_format($recibo->montoRecibido ?? 0, 3)  }}</b></td>
+                    <td style="padding-right: 1%;"><b>Bs.
+                            {{ number_format($recibo->montoRecibido * $recibo->TASA_CAMB ?? 0, 2)  }}</b></td>
+                </tr>
+                <tr class="text-right">
+                    <td style="padding-right: 1%;">VUELTO:</td>
+                    <td style="padding-right: 1%;"><b>$ {{ number_format($recibo->VUELTO ?? 0, 3)  }}</b></td>
+                    <td style="padding-right: 1%;"><b>Bs.
+                            {{ number_format($recibo->VUELTO * $recibo->TASA_CAMB ?? 0, 3)  }}</b></td>
+                </tr>
+                <tr class="text-right">
+                    <td style="padding-right: 1%;">TOTAL CANCELADO $:</td>
+                    <td style="padding-right: 1%;"><b>$
+                            {{ number_format( $recibo->montoRecibido - $recibo->MONTO_RET - $recibo->VUELTO , 3) ?? "0.00" }}</b>
+                    </td>
+                    <td style="padding-right: 1%;"><b>Bs.
+                            {{ number_format( ($recibo->montoRecibido - $recibo->MONTO_RET - $recibo->VUELTO) * $recibo->TASA_CAMB , 3) ?? "0.00" }}</b>
+                    </td>
+                </tr>
+                <tr class="text-right">
+                    <td style="padding-right: 1%;">SALDO:</td>
+                    <td style="padding-right: 1%;"><b>$ {{ number_format($recibo->SALDO_DOC, 3) ?? "0.00" }}</b></td>
+                    <td style="padding-right: 1%;"><b>Bs.
+                            {{ number_format($recibo->SALDO_DOC * $recibo->TASA_CAMB, 3) ?? "0.00" }}</b></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align: center;font-size: 9pt;font-weight: bold;text-decoration: underline; border: none;">RECIBI CONFORME</td>
+                </tr>
+            </table>
         </td>
     </tr>
-
     <tr style="font-size: 9pt">
-        <td colspan="5" style="padding: 5px 5px 15px;">
-            Analista de Caja: <b>{{ $recibo->createdBy->name }}</b>
+        <td colspan="4" style="padding: 1px 3px 15px;">
+            Analista de Caja: <b>{{ $recibo->createdBy->name }}</b><br>
+            <u>Comentario:</u> {{ $recibo->comentario ?? "" }}
         </td>
-        <td colspan="2" style="padding: 5px 5px 15px;">Hora de Entrega:</td>
-        <td colspan="3" style="padding: 5px 5px 15px;">Firma y Nombre</td>
+        <td colspan="" style="padding: 1px 3px; vertical-align: top">Hora de Entrega:</td>
+        <td colspan="5" style="padding: 1px 3px; vertical-align: top">Firma y Nombre</td>
     </tr>
 </table>
 </body>
