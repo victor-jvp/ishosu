@@ -89,8 +89,8 @@
                    {{ ($recibo->MONTO_RET <= 0) ? "checked" : "" }} style="display: inline;"/><label for="no">NO</label>
         </td>
         <td colspan="2" class="text-center"><label>NEGOCIACION ESPECIAL: </label><input type="checkbox" {{ ($recibo->TIPO_COBRO == "espec") ? "checked" : "" }} style="display: inline;"/></td>
-        <td colspan="2" class="text-center"><label> DESCUENTO: </label><input type="checkbox" {{ ($recibo->TIPO_COBRO == "desc") ? "checked" : "" }} style="display: inline;"/></td>
-        <td colspan="3" class="text-center"><label style="font-size: 6pt">TASA CAMBIO:</label><br><b style="font-size: 9pt">Bs. {{number_format( $recibo->TASA_CAMB, 2, ".", "," ) }}</b></td>
+        <td colspan="3" class="text-center"><label> DESCUENTO: </label><input type="checkbox" {{ ($recibo->TIPO_COBRO == "desc") ? "checked" : "" }} style="display: inline;"/></td>
+        <td colspan="2" class="text-center"><label style="font-size: 6pt">TASA CAMBIO:</label><br><b style="font-size: 9pt">Bs. {{number_format( $recibo->TASA_CAMB, 2, ".", "," ) }}</b></td>
     </tr>
     <tr>
         <td class="text-right" style="padding-right: 5px"><b>{{ strtoupper($recibo->tipoDocumento->DESCR) }}:</b></td>
@@ -126,25 +126,16 @@
                 @endphp
                 @foreach ($billetes as $item)
                     @php
-                        $cantidad = 0;
                         $denominacion = $item;
-                        $total = 0;
+                        $valCantidad = App\Models\ReciboDet::where("id_recibo", $recibo->id)->where("DENOMINACION", $item)->sum("CANTIDAD");
+                        $valDenominacion = App\Models\ReciboDet::where("id_recibo", $recibo->id)->where("DENOMINACION", $item)->max("DENOMINACION");
+                        $totalVef = $valCantidad * $valDenominacion;
+                        $sumTotal += $totalVef;
                     @endphp
-                    @foreach($recibo->reciboDet as $bill)
-                        @if($bill->DENOMINACION == $item)
-                            @php
-                                $cantidad = $bill->CANTIDAD;
-                                $denominacion = $bill->DENOMINACION;
-                                $total = $bill->DENOMINACION * $bill->CANTIDAD;
-
-                                $sumTotal += $total;
-                            @endphp
-                        @endif
-                    @endforeach
                     <tr class="text-center">
-                        <td>{{ $cantidad }}</td>
+                        <td>{{ $valCantidad }}</td>
                         <td>{{ number_format($denominacion, 2, ".", ",") }}</td>
-                        <td>{{ number_format($total, 2) }}</td>
+                        <td>{{ number_format($totalVef, 2) }}</td>
                     </tr>
                 @endforeach
                 <tr>
@@ -157,42 +148,42 @@
             <table style="width: 100%;">
                 <tr class="text-right">
                     <td style="padding-right: 1%; width: 40%;">MONTO. RET.: </td>
-                    <td style="padding-right: 1%; width: 20%;"><b>$ {{ number_format((($recibo->MONTO_RET / $recibo->TASA_CAMB)  * -1) ?? 0, 3)  }}</b></td>
+                    <td style="padding-right: 1%; width: 20%;"><b>$ {{ number_format( bcdiv( ($recibo->MONTO_RET / $recibo->TASA_CAMB)  * -1, 1, 3) ?? 0, 3)  }}</b></td>
                     <td style="padding-right: 1%; width: 30%;"><b>Bs. {{ number_format(($recibo->MONTO_RET *-1) ?? 0, 2)  }}</b></td>
                 </tr>
                 @if($recibo->TIPO_DOC != "NE")
                 <tr class="text-right">
                     <td style="padding-right: 1%;">ND /NC:</td>
                     <td style="padding-right: 1%;"><b>Bs.
-                        {{ number_format( bcdiv( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, 1, 3) * $recibo->TASA_CAMB, 2) }}
+                        {{ number_format( bcdiv( (($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC) / $recibo->TASA_CAMB, 1, 3) , 3) }}
                     </td>
                     <td style="padding-right: 1%;"><b>$
-                    {{  number_format( bcdiv( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, 1, 3), 3) }}
+                    {{  number_format( bcdiv( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, 1, 3), 2) }}
                 </tr>
                 @endif
                 <tr class="text-right">
                     <td style="padding-right: 1%;">MONTO RECIBIDO: </td>
                     <td style="padding-right: 1%;"><b>$
-                            {{ number_format( $recibo->montoRecibido / $recibo->TASA_CAMB ?? 0, 3)  }}</b></td>
+                            {{ number_format( bcdiv($recibo->montoRecibido / $recibo->TASA_CAMB ?? 0, 1 ,3 ) , 3)  }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs. {{ number_format($recibo->montoRecibido ?? 0, 2)  }}</b></td>
                 </tr>
                 <tr class="text-right">
                     <td style="padding-right: 1%;">VUELTO:</td>
                     <td style="padding-right: 1%;"><b>$
-                            {{ number_format( $recibo->VUELTO / $recibo->TASA_CAMB ?? 0, 3)  }}</b></td>
+                            {{ number_format( bcdiv($recibo->VUELTO / $recibo->TASA_CAMB ?? 0, 1, 3), 3)  }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs. {{ number_format($recibo->VUELTO ?? 0, 2)  }}</b></td>
                 </tr>
                 <tr class="text-right">
                     <td style="padding-right: 1%;">TOTAL A PAGAR: </td>
                     <td style="padding-right: 1%;"><b>$
-                            {{ number_format(( ($recibo->MONTO_DOC - $recibo->MONTO_RET) / $recibo->TASA_CAMB) ?? 0, 3)  }}</b></td>
+                            {{ number_format( bcdiv(($recibo->MONTO_DOC - $recibo->MONTO_RET) / $recibo->TASA_CAMB, 1, 3) ?? 0, 3)  }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs.
                             {{ number_format(( $recibo->MONTO_DOC - $recibo->MONTO_RET) ?? 0, 2)  }}</b></td>
                 </tr>
                 <tr class="text-right">
                     <td style="padding-right: 1%;">SALDO:</td>
                     <td style="padding-right: 1%;"><b>$
-                            {{ number_format( $recibo->SALDO_DOC * $recibo->TASA_CAMB, 3) }}</b></td>
+                            {{ number_format( bcdiv($recibo->SALDO_DOC / $recibo->TASA_CAMB, 1, 3), 3) }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs. {{ number_format($recibo->SALDO_DOC, 2) }}</b></td>
                 </tr>
                 <tr>

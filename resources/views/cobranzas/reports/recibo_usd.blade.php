@@ -89,8 +89,8 @@
                    {{ ($recibo->MONTO_RET <= 0) ? "checked" : "" }} style="display: inline;"/><label for="no">NO</label>
         </td>
         <td colspan="2" class="text-center"><label>NEGOCIACION ESPECIAL: </label><input type="checkbox" {{ ($recibo->TIPO_COBRO == "espec") ? "checked" : "" }} style="display: inline;"/></td>
-        <td colspan="2" class="text-center"><label> DESCUENTO: </label><input type="checkbox" {{ ($recibo->TIPO_COBRO == "desc") ? "checked" : "" }} style="display: inline;"/></td>
-        <td colspan="3" class="text-center"><label style="font-size: 6pt">TASA CAMBIO:</label><br><b style="font-size: 9pt">Bs. {{number_format( $recibo->TASA_CAMB, 2, ".", "," ) }}</b></td>
+        <td colspan="3" class="text-center"><label> DESCUENTO: </label><input type="checkbox" {{ ($recibo->TIPO_COBRO == "desc") ? "checked" : "" }} style="display: inline;"/></td>
+        <td colspan="2" class="text-center"><label style="font-size: 6pt">TASA CAMBIO:</label><br><b style="font-size: 9pt">Bs. {{number_format( $recibo->TASA_CAMB, 2, ".", "," ) }}</b></td>
     </tr>
     <tr>
         <td class="text-right" style="padding-right: 5px"><b>{{ strtoupper($recibo->tipoDocumento->DESCR) }}:</b></td>
