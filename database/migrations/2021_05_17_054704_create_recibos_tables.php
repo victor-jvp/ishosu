@@ -16,6 +16,8 @@ class CreateRecibosTables extends Migration
 
             $table->id();
 
+            $table->string('estacion', 3);
+            $table->integer('num');
             $table->unsignedBigInteger("id_relacion")->nullable();
 
             $table->dateTime("FECHA");

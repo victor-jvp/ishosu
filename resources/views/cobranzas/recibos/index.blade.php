@@ -99,7 +99,7 @@
                                                        {{ (Auth::user()->id == $item->created_by) ? "checked" : "" }}
                                                        name="recibos[]">
                                                 <label for="md_checkbox_{{ $item->id }}">
-                                                    <b>{{ str_pad($item->id,"6","0",STR_PAD_LEFT) }}</b>
+                                                    <b>{{ $item->idZero }}</b>
                                                 </label>
                                                 @else
                                                 <b>{{ $item->idZero }}</b>

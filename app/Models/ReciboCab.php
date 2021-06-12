@@ -20,9 +20,8 @@ class ReciboCab extends Model
 
     public function getIdZeroAttribute()
     {
-        $estacion = (!is_null($this->createdBy->estacion)) ? $this->createdBy->estacion->codigo : "";
-
-        return $estacion.str_pad($this->id, "6", "0", STR_PAD_LEFT);
+//        $estacion = (!is_null($this->createdBy->estacion)) ? $this->createdBy->estacion->codigo : "";
+        return $this->estacion.str_pad($this->num, "6", "0", STR_PAD_LEFT);
     }
 
     public function getMontoRecibidoAttribute()
@@ -39,10 +38,10 @@ class ReciboCab extends Model
         return $this->belongsTo(Tfachisa::class, "NUMEDOCU")->orderBy('NUMEDOCU', 'desc');
     }
 
-    public function notaEntregaNew()
+    /*public function notaEntregaNew()
     {
         return $this->belongsTo(Tfachisa::class, "NUMEDOCU")->orderBy('NUMEDOCU', 'desc');
-    }
+    }*/
 
     public function notaEntrega()
     {

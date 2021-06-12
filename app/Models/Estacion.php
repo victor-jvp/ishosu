@@ -13,4 +13,21 @@ class Estacion extends Model
 
     protected $connection   = "mysql";
     protected $table = "estaciones";
+
+    public function scopeAumentarRecibo($query, $user)
+    {
+        if  ($user->estacion){
+            $estacion = $query->find($user->estacion->id);
+            $estacion->recibo_num++;
+            $estacion->save();
+        }
+    }
+    public function scopeAumentarRelacion($query, $user)
+    {
+        if  ($user->estacion){
+            $estacion = $query->find($user->estacion->id);
+            $estacion->relacion_num++;
+            $estacion->save();
+        }
+    }
 }
