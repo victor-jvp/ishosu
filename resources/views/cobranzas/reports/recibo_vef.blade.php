@@ -173,13 +173,13 @@
                 <tr class="text-right">
                     <td style="padding-right: 1%;">MONTO RECIBIDO: </td>
                     <td style="padding-right: 1%;"><b>$
-                            {{ number_format($recibo->montoRecibido / $recibo->TASA_CAMB ?? 0, 3)  }}</b></td>
+                            {{ number_format( $recibo->montoRecibido / $recibo->TASA_CAMB ?? 0, 3)  }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs. {{ number_format($recibo->montoRecibido ?? 0, 2)  }}</b></td>
                 </tr>
                 <tr class="text-right">
                     <td style="padding-right: 1%;">VUELTO:</td>
                     <td style="padding-right: 1%;"><b>$
-                            {{ number_format($recibo->VUELTO / $recibo->TASA_CAMB ?? 0, 3)  }}</b></td>
+                            {{ number_format( $recibo->VUELTO / $recibo->TASA_CAMB ?? 0, 3)  }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs. {{ number_format($recibo->VUELTO ?? 0, 2)  }}</b></td>
                 </tr>
                 <tr class="text-right">
@@ -192,7 +192,7 @@
                 <tr class="text-right">
                     <td style="padding-right: 1%;">SALDO:</td>
                     <td style="padding-right: 1%;"><b>$
-                            {{ number_format($recibo->SALDO_DOC * $recibo->TASA_CAMB, 3) }}</b></td>
+                            {{ number_format( $recibo->SALDO_DOC * $recibo->TASA_CAMB, 3) }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs. {{ number_format($recibo->SALDO_DOC, 2) }}</b></td>
                 </tr>
                 <tr>

@@ -173,7 +173,7 @@
                 <tr class="text-right">
                     <td style="padding-right: 1%;">ND /NC:</td>
                     <td style="padding-right: 1%;"><b>$
-                            {{  number_format(bcdiv( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, 1, 3), 3) }}
+                            {{  number_format( bcdiv( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, 1, 3), 3) }}
                     <td style="padding-right: 1%;"><b>Bs.
                             {{ number_format( bcdiv( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, 1, 3) * $recibo->TASA_CAMB, 2) }}
                     </td>
@@ -183,13 +183,13 @@
                     <td style="padding-right: 1%;">MONTO RECIBIDO: </td>
                     <td style="padding-right: 1%;"><b>$ {{ number_format($recibo->montoRecibido ?? 0, 3)  }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs.
-                            {{ number_format($recibo->montoRecibido * $recibo->TASA_CAMB ?? 0, 2)  }}</b></td>
+                            {{ number_format( $recibo->montoRecibido * $recibo->TASA_CAMB ?? 0, 2)  }}</b></td>
                 </tr>
                 <tr class="text-right">
                     <td style="padding-right: 1%;">VUELTO:</td>
                     <td style="padding-right: 1%;"><b>$ {{ number_format($recibo->VUELTO ?? 0, 3)  }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs.
-                            {{ number_format($recibo->VUELTO * $recibo->TASA_CAMB ?? 0, 2)  }}</b></td>
+                            {{ number_format( $recibo->VUELTO * $recibo->TASA_CAMB ?? 0, 2)  }}</b></td>
                 </tr>
 
                 <tr class="text-right">
@@ -204,7 +204,7 @@
                     <td style="padding-right: 1%;">SALDO:</td>
                     <td style="padding-right: 1%;"><b>$ {{ number_format($recibo->SALDO_DOC, 3)}}</b></td>
                     <td style="padding-right: 1%;"><b>Bs.
-                            {{ number_format($recibo->SALDO_DOC * $recibo->TASA_CAMB, 2)  }}</b></td>
+                            {{ number_format( $recibo->SALDO_DOC * $recibo->TASA_CAMB, 2)  }}</b></td>
                 </tr>
                 <tr>
                     <td colspan="3" style="text-align: center;font-size: 9pt;font-weight: bold;text-decoration: underline; border: none;">RECIBI CONFORME</td>
