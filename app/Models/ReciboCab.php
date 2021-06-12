@@ -39,9 +39,16 @@ class ReciboCab extends Model
         return $this->belongsTo(Tfachisa::class, "NUMEDOCU")->orderBy('NUMEDOCU', 'desc');
     }
 
+    public function notaEntregaNew()
+    {
+        return $this->belongsTo(Tfachisa::class, "NUMEDOCU")->orderBy('NUMEDOCU', 'desc');
+    }
+
     public function notaEntrega()
     {
-        return $this->belongsTo(Tfacnda::class, "NUMEDOCU")->orderBy('NUMEDOCU', 'desc');
+        $objecto = (Tfachisa::where("NUMEDOCU", "=", $this->NUMEDOCU)->count() > 0) ? Tfachisa::class : Tfacnda::class;
+
+        return $this->belongsTo($objecto, "NUMEDOCU")->orderBy('NUMEDOCU', 'desc');
     }
 
     public function notaDebito()

@@ -41,12 +41,22 @@ class DocumentosController extends Controller
                 ->get()->toArray();
         }
         if ($tipo == "NE") {
-            $result['results'] = Tfacnda::select($select)
+
+            $neOld = Tfacnda::select($select)
                 ->with(['recibos', 'cliente', 'ruta'])
                 ->where("TIPODOCU", "=", "NE")
                 ->where("NUMEDOCU", "LIKE", "%{$id}%")
                 ->orderby('NUMEDOCU', 'desc')
                 ->get()->toArray();
+
+            $neNew = Tfachisa::select($select)
+                   ->with(['recibos', 'cliente', 'ruta'])
+                   ->where("TIPODOCU", "=", "NE")
+                   ->where("NUMEDOCU", "LIKE", "%{$id}%")
+                   ->orderby('NUMEDOCU', 'desc')
+                   ->get()->toArray();
+
+            $result['results'] = array_merge($neOld, $neNew);
         }
         if ($tipo == "ND") {
             $result['results'] = Tcpce::select(

@@ -32,7 +32,7 @@ class CreateRecibosTables extends Migration
             $table->double("VUELTO")->default(0);
             $table->boolean("VUELTO_ENT")->default(false);
             $table->double("SALDO_DOC")->default(0);
-
+            $table->text('COMENTARIO')->nullable()->default(null);
 
             $table->unsignedBigInteger("created_by");
             $table->unsignedBigInteger("updated_by");

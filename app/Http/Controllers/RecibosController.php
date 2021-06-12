@@ -68,7 +68,7 @@ class RecibosController extends Controller
             $reciboCab->TIPO_PAGO   = $request->tipo_pago;
             $reciboCab->TIPO_DOC    = $request->tipo_doc;
             $reciboCab->NUMEDOCU    = $request->nro_documento;
-            $reciboCab->TIPO_COBRO  = $request->tipo_cobro;
+            $reciboCab->TIPO_COBRO  = ($request->tipo_doc == "NE") ? "espec" : $request->tipo_cobro;
             $reciboCab->PORC        = ($request->tipo_cobro == "desc") ? Str::remove(",", $request->porcentaje) : 0;
 
             $reciboCab->MONTO_DESC  = ($request->monto_desc != "") ? Str::remove(",", $request->monto_desc) : 0;

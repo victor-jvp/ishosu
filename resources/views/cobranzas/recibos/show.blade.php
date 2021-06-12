@@ -432,7 +432,6 @@
                                 </div>
                             </div>
 
-
                             <div class="row">
                                 <div class="col-sm-12 table-responsive" style="margin-bottom: 0px">
                                     <table id="table_montos" class="table table-bordered table-striped table-hover"
@@ -484,6 +483,18 @@
                                     </table>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h2 class="card-inside-title">Comentario</h2>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                                <textarea rows="1" class="form-control no-resize auto-growth"
+                                                          placeholder="...">{{ $recibo->COMENTARIO ?? "" }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -516,6 +527,8 @@
     <script src="{{ asset('plugins/momentjs/moment.js') }}"></script>
     <!-- Input Mask Plugin Js -->
     <script src="{{ asset('plugins/jquery-inputmask/jquery.inputmask.bundle.js') }}"></script>
+    <!-- Autosize Plugin Js -->
+    <script src="{{ asset('plugins/autosize/autosize.js') }}"></script>
 
     <script>
 
@@ -550,7 +563,6 @@
             $('body').tooltip({
                 selector: '[data-toggle="tooltip"]'
             });
-
             //Input Mask
             $(".monto").inputmask({
                 alias: 'decimal',
@@ -563,6 +575,8 @@
                 groupSeparator: '.',
                 autoGroup: true,
             });
+            //Textarea auto growth
+            autosize($('textarea.auto-growth'));
 
             LoadDocData()
         })

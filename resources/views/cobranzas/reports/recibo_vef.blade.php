@@ -198,7 +198,7 @@
     <tr style="font-size: 9pt">
         <td colspan="4" style="padding: 1px 3px 15px;">
             Analista de Caja: <b>{{ $recibo->createdBy->name }}</b><br>
-            <u>Comentario:</u> {{ $recibo->comentario ?? "" }}
+            <u>Comentario:</u> {{ $recibo->COMENTARIO ?? "" }}
         </td>
         <td colspan="" style="padding: 1px 3px; vertical-align: top">Hora de Entrega:</td>
         <td colspan="5" style="padding: 1px 3px; vertical-align: top">Firma y Nombre</td>

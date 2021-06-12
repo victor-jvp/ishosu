@@ -295,12 +295,17 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <p><b>Total Cobrado Doc.</b></p>
+                                            <div class="col-sm-6">
+                                                <p><b>Tipo de cobro</b></p>
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="text" class="form-control monto" id="total_cobrado"
-                                                               name="total_cobrado" readonly value="0">
+                                                        <input type="hidden" name="tipo_cobro" id="h_tipo_cobro">
+                                                        <select class="form-control show-tick" required
+                                                                data-container="body" data-title="Seleccione..." id="tipo_cobro">
+                                                            <option value="total">Total del Documento</option>
+                                                            <option value="desc">Descuento</option>
+                                                            <option value="espec">Negociación Especial</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -317,21 +322,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <p><b>Tipo de cobro</b></p>
-                                                <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="hidden" name="tipo_cobro" id="h_tipo_cobro">
-                                                        <select class="form-control show-tick" required
-                                                                data-container="body" data-title="Seleccione..." id="tipo_cobro">
-                                                            <option value="total">Total del Documento</option>
-                                                            <option value="desc">Descuento</option>
-                                                            <option value="espec">Negociación Especial</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
+
+                                            <div class="col-sm-3">
                                                 <p><b>%</b></p>
                                                 <div class="form-group">
                                                     <div class="form-line">
@@ -340,7 +332,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-4">
                                                 <p><b>Monto Desc.</b></p>
                                                 <div class="form-group">
                                                     <div class="form-line">
@@ -501,8 +493,28 @@
 
                                 </div>
 
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <h2 class="card-inside-title">Comentario</h2>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <textarea rows="1" class="form-control no-resize auto-growth"
+                                                          placeholder="..."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 text-right">
+                                        <button type="submit" data-toggle="tooltip" data-placement="auto"
+                                                data-original-title="Guardar"
+                                                class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
+                                            <i class="material-icons">save</i>
+                                        </button>
+                                    </div>
+                                </div>
+
 
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -540,6 +552,8 @@
     <script src="{{ asset('plugins/momentjs/moment.js') }}"></script>
     <!-- Input Mask Plugin Js -->
     <script src="{{ asset('plugins/jquery-inputmask/jquery.inputmask.bundle.js') }}"></script>
+    <!-- Autosize Plugin Js -->
+    <script src="{{ asset('plugins/autosize/autosize.js') }}"></script>
 
     <script>
         jQuery.fn.dataTable.Api.register('sum()', function () {
@@ -563,8 +577,6 @@
         var table_montos
         var simbolo
         var total_a_cobrar = 0
-        var total_cobrado_vef = 0
-        var total_cobrado_usd = 0
 
         $(document).ready(function () {
             $(window).keydown(function(event){
@@ -651,7 +663,8 @@
             $('body').tooltip({
                 selector: '[data-toggle="tooltip"]'
             });
-
+            //Textarea auto growth
+            autosize($('textarea.auto-growth'));
             //Input Mask
             $(".monto").inputmask({
                 alias: 'decimal',
@@ -664,6 +677,7 @@
                 groupSeparator: '.',
                 autoGroup: true,
             });
+
 
             //Selector Nro Doc carga via ajax
             $("#nro_documento").select2({
@@ -872,7 +886,7 @@
             total_a_cobrar = 0;
 
             $("#id_ruta, #vendedor, #cliente, #fecha_documento, #id_cliente").val(null)
-            $("#tasa_cambio, #vuelto, #saldo_doc, #total_cobrado, #total_a_cobrar").val(0)
+            $("#tasa_cambio, #vuelto, #saldo_doc, #total_a_cobrar").val(0)
             $("#subtotal_vef, #subtotal_usd, #descuento_vef, #descuento_usd, #exento_vef, #exento_usd").val(0)
             $("#base_vef, #base_usd, #iva_vef, #iva_usd, #total_vef, #total_usd").val(0)
 
@@ -890,16 +904,15 @@
             const total_recibido = parseFloat(table_montos.column(6).data().sum())
             $("#total_recibido").html(total_recibido.toFixed(2))
 
-            const total_cobrado = parseFloat( $("#total_cobrado").inputmask('unmaskedvalue') )
             total_a_cobrar = parseFloat($("#total_a_cobrar").inputmask('unmaskedvalue'))
 
             let saldo_doc = 0
 
             if ($("#chk_monto_ret").prop("checked")) {
                 const monto_ret = parseFloat($("#monto_ret").inputmask('unmaskedvalue') ?? 0)
-                saldo_doc = parseFloat(total_a_cobrar - total_cobrado - total_recibido + vuelto - monto_ret)
+                saldo_doc = parseFloat(total_a_cobrar - total_recibido + vuelto - monto_ret)
             } else {
-                saldo_doc = parseFloat(total_a_cobrar - total_cobrado - total_recibido + vuelto)
+                saldo_doc = parseFloat(total_a_cobrar - total_recibido + vuelto)
             }
             if ($("#tipo_moneda_usd").prop("checked")) { //si la moneda es usd, truncar a 3 decimales
                 $("#saldo_doc").val( toTrunc(saldo_doc, 3))
@@ -1060,11 +1073,9 @@
             if ($("#tipo_moneda_usd").prop('checked')) {
                 denominacion = dolares.split(",")
                 simbolo = "$"
-                $("#total_cobrado").val( toTrunc(total_cobrado_usd, 3) )
             } else {
                 denominacion = bolivares.split(",")
                 simbolo = "Bs"
-                $("#total_cobrado").val( total_cobrado_vef.toFixed(2) )
             }
             let options = ""
             $("#denominacion").html(null).selectpicker("refresh")
@@ -1117,17 +1128,6 @@
 
             $("#monto_doc_vef").val()
             $("#tasa_cambio").val(cambDol)
-
-            const moneda = ($("#tipo_moneda_usd").prop("checked")) ? "usd" : "vef"
-            total_cobrado_usd = resp.total_cobrado
-            total_cobrado_vef = resp.total_cobrado * resp.CAMBDOL
-
-            if (moneda == "usd")
-            {
-                $("#total_cobrado").val(toTrunc(total_cobrado_usd, 3))
-            }else{
-                $("#total_cobrado").val(total_cobrado_vef.toFixed(2))
-            }
 
             $("#monto_doc").val(0)
 
