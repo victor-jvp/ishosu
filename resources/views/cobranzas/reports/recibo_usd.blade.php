@@ -173,9 +173,9 @@
                 <tr class="text-right">
                     <td style="padding-right: 1%;">ND /NC:</td>
                     <td style="padding-right: 1%;"><b>$
-                            {{ number_format( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, 3) }}
+                            {{  number_format(bcdiv( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, 1, 3), 3) }}
                     <td style="padding-right: 1%;"><b>Bs.
-                            {{ number_format( ($document->TOTADOCU) - $recibo->MONTO_DOC, 2) }}
+                            {{ number_format( bcdiv( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, 1, 3) * $recibo->TASA_CAMB, 2) }}
                     </td>
                 </tr>
                 @endif
