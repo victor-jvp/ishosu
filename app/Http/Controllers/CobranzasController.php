@@ -173,7 +173,9 @@ class CobranzasController extends Controller
             return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
         }
 
-        $relacion = Relacion::find($id);
+        $relacion = Relacion::with('recibos.reciboDet')->find($id);
+//        dd($relacion);
+
         $pdf = \App::make('dompdf.wrapper');
         /* Careful: use "enable_php" option only with local html & script tags you control.
   used with remote html or scripts is a major security problem (remote php injection) */

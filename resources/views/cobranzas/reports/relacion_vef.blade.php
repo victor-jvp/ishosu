@@ -82,12 +82,14 @@
         <td class="text-center" style="font-weight: bold;">FECHA ENTREGA</td>
         <td class="text-center" style="font-weight: bold;">FIRMA</td>
     </tr>
-    @php($sumMonto = 0)
+    @php
+        $sumMonto = 0;
+        $nDecimals = ($relacion->TIPO_MONEDA == "VEF") ? 2 : 3;
+    @endphp
     @foreach($relacion->recibos as $recibo)
 
         @php
-            $nDecimals = ($recibo->TIPO_MONEDA == "VEF") ? 2 : 3;
-            $document = 0;
+            $document = null;
             if ($recibo->TIPO_DOC == "FA"){
                 $document = $recibo->factura;
             }else if($recibo->TIPO_DOC == "NE") {
@@ -98,13 +100,13 @@
         @endphp
 
         <tr style="font-size: 6.5pt !important">
-            <td class="text-center" style="padding: 5px;">{{ $recibo->idZero }}</td>
-            <td class="text-center" style="padding: 5px;">{{ $recibo->FECHA->format("d/m/Y") }}</td>
-            <td class="text-right"
-                style="padding: 5px;">{{ $document->CODICLIE ?? "" }}</td>
+            <td class="text-center" style="padding: 3px;">{{ $recibo->idZero }}</td>
+            <td class="text-center" style="padding: 3px;">{{ $recibo->FECHA->format("d/m/Y") }}</td>
+            <td class="text-center"
+                style="padding: 3px;">{{ $document->CODICLIE ?? "" }}</td>
             <td class=""
-                style="padding: 5px;">{{ $document->cliente->NOMBCLIE ?? "" }}</td>
-            <td class="text-center" style="padding: 5px;">{{ $recibo->NUMEDOCU }}</td>
+                style="padding: 3px;">{{ $document->cliente->NOMBCLIE ?? "" }}</td>
+            <td class="text-center" style="padding: 3px;">{{ $recibo->NUMEDOCU }}</td>
             <td class="text-center">
                 @foreach ($recibo->reciboDet as $det)
                 {{ (!is_null($det->FECHA_PAGO)) ? $det->FECHA_PAGO->format("d/m/Y") : "" }}<br>
@@ -127,19 +129,19 @@
             </td>
             <td class="text-right">
                 @foreach ($recibo->reciboDet as $det)
-                    @php $sumMonto += $det->MONTO; @endphp
-                    {{ number_format($det->MONTO, 2) ?? "" }}<br>
+                    {{ number_format($det->MONTO ?? 0, 2)  }}<br>
+                    @php($sumMonto += $det->MONTO)
                 @endforeach
             </td>
-            <td style="padding: 5px; width: 6%"></td>
-            <td style="padding: 5px; width: 6%"></td>
+            <td style="padding: 3px; width: 6%"></td>
+            <td style="padding: 3px; width: 6%"></td>
         </tr>
     @endforeach
 
     <tfoot>
     <tr class="text-right" style="">
-        <td colspan="9" style="padding: 5px; font-size: 9pt;">TOTAL:</td>
-        <td style="padding: 5px; font-size: 8pt;">{{ number_format($sumMonto, 2) }}</td>
+        <td colspan="9" style="padding: 3px; font-size: 9pt;">TOTAL:</td>
+        <td style="padding: 3px; font-size: 8pt;">{{ number_format($sumMonto, 2) }}</td>
         <td colspan="2"></td>
     </tr>
     </tfoot>
