@@ -41,6 +41,13 @@ class CobranzasController extends Controller
                 $recibos = ReciboCab::where("tipo_moneda", $request->tipo_moneda)
                     ->whereIn("id", $request->recibos)
                     ->get();
+                if (count($recibos) == 0) {
+                    return response()->json([
+                        'title' => "Atención.",
+                        "text"  => "No hay recibos disponibles por relacionar.",
+                        "type"  => "warning"
+                    ]);
+                }
             } else {
                 $recibos = ReciboCab::where("tipo_moneda", $request->tipo_moneda)
                     ->whereNull("id_relacion")
@@ -58,7 +65,7 @@ class CobranzasController extends Controller
             $relacion = new Relacion();
 
             $relacion->estacion    = Auth::user()->estacion->codigo ?? "";
-            $relacion->num         = (!is_null(Auth::user()->estacion)) ? (Auth::user()->estacion->recibo_num + 1) : Estacion::where("TIPO_DOC", $request->tipo_doc)->max("num") + 1;
+            $relacion->num         = (!is_null(Auth::user()->estacion)) ? (Auth::user()->estacion->relacion_num + 1) : Relacion::whereNull('estacion')->max('num') + 1;
             $relacion->FECHA       = date("Y-m-d H:i:s");
             $relacion->TIPO_MONEDA = $request->tipo_moneda;
             $relacion->COMENTARIO  = $request->comentario;

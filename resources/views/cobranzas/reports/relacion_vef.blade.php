@@ -107,6 +107,7 @@
             <td class=""
                 style="padding: 3px;">{{ $document->cliente->NOMBCLIE ?? "" }}</td>
             <td class="text-center" style="padding: 3px;">{{ $recibo->NUMEDOCU }}</td>
+            @if ($recibo->TIPO_PAGO == 'T')
             <td class="text-center">
                 @foreach ($recibo->reciboDet as $det)
                 {{ (!is_null($det->FECHA_PAGO)) ? $det->FECHA_PAGO->format("d/m/Y") : "" }}<br>
@@ -133,6 +134,13 @@
                     @php($sumMonto += $det->MONTO)
                 @endforeach
             </td>
+            @else
+            <td colspan="4" class="text-center">- EFECTIVO -</td>
+            <td class="text-right">
+                {{ number_format($recibo->montoRecibido, 2) }}
+                @php($sumMonto += $recibo->montoRecibido)
+            </td>
+            @endif
             <td style="padding: 3px; width: 6%"></td>
             <td style="padding: 3px; width: 6%"></td>
         </tr>

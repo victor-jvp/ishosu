@@ -122,7 +122,7 @@ class RecibosController extends Controller
                 "type"  => "success",
                 "goto"  => route("recibos.index")
             ];
-            if ($reciboCab->TIPO_MONEDA == "USD") {
+            if ($reciboCab->TIPO_PAGO == "E") {
                 $result["print"] = route("recibos.print", $reciboCab->id);
             }
             return response()->json($result);
