@@ -489,7 +489,7 @@
                                     <h2 class="card-inside-title">Comentario</h2>
                                     <div class="form-group">
                                         <div class="form-line">
-                                                <textarea rows="1" class="form-control no-resize auto-growth"
+                                                <textarea rows="1" class="form-control no-resize auto-growth" disabled
                                                           placeholder="...">{{ $recibo->COMENTARIO ?? "" }}</textarea>
                                         </div>
                                     </div>
