@@ -119,12 +119,12 @@
             </td>
             <td>
                 @foreach ($recibo->reciboDet as $det)
-                {{ $det->bank_e->name ?? "" }}<br>
+                {{ $det->bank_e->NOMBRE ?? "" }}<br>
                 @endforeach
             </td>
             <td>
                 @foreach ($recibo->reciboDet as $det)
-                {{ $det->bank_r->name ?? "" }}<br>
+                {{ $det->bank_r->NOMBBANC ?? "" }}<br>
                 @endforeach
             </td>
             <td class="text-right">

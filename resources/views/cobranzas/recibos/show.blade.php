@@ -460,8 +460,8 @@
                                                 </tr>
                                             @else
                                                 <tr>
-                                                    <td class="text-center">{{ $item->bank_e->name }}</td>
-                                                    <td class="text-center">{{ $item->bank_r->name }}</td>
+                                                    <td class="text-center">{{ $item->bank_e->NOMBRE }}</td>
+                                                    <td class="text-center">{{ $item->bank_r->NOMBBANC }}</td>
                                                     <td class="text-center">{{ $item->FECHA_PAGO->format("d/m/Y") }}</td>
                                                     <td class="text-center">{{ $item->REFERENCIA }}</td>
                                                     <td class="text-right">{{ number_format($item->MONTO, 2, ".", ",") }}</td>

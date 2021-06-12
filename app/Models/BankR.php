@@ -9,4 +9,7 @@ class BankR extends Model
 {
     protected $connection = "ishosu";
     protected $table = "vbanctas";
+    public    $incrementing = false;
+    protected $primaryKey   = "CODIBANC";
+    protected $keyType      = "string";
 }

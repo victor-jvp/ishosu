@@ -9,4 +9,7 @@ class BankE extends Model
 {
     protected $connection = "ishosu";
     protected $table = "tbancos";
+    public    $incrementing = false;
+    protected $primaryKey   = "CODIGO";
+    protected $keyType      = "string";
 }
