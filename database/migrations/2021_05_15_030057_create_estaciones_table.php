@@ -18,6 +18,8 @@ class CreateEstacionesTable extends Migration
 
             $table->string("codigo", 3)->unique();
             $table->string("name", 55)->nullable();
+            $table->integer('recibo_num')->default(0);
+            $table->integer('relacion_num')->default(0);
 
             $table->timestamps();
             $table->softDeletes();

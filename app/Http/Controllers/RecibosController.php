@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\BankE;
 use App\Models\BankR;
+use App\Models\Estacion;
 use App\Models\ReciboCab;
 use App\Models\ReciboDet;
 use App\Models\Relacion;
+use Illuminate\Support\Facades\Auth;
 use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -64,6 +66,9 @@ class RecibosController extends Controller
         try {
             $reciboCab = new ReciboCab();
 
+
+            $reciboCab->estacion    = Auth::user()->estacion->codigo ?? "";
+            $reciboCab->num         = (!is_null(Auth::user()->estacion)) ? (Auth::user()->estacion->recibo_num + 1) : ReciboCab::where("TIPO_DOC", $request->tipo_doc)->max("num") + 1;
             $reciboCab->FECHA       = date("Y-m-d H:i:s");
             $reciboCab->TIPO_MONEDA = $request->tipo_moneda;
             $reciboCab->TIPO_PAGO   = $request->tipo_pago;
@@ -107,7 +112,10 @@ class RecibosController extends Controller
                 }
             }
 
+            Estacion::aumentarRecibo(Auth::user());
+
             DB::commit();
+
             $result = [
                 'title' => "Aviso.",
                 "text"  => "Se ha guardado el registro con éxito.",

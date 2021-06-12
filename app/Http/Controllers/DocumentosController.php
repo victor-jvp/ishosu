@@ -6,6 +6,7 @@ use App\Models\ReciboCab;
 use App\Models\Tcpce;
 use App\Models\Tfacnda;
 use App\Models\Tfachisa;
+use App\Models\Truta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -34,29 +35,43 @@ class DocumentosController extends Controller
         $result = [];
         if ($tipo == "FA") {
             $result['results'] = Tfachisa::select($select)
-                ->with(['recibos', 'cliente', 'ruta'])
+                ->with(['recibos', 'cliente'])
                 ->where("TIPODOCU", "=", "FA")
                 ->where("NUMEDOCU", "LIKE", "%{$id}%")
                 ->orderby('NUMEDOCU', 'desc')
                 ->get()->toArray();
+
+            foreach ($result['results'] as $i => $row)
+            {
+                $result['results'][$i]['ruta'] = Truta::whereRaw("TRIM(CODIRUTA) = {$row['CODIRUTA']}")->first();
+            }
+
+            return $result;
         }
         if ($tipo == "NE") {
 
             $neOld = Tfacnda::select($select)
-                ->with(['recibos', 'cliente', 'ruta'])
+                ->with(['recibos', 'cliente'])
                 ->where("TIPODOCU", "=", "NE")
                 ->where("NUMEDOCU", "LIKE", "%{$id}%")
                 ->orderby('NUMEDOCU', 'desc')
                 ->get()->toArray();
 
             $neNew = Tfachisa::select($select)
-                   ->with(['recibos', 'cliente', 'ruta'])
+                   ->with(['recibos', 'cliente'])
                    ->where("TIPODOCU", "=", "NE")
                    ->where("NUMEDOCU", "LIKE", "%{$id}%")
                    ->orderby('NUMEDOCU', 'desc')
                    ->get()->toArray();
 
             $result['results'] = array_merge($neOld, $neNew);
+
+            foreach ($result['results'] as $i => $row)
+            {
+                $result['results'][$i]['ruta'] = Truta::whereRaw("TRIM(CODIRUTA) = {$row['CODIRUTA']}")->first();
+            }
+
+            return $result;
         }
         if ($tipo == "ND") {
             $result['results'] = Tcpce::select(

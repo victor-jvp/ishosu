@@ -23,6 +23,7 @@ class Tfachisa extends Model
         "CAMBDOL"  => "double",
         "TIPODOCU" => "string",
         "CODICLIE" => "string",
+        "CODIRUTA" => "string",
     ];
     protected $appends      = [
         "total_cobrado"
