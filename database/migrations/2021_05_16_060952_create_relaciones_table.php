@@ -16,6 +16,8 @@ class CreateRelacionesTable extends Migration
         Schema::create('relaciones', function (Blueprint $table) {
             $table->id();
 
+            $table->string('estacion', 3);
+            $table->integer('num');
             $table->date("FECHA");
             $table->string('TIPO_MONEDA', 6);
             $table->string("COMENTARIO")->nullable();

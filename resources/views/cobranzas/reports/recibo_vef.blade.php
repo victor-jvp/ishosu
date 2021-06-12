@@ -151,13 +151,13 @@
                     <td style="padding-right: 1%; width: 20%;"><b>$ {{ number_format( bcdiv( ($recibo->MONTO_RET / $recibo->TASA_CAMB)  * -1, 1, 3) ?? 0, 3)  }}</b></td>
                     <td style="padding-right: 1%; width: 30%;"><b>Bs. {{ number_format(($recibo->MONTO_RET *-1) ?? 0, 2)  }}</b></td>
                 </tr>
-                @if($recibo->TIPO_DOC != "NE")
+                @if($recibo->TIPO_DOC != "NE" && !($recibo->TIPO_MONEDA == "VEF" && $recibo->TIPO_PAGO == "E"))
                 <tr class="text-right">
                     <td style="padding-right: 1%;">ND /NC:</td>
-                    <td style="padding-right: 1%;"><b>Bs.
+                    <td style="padding-right: 1%;"><b>$
                         {{ number_format( bcdiv( (($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC) / $recibo->TASA_CAMB, 1, 3) , 3) }}
                     </td>
-                    <td style="padding-right: 1%;"><b>$
+                    <td style="padding-right: 1%;"><b>Bs.
                     {{  number_format( bcdiv( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, 1, 3), 2) }}
                 </tr>
                 @endif

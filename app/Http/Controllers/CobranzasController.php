@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estacion;
 use App\Models\ReciboCab;
 use App\Models\Relacion;
+use Illuminate\Support\Facades\Auth;
 use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -55,6 +57,8 @@ class CobranzasController extends Controller
 
             $relacion = new Relacion();
 
+            $relacion->estacion    = Auth::user()->estacion->codigo ?? "";
+            $relacion->num         = (!is_null(Auth::user()->estacion)) ? (Auth::user()->estacion->recibo_num + 1) : Estacion::where("TIPO_DOC", $request->tipo_doc)->max("num") + 1;
             $relacion->FECHA       = date("Y-m-d H:i:s");
             $relacion->TIPO_MONEDA = $request->tipo_moneda;
             $relacion->COMENTARIO  = $request->comentario;
@@ -65,6 +69,8 @@ class CobranzasController extends Controller
                 $recibo->id_relacion = $relacion->id;
                 $recibo->save();
             }
+
+            Estacion::aumentarRelacion(Auth::user());
 
             DB::commit();
 
