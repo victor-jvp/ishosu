@@ -43,7 +43,7 @@ class DocumentosController extends Controller
 
             foreach ($result['results'] as $i => $row)
             {
-                $result['results'][$i]['ruta'] = Truta::whereRaw("TRIM(CODIRUTA) = {$row['CODIRUTA']}")->first();
+                $result['results'][$i]['ruta'] = Truta::whereRaw("TRIM(CODIRUTA) = '{$row['CODIRUTA']}'")->first();
             }
 
             return $result;
@@ -68,7 +68,7 @@ class DocumentosController extends Controller
 
             foreach ($result['results'] as $i => $row)
             {
-                $result['results'][$i]['ruta'] = Truta::whereRaw("TRIM(CODIRUTA) = {$row['CODIRUTA']}")->first();
+                $result['results'][$i]['ruta'] = Truta::whereRaw("TRIM(CODIRUTA) = '{$row['CODIRUTA']}'")->first();
             }
 
             return $result;
