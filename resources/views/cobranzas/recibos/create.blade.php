@@ -110,7 +110,7 @@
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <input type="text" class="form-control" id="id_cliente"
-                                                       name="id_cliente"
+                                                       disabled
                                                        readonly autofocus>
                                             </div>
                                         </div>
@@ -141,7 +141,7 @@
                                         <p><b>Vendedor</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text" class="form-control" id="vendedor" disabled>
+                                                <input type="text" class="form-control" id="vendedor" readonly name="vendedor">
                                             </div>
                                         </div>
                                     </div>
@@ -149,7 +149,7 @@
                                         <p><b>Cliente</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text" class="form-control" id="cliente" disabled>
+                                                <input type="text" class="form-control" id="cliente" readonly name="cliente">
                                             </div>
                                         </div>
                                     </div>
@@ -442,8 +442,8 @@
                                                 data-dropup-auto="false" data-container="body" data-size="10"
                                                 data-title="Banco Emisor" id="banco_e">
                                             @foreach ($banks_e as $item)
-                                                <option data-subtext="{{ $item->code }}" value="{{ $item->id }}">
-                                                    {{ $item->name }}</option>
+                                                <option data-subtext="{{ $item->CODIGO }}" value="{{ $item->CODIGO }}">
+                                                    {{ $item->NOMBRE }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -452,8 +452,8 @@
                                                 data-dropup-auto="false" data-container="body" data-size="10"
                                                 data-title="Banco Receptor" id="banco_r">
                                             @foreach ($banks_r as $item)
-                                                <option data-subtext="{{ $item->code }}" value="{{ $item->id }}">
-                                                    {{ $item->name }}</option>
+                                                <option data-subtext="{{ $item->CODIBANC }}" value="{{ $item->CODIBANC }}">
+                                                    {{ $item->NOMBBANC }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -498,7 +498,7 @@
                                         <h2 class="card-inside-title">Comentario</h2>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <textarea rows="1" class="form-control no-resize auto-growth"
+                                                <textarea rows="1" class="form-control no-resize auto-growth" name="comentario"
                                                           placeholder="..."></textarea>
                                             </div>
                                         </div>
@@ -639,6 +639,16 @@
 
             $("#total_a_cobrar").change(function (e) {
                 UpdateMontos()
+                if ($("#tipo_doc_ne").prop("checked")) { // si es una nota de entrega dividir el total factura entre el total a cobrar
+                    const total_cobrar = $(this).inputmask("unmaskedvalue");
+                    const total_factura = $("#total_vef").inputmask("unmaskedvalue");
+                    if (total_cobrar > 0){
+                        const saldo = parseFloat( total_factura ?? 0 ) / parseFloat( total_cobrar ?? 0 )
+                        $("#tasa_cambio").val(saldo.toFixed(2))
+                    }else{
+                        $("#tasa_cambio").val(0)
+                    }
+                }
             })
 
             $("#chk_monto_ret").change(function (e) {

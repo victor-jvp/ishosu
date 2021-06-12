@@ -88,8 +88,8 @@
             <input type="checkbox" id="no"
                    {{ ($recibo->MONTO_RET <= 0) ? "checked" : "" }} style="display: inline;"/><label for="no">NO</label>
         </td>
-        <td colspan="2" class="text-center"><label>NEGOCIACION ESPECIAL: </label><input type="checkbox" {{ ($recibo->MONTO_RET > 0) ? "checked" : "" }} style="display: inline;"/></td>
-        <td colspan="2" class="text-center"><label> DESCUENTO: </label><input type="checkbox" {{ ($recibo->MONTO_RET > 0) ? "checked" : "" }} style="display: inline;"/></td>
+        <td colspan="2" class="text-center"><label>NEGOCIACION ESPECIAL: </label><input type="checkbox" {{ ($recibo->TIPO_COBRO == "espec") ? "checked" : "" }} style="display: inline;"/></td>
+        <td colspan="2" class="text-center"><label> DESCUENTO: </label><input type="checkbox" {{ ($recibo->TIPO_COBRO == "desc") ? "checked" : "" }} style="display: inline;"/></td>
         <td colspan="3" class="text-center"><label style="font-size: 6pt">TASA CAMBIO:</label><br><b style="font-size: 9pt">Bs. {{number_format( $recibo->TASA_CAMB, 2, ".", "," ) }}</b></td>
     </tr>
     <tr>
@@ -157,13 +157,6 @@
                     <td style="padding-right: 1%; width: 30%;"><b>Bs. {{ number_format(($recibo->MONTO_RET *-1) ?? 0, 2)  }}</b></td>
                 </tr>
                 <tr class="text-right">
-                    <td style="padding-right: 1%;">TOTAL A PAGAR: </td>
-                    <td style="padding-right: 1%;"><b>$
-                            {{ number_format(( ($recibo->MONTO_DOC - $recibo->MONTO_RET) / $recibo->TASA_CAMB) ?? 0, 3)  }}</b></td>
-                    <td style="padding-right: 1%;"><b>Bs.
-                        {{ number_format(( $recibo->MONTO_DOC - $recibo->MONTO_RET) ?? 0, 2)  }}</b></td>
-                </tr>
-                <tr class="text-right">
                     <td style="padding-right: 1%;">MONTO RECIBIDO: </td>
                     <td style="padding-right: 1%;"><b>$
                             {{ number_format($recibo->montoRecibido / $recibo->TASA_CAMB ?? 0, 3)  }}</b></td>
@@ -175,13 +168,20 @@
                             {{ number_format($recibo->VUELTO / $recibo->TASA_CAMB ?? 0, 3)  }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs. {{ number_format($recibo->VUELTO ?? 0, 2)  }}</b></td>
                 </tr>
-                <tr class="text-right">
-                    <td style="padding-right: 1%;">TOTAL CANCELADO $:</td>
+                {{--<tr class="text-right">
+                    <td style="padding-right: 1%;">TOTAL CANCELADO:</td>
                     <td style="padding-right: 1%;"><b>$
                             {{ number_format( ($recibo->montoRecibido - $recibo->MONTO_RET - $recibo->VUELTO) / $recibo->TASA_CAMB , 3) }}</b></td>
                     <td style="padding-right: 1%;"><b>Bs.
                             {{ number_format( $recibo->montoRecibido - $recibo->MONTO_RET - $recibo->VUELTO , 2) }}</b>
                     </td>
+                </tr>--}}
+                <tr class="text-right">
+                    <td style="padding-right: 1%;">TOTAL A PAGAR: </td>
+                    <td style="padding-right: 1%;"><b>$
+                            {{ number_format(( ($recibo->MONTO_DOC - $recibo->MONTO_RET) / $recibo->TASA_CAMB) ?? 0, 3)  }}</b></td>
+                    <td style="padding-right: 1%;"><b>Bs.
+                            {{ number_format(( $recibo->MONTO_DOC - $recibo->MONTO_RET) ?? 0, 2)  }}</b></td>
                 </tr>
                 <tr class="text-right">
                     <td style="padding-right: 1%;">SALDO:</td>

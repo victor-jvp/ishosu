@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bank;
+use App\Models\BankE;
+use App\Models\BankR;
 use App\Models\ReciboCab;
 use App\Models\ReciboDet;
 use App\Models\Relacion;
@@ -21,13 +22,13 @@ class RecibosController extends Controller
             return redirect()->route("home")->with("info", "Acceso denegado. No posee permisos para ir al sitio anterior.");
         }
 
-        if (auth()->user()->hasRole(["Admin", "Supervisor"])) {
-            $recibos = ReciboCab::whereNull("id_relacion")
-                ->get();
-        }else{
-            $recibos = ReciboCab::whereNull("id_relacion")
-                ->where("created_by", auth()->user()->getAuthIdentifier())
-                ->get();
+        if (auth()->user()->hasRole([
+            "Admin",
+            "Supervisor"
+        ])) {
+            $recibos = ReciboCab::whereNull("id_relacion")->get();
+        } else {
+            $recibos = ReciboCab::whereNull("id_relacion")->where("created_by", auth()->user()->getAuthIdentifier())->get();
         }
 
         return view('cobranzas.recibos.index', compact('recibos'));
@@ -51,8 +52,8 @@ class RecibosController extends Controller
 
         $dolares   = "100, 50, 20, 10, 5, 1,Centimos...";
         $bolivares = "500000, 200000, 100000, 50000";
-        $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
-        $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
+        $banks_e   = BankE::all();
+        $banks_r   = BankR::all();
 
         return view('cobranzas.recibos.create', compact('dolares', 'bolivares', 'banks_e', 'banks_r'));
     }
@@ -68,15 +69,18 @@ class RecibosController extends Controller
             $reciboCab->TIPO_PAGO   = $request->tipo_pago;
             $reciboCab->TIPO_DOC    = $request->tipo_doc;
             $reciboCab->NUMEDOCU    = $request->nro_documento;
+            $reciboCab->NOMBCLIE    = $request->cliente;
+            $reciboCab->NOMBVEND    = $request->vendedor;
             $reciboCab->TIPO_COBRO  = ($request->tipo_doc == "NE") ? "espec" : $request->tipo_cobro;
             $reciboCab->PORC        = ($request->tipo_cobro == "desc") ? Str::remove(",", $request->porcentaje) : 0;
 
-            $reciboCab->MONTO_DESC  = ($request->monto_desc != "") ? Str::remove(",", $request->monto_desc) : 0;
-            $reciboCab->MONTO_DOC   = ($request->total_a_cobrar != "") ? Str::remove(",", $request->total_a_cobrar) : 0;
-            $reciboCab->MONTO_RET   = ($request->monto_ret != "") ? Str::remove(",", $request->monto_ret) : 0;
-            $reciboCab->TASA_CAMB   = ($request->tasa_cambio != "") ? Str::remove(",", $request->tasa_cambio) : 0;
-            $reciboCab->VUELTO      = ($request->vuelto != "") ? Str::remove(",", $request->vuelto) : 0;
-            $reciboCab->SALDO_DOC   = ($request->saldo_doc != "") ? Str::remove(",", $request->saldo_doc) : 0;
+            $reciboCab->MONTO_DESC = ($request->monto_desc != "") ? Str::remove(",", $request->monto_desc) : 0;
+            $reciboCab->MONTO_DOC  = ($request->total_a_cobrar != "") ? Str::remove(",", $request->total_a_cobrar) : 0;
+            $reciboCab->MONTO_RET  = ($request->monto_ret != "") ? Str::remove(",", $request->monto_ret) : 0;
+            $reciboCab->TASA_CAMB  = ($request->tasa_cambio != "") ? Str::remove(",", $request->tasa_cambio) : 0;
+            $reciboCab->VUELTO     = ($request->vuelto != "") ? Str::remove(",", $request->vuelto) : 0;
+            $reciboCab->SALDO_DOC  = ($request->saldo_doc != "") ? Str::remove(",", $request->saldo_doc) : 0;
+            $reciboCab->COMENTARIO = $request->comentario;
 
             $reciboCab->save();
 
@@ -138,8 +142,14 @@ class RecibosController extends Controller
 
         $dolares   = "100, 50, 20, 10, 5, 1,Centimos...";
         $bolivares = "500000, 200000, 100000, 50000";
-        $banks_e   = Bank::whereIn("tipo", ["E", "A"])->get();
-        $banks_r   = Bank::whereIn("tipo", ["R", "A"])->get();
+        $banks_e   = Bank::whereIn("tipo", [
+            "E",
+            "A"
+        ])->get();
+        $banks_r   = Bank::whereIn("tipo", [
+            "R",
+            "A"
+        ])->get();
 
         return view('cobranzas.recibos.edit', compact('recibo', 'dolares', 'bolivares', 'banks_e', 'banks_r'));
     }
@@ -154,14 +164,13 @@ class RecibosController extends Controller
         try {
             DB::beginTransaction();
 
-            $recibo = ReciboCab::find($id);
+            $recibo      = ReciboCab::find($id);
             $id_relacion = $recibo->id_relacion;
             $recibo->delete();
 
-            if (!is_null($id_relacion))
-            {
+            if (!is_null($id_relacion)) {
                 $relacion = Relacion::find($id_relacion);
-                if($relacion->recibos->count() == 0){
+                if ($relacion->recibos->count() == 0) {
                     $relacion->delete();
                 }
             }
@@ -194,18 +203,40 @@ class RecibosController extends Controller
 
         $recibo = ReciboCab::find($id);
 
-        if($recibo->TIPO_MONEDA == "USD")
-        {
-            $billetes   = [100, 50, 20, 10, 5, 1, 0.5];
-            $paper_size= [0,0,612,396];
-            $pdf = PDF::loadView('cobranzas.reports.recibo_usd', compact("recibo", "billetes"))->setPaper("letter", "portrait");
+        if ($recibo->TIPO_MONEDA == "USD") {
+            $billetes   = [
+                100,
+                50,
+                20,
+                10,
+                5,
+                1,
+                0.5
+            ];
+            $paper_size = [
+                0,
+                0,
+                612,
+                396
+            ];
+            $pdf        = PDF::loadView('cobranzas.reports.recibo_usd', compact("recibo", "billetes"))->setPaper("letter", "portrait");
             return $pdf->stream("Recibo {$recibo->idZero}.pdf");
             //return view("cobranzas.reports.recibo_usd", compact("recibo", "billetes"));
 
-        }else{
-            $billetes = [500000, 200000, 100000, 50000];
-            $paper_size = [0, 0, 612, 396];
-            $pdf = PDF::loadView('cobranzas.reports.recibo_vef', compact("recibo", "billetes"))->setPaper("letter", "portrait");
+        } else {
+            $billetes   = [
+                500000,
+                200000,
+                100000,
+                50000
+            ];
+            $paper_size = [
+                0,
+                0,
+                612,
+                396
+            ];
+            $pdf        = PDF::loadView('cobranzas.reports.recibo_vef', compact("recibo", "billetes"))->setPaper("letter", "portrait");
             return $pdf->stream("Recibo {$recibo->idZero}.pdf");
 //            return view("cobranzas.reports.recibo_vef", compact("recibo", "billetes"));
         }
@@ -216,7 +247,7 @@ class RecibosController extends Controller
         try {
             DB::beginTransaction();
 
-            $recibo = ReciboCab::find($id);
+            $recibo             = ReciboCab::find($id);
             $recibo->VUELTO_ENT = true;
             $recibo->save();
 

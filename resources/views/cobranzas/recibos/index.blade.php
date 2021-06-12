@@ -95,8 +95,9 @@
                                             <td>
                                                 @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
                                                 <input type="checkbox" id="md_checkbox_{{ $item->id }}"
-                                                    class="filled-in chk-col-indigo" checked value="{{ $item->id }}"
-                                                    name="recibos[]">
+                                                       class="filled-in chk-col-indigo" value="{{ $item->id }}"
+                                                       {{ (Auth::user()->id == $item->created_by) ? "checked" : "" }}
+                                                       name="recibos[]">
                                                 <label for="md_checkbox_{{ $item->id }}">
                                                     <b>{{ str_pad($item->id,"6","0",STR_PAD_LEFT) }}</b>
                                                 </label>

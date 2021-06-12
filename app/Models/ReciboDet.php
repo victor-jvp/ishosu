@@ -16,10 +16,10 @@ class ReciboDet extends Model
 
     public function bank_e()
     {
-        return $this->belongsTo(Bank::class, "bank_id_e");
+        return $this->belongsTo(BankE::class, "bank_id_e");
     }
     public function bank_r()
     {
-        return $this->belongsTo(Bank::class, "bank_id_r");
+        return $this->belongsTo(BankR::class, "bank_id_r");
     }
 }

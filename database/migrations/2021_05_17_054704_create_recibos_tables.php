@@ -23,6 +23,9 @@ class CreateRecibosTables extends Migration
             $table->string("TIPO_PAGO", 1)->nullable();
             $table->string("TIPO_DOC", 6);
             $table->string("NUMEDOCU", 9)->nullable();
+            $table->string("NOMBCLIE")->nullable();
+            $table->string("NOMBVEND")->nullable();
+
             $table->string("TIPO_COBRO", 10)->nullable()->default(null);
             $table->double("PORC")->default(0);
             $table->double("MONTO_DESC")->default(0);
@@ -55,12 +58,10 @@ class CreateRecibosTables extends Migration
             $table->double("DENOMINACION")->nullable();
             $table->string("REFERENCIA", 55)->nullable();
             $table->date("FECHA_PAGO")->nullable();
-            $table->unsignedBigInteger("bank_id_e")->nullable();
-            $table->unsignedBigInteger("bank_id_r")->nullable();
+            $table->string("bank_id_e", 35)->nullable();
+            $table->string("bank_id_r", 35)->nullable();
             $table->double("MONTO")->nullable();
 
-            $table->foreign('bank_id_e')->references('id')->on('banks');
-            $table->foreign('bank_id_r')->references('id')->on('banks');
             $table->foreign('id_recibo')->references('id')->on('recibos_cab')->onDelete('cascade');
         });
     }

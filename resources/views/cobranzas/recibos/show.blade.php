@@ -159,7 +159,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" class="form-control"
-                                                   value="{{ $document->ruta->NOMBVEND ?? '' }}"
+                                                   value="{{ $recibo->NOMBVEND ?? '' }}"
                                                    disabled>
                                             <label class="form-label">Vendedor</label>
                                         </div>
@@ -169,9 +169,9 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" class="form-control"
-                                                   value="{{ $document->cliente->NOMBCLIE ?? '' }}"
+                                                   value="{{ $recibo->NOMBCLIE ?? '' }}"
                                                    disabled>
-                                            <label class="form-label">Codigo Cliente</label>
+                                            <label class="form-label">Cliente</label>
                                         </div>
                                     </div>
                                 </div>
@@ -604,10 +604,6 @@
                     $("#chk_monto_ret").prop("checked", "{{ ($recibo->MONTO_RET > 0) ? true : false }}")
 
                     $("#fecha_documento").val(moment(resp.FECHA).format("YYYY-MM-DD"))
-                    $("#id_cliente").val(resp.CODICLIE)
-                    $("#cliente").val((resp.cliente.NOMBCLIE).trim())
-                    $("#id_ruta").val(resp.CODIRUTA ?? null)
-                    $("#vendedor").val((resp.ruta) ? resp.ruta.NOMBVEND : null)
                     //Fill doc table data
 
                     const totalIva = resp.IMPUBRUT
