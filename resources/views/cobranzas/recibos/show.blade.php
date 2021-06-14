@@ -43,16 +43,13 @@
                                 {{-- <small>Different sizes and widths</small> --}}
                             </h2>
                             <ul class="header-dropdown m-r-0">
-                                @if ($recibo->TIPO_PAGO == "E")
-                                    <li>
-                                        <a href="{{ route('recibos.print', $recibo->id) }}" data-toggle="tooltip"
-                                           data-placement="auto"
-                                           data-original-title="Imprimir Recibo" target="_blank"
-                                           class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
-                                            <i class="material-icons">print</i>
-                                        </a>
-                                    </li>
-                                @endif
+                                <li>
+                                    <a href="{{ route('recibos.print', $recibo->id) }}" data-toggle="tooltip"
+                                        data-placement="auto" data-original-title="Imprimir Recibo" target="_blank"
+                                        class="btn btn-default btn-circle-lg waves-effect waves-circle waves-float">
+                                        <i class="material-icons">print</i>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                         <div class="body">

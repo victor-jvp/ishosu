@@ -100,11 +100,6 @@
         <td class="text-center">{{ __("MONTO Bs.: ") }}<b>Bs. {{ number_format($document->TOTADOCU, 2) }}</b></td>
         <td colspan="3" class="text-center">{{ __("MONTO $: ") }}<br><b>$ {{ number_format($document->TOTADOCU / $document->CAMBDOL, 3) }}</b></td>
         <td colspan="2" class="text-center" >{{ __("NEG.ESP.: ") }}<br><b>Bs. {{ number_format($recibo->MONTO_DOC, $nDecimals) }}</b></td>
-{{--        <td class="text-center" colspan="3">--}}
-{{--            @if($recibo->TIPO_DOC != "NE")--}}
-{{--            {{ __("ND / NC: ") }}<br><b>Bs. {{ number_format( ($document->TOTADOCU / $document->CAMBDOL) - $recibo->MONTO_DOC, $nDecimals) }}</b>--}}
-{{--            @endif--}}
-{{--        </td>--}}
     </tr>
     <tr>
         <td class="text-right" style="padding-right: 5px">{{ __("FORMA DE PAGO: ") }}</td>
@@ -114,6 +109,7 @@
         <td class="text-center" colspan="6" style="padding: 5px 5px;"><b><u>DESGLOSE DE PAGO</u></b></td>
     </tr>
     <tr>
+        @if($recibo->TIPO_PAGO == "E")
         <td colspan="4" style="vertical-align: baseline;">
             <table class="table-bordered" style="width: 100%;">
                 <tr>
@@ -144,6 +140,37 @@
                 </tr>
             </table>
         </td>
+        @else
+        <td colspan="4" style="vertical-align: baseline;">
+            <table class="table-bordered" style="width: 100%;">
+                <tr>
+                    <td class="text-center"><b>{{ __("BANCO EMISOR") }}</b></td>
+                    <td class="text-center"><b>{{ __("BANCO RECEPTOR") }}</b></td>
+                    <td class="text-center"><b>{{ __("FECHA PAGO") }}</b></td>
+                    <td class="text-center"><b>{{ __("REFERENCIA") }}</b></td>
+                    <td class="text-center"><b>{{ __("MONTO") }}</b></td>
+                </tr>
+                @php
+                $sumTotal = 0;
+                @endphp
+                @foreach ($recibo->reciboDet as $item)
+                <tr class="text-center">
+                    <td>{{ $item->bank_e->NOMBRE }}</td>
+                    <td>{{ $item->bank_r->NOMBBANC }}</td>
+                    <td>{{ $item->FECHA_PAGO->format("d/m/Y") }}</td>
+                    <td>{{ $item->REFERENCIA }}</td>
+                    <td class="text-right" style="padding-right: 1%">{{ number_format($item->MONTO, 2, ".", ",") }}</td>
+                    @php($sumTotal += $item->MONTO)
+                </tr>
+                @endforeach
+                <tr>
+                    <td colspan="4" class="text-right" style="font-size: 9pt; font-weight: bold">TOTAL</td>
+                    <td class="text-right" style="font-weight: bold; padding-right: 1%">
+                        {{ number_format($sumTotal, 2) }}</td>
+                </tr>
+            </table>
+        </td>
+        @endif
         <td colspan="6" style="vertical-align: baseline;">
             <table style="width: 100%;">
                 <tr class="text-right">

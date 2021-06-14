@@ -139,13 +139,11 @@
                                                         data-toggle="tooltip" data-placement="auto"
                                                         data-original-title="Detalles"><i class="material-icons">visibility</i>
                                                     </a>
-                                                    @if ($item->TIPO_PAGO == "E")
                                                     <a href="{{ route("recibos.print", $item->id) }}" target="_blank"
                                                         class="btn btn-default btn-sm waves-effect"
                                                         data-toggle="tooltip" data-placement="auto"
                                                         data-original-title="Imprimir"><i class="material-icons">print</i>
                                                     </a>
-                                                    @endif
                                                     @can('recibos.delete')
                                                     <button type="button" onclick="DeleteRow({{ $item->id }})"
                                                         class="btn btn-default btn-sm waves-effect"
