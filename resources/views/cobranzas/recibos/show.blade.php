@@ -622,17 +622,17 @@
                     }
 
                     $("#subtotal_vef").val(totalBrut)
-                    $("#subtotal_usd").val(toTrunc(totalBrut / cambDol, 3))
+                    $("#subtotal_usd").val((totalBrut / cambDol).toFixed(3))
                     $("#descuento_vef").val(descuento)
-                    $("#descuento_usd").val(toTrunc(descuento / cambDol, 3))
+                    $("#descuento_usd").val((descuento / cambDol).toFixed(3))
                     $("#exento_vef").val(exento.toFixed(2))
-                    $("#exento_usd").val(toTrunc(exento / cambDol, 3))
+                    $("#exento_usd").val((exento / cambDol).toFixed(3))
                     $("#base_vef").val(baseImp.toFixed(2))
-                    $("#base_usd").val(toTrunc(baseImp / cambDol, 3))
+                    $("#base_usd").val((baseImp / cambDol).toFixed(3))
                     $("#iva_vef").val(totalIva)
-                    $("#iva_usd").val(toTrunc(totalIva / cambDol, 3))
+                    $("#iva_usd").val((totalIva / cambDol, 3).toFixed(3))
                     $("#total_vef").val(totalDocu.toFixed(2))
-                    $("#total_usd").val(toTrunc(totalDocu / cambDol, 3))
+                    $("#total_usd").val((totalDocu / cambDol).toFixed(3))
 
                     // $("#monto_doc_vef").val()
                     // $("#tasa_cambio").val(cambDol)

@@ -657,7 +657,7 @@
                     const iva = $(`#iva_${moneda}`).inputmask("unmaskedvalue")
                     const monto_ret = parseFloat(iva * (75 / 100))
 
-                    $("#monto_ret").val(toTrunc(monto_ret, 3))
+                    $("#monto_ret").val(monto_ret.toFixed(3))
                 } else {
                     $("#monto_ret").val(0)
                 }
@@ -813,8 +813,8 @@
             }
 
             if (moneda = "usd") {
-                $("#total_a_cobrar").val(toTrunc(result, 3))
-                $("#monto_desc").val(toTrunc(monto_desc, 3))
+                $("#total_a_cobrar").val(result.toFixed(3))
+                $("#monto_desc").val(monto_desc.toFixed(3))
             } else {
                 $("#total_a_cobrar").val(result.toFixed(2))
                 $("#monto_desc").val(monto_desc.toFixed(2))
@@ -846,7 +846,7 @@
             }
 
             if (moneda = "usd") {
-                $("#total_a_cobrar").val(toTrunc(total_a_cobrar, 3))
+                $("#total_a_cobrar").val(total_a_cobrar.toFixed(3))
             } else {
                 $("#total_a_cobrar").val(total_a_cobrar.toFixed(2))
             }
@@ -925,7 +925,7 @@
                 saldo_doc = parseFloat(total_a_cobrar - total_recibido + vuelto)
             }
             if ($("#tipo_moneda_usd").prop("checked")) { //si la moneda es usd, truncar a 3 decimales
-                $("#saldo_doc").val( toTrunc(saldo_doc, 3))
+                $("#saldo_doc").val( saldo_doc.toFixed(3))
             }else{ // si es vef redondear a 2
                 $("#saldo_doc").val( saldo_doc.toFixed(2))
             }
@@ -1115,7 +1115,7 @@
 
             if (resp.TIPODOCU == "ND") {
                 if (resp.TIPOAFEC == "FA") {
-                    cambDol = resp.fa_afectada.CAMBDOL
+                    cambdol = resp.fa_afectada.CAMBDOL
                 } else {
                     cambDol = resp.ne_afectada.CAMBDOL
                 }
@@ -1124,17 +1124,17 @@
             }
 
             $("#subtotal_vef").val(totalBrut)
-            $("#subtotal_usd").val(toTrunc(totalBrut / cambDol, 3))
+            $("#subtotal_usd").val((totalBrut / cambDol).toFixed(3))
             $("#descuento_vef").val(descuento)
-            $("#descuento_usd").val(toTrunc(descuento / cambDol, 3))
+            $("#descuento_usd").val((descuento / cambDol).toFixed(3))
             $("#exento_vef").val(exento.toFixed(2))
-            $("#exento_usd").val(toTrunc(exento / cambDol, 3))
+            $("#exento_usd").val((exento / cambDol).toFixed(3))
             $("#base_vef").val(baseImp.toFixed(2))
-            $("#base_usd").val(toTrunc(baseImp / cambDol, 3))
+            $("#base_usd").val((baseImp / cambDol).toFixed(3))
             $("#iva_vef").val(totalIva)
-            $("#iva_usd").val(toTrunc(totalIva / cambDol, 3))
+            $("#iva_usd").val((totalIva / cambDol, 3).toFixed(3))
             $("#total_vef").val(totalDocu.toFixed(2))
-            $("#total_usd").val(toTrunc(totalDocu / cambDol, 3))
+            $("#total_usd").val((totalDocu / cambDol).toFixed(3))
 
             $("#monto_doc_vef").val()
             $("#tasa_cambio").val(cambDol)

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ReciboCab;
+use App\Models\Tcpca;
 use App\Models\Tcpce;
 use App\Models\Tfacnda;
 use App\Models\Tfachisa;
@@ -35,7 +36,7 @@ class DocumentosController extends Controller
         $result = [];
         if ($tipo == "FA") {
             $result['results'] = Tfachisa::select($select)
-                ->with(['recibos', 'cliente'])
+                ->with(['recibos'])
                 ->where("TIPODOCU", "=", "FA")
                 ->where("NUMEDOCU", "LIKE", "%{$id}%")
                 ->orderby('NUMEDOCU', 'desc')
@@ -43,6 +44,7 @@ class DocumentosController extends Controller
 
             foreach ($result['results'] as $i => $row)
             {
+                $result['results'][$i]['cliente'] = Tcpca::whereRaw("TRIM(CODICLIE) = '{$row['CODICLIE']}'")->first();
                 $result['results'][$i]['ruta'] = Truta::whereRaw("TRIM(CODIRUTA) = '{$row['CODIRUTA']}'")->first();
             }
 
@@ -68,6 +70,7 @@ class DocumentosController extends Controller
 
             foreach ($result['results'] as $i => $row)
             {
+                $result['results'][$i]['cliente'] = Tcpca::whereRaw("TRIM(CODICLIE) = '{$row['CODICLIE']}'")->first();
                 $result['results'][$i]['ruta'] = Truta::whereRaw("TRIM(CODIRUTA) = '{$row['CODIRUTA']}'")->first();
             }
 
@@ -92,6 +95,11 @@ class DocumentosController extends Controller
                 ->where("NUMEDOCU", "LIKE", "%{$id}%")
                 ->orderby('NUMEDOCU', 'desc')
                 ->get()->toArray();
+
+            foreach ($result['results'] as $i => $row)
+            {
+                $result['results'][$i]['cliente'] = Tcpca::whereRaw("TRIM(CODICLIE) = '{$row['CODICLIE']}'")->first();
+            }
         }
 
         return response()->json($result);
