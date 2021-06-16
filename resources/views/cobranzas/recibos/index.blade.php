@@ -251,9 +251,9 @@
                 buttons: [
                     'copy', 'csv', 'excel'
                 ],
-                sorting: [
-                    [0, 'desc']
-                ],
+                // sorting: [
+                //     [0, 'desc']
+                // ],
                 columnDefs: [
                     {targets: [7,8,9,10,11,12], className: "dt-body-right"},
                     {targets: {{ (Auth::user()->hasRole(["Admin", "Supervisor"])) ? 14 : 13 }}, sorting: false}

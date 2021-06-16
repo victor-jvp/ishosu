@@ -5,13 +5,6 @@
 
     @php
         $nDecimals = ($recibo->TIPO_MONEDA == "USD") ? 3 : 2;
-         if ($recibo->TIPO_DOC == "FA") {
-            $document = $recibo->factura;
-        }else if($recibo->TIPO_DOC == "NE"){
-            $document = $recibo->notaEntrega;
-        }else {
-            $document = $recibo->notaDebito;
-        }
     @endphp
 
     <section class="content">
@@ -453,7 +446,7 @@
                                                 <tr>
                                                     <td>{{ number_format($item->CANTIDAD, 2, ".", ",") }}</td>
                                                     <td>{{ number_format($item->DENOMINACION, 2, ".", ",") }}</td>
-                                                    <td class="text-right">{{ number_format($item->CANTIDAD * $item->DENOMINACION, 2, ".", ",") }}</td>
+                                                    <td class="text-right">{{ number_format($item->CANTIDAD * $item->DENOMINACION, $nDecimals, ".", ",") }}</td>
                                                 </tr>
                                             @else
                                                 <tr>
@@ -461,7 +454,7 @@
                                                     <td class="text-center">{{ $item->bank_r->NOMBBANC }}</td>
                                                     <td class="text-center">{{ $item->FECHA_PAGO->format("d/m/Y") }}</td>
                                                     <td class="text-center">{{ $item->REFERENCIA }}</td>
-                                                    <td class="text-right">{{ number_format($item->MONTO, 2, ".", ",") }}</td>
+                                                    <td class="text-right">{{ number_format($item->MONTO, $nDecimals, ".", ",") }}</td>
                                                 </tr>
                                             @endif
                                         @endforeach
@@ -470,10 +463,10 @@
                                         <tr>
                                             @if ($recibo->TIPO_PAGO == "E")
                                                 <td class="font-bold text-right" colspan="2">Total</td>
-                                                <td class="text-right font-bold">{{ number_format($recibo->monto_recibido, 2, ".", ",") }}</td>
+                                                <td class="text-right font-bold">{{ number_format($recibo->monto_recibido, $nDecimals, ".", ",") }}</td>
                                             @else
                                                 <td class="font-bold text-right" colspan="4">Total</td>
-                                                <td class="text-right font-bold">{{ number_format($recibo->monto_recibido, 2, ".", ",") }}</td>
+                                                <td class="text-right font-bold">{{ number_format($recibo->monto_recibido, $nDecimals, ".", ",") }}</td>
                                             @endif
                                         </tr>
                                         </tfoot>

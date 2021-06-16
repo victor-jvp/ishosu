@@ -657,7 +657,13 @@
                     const iva = $(`#iva_${moneda}`).inputmask("unmaskedvalue")
                     const monto_ret = parseFloat(iva * (75 / 100))
 
-                    $("#monto_ret").val(monto_ret.toFixed(3))
+                    if (moneda == "usd")
+                    {
+                        $("#monto_ret").val(monto_ret.toFixed(3))
+                    }else{
+                        $("#monto_ret").val(monto_ret.toFixed(2))
+                    }
+
                 } else {
                     $("#monto_ret").val(0)
                 }
@@ -912,7 +918,7 @@
         function UpdateMontos() {
             let vuelto = parseFloat( $("#vuelto").inputmask('unmaskedvalue') ?? 0 )
             const total_recibido = parseFloat(table_montos.column(6).data().sum())
-            $("#total_recibido").html(total_recibido.toFixed(2))
+
 
             total_a_cobrar = parseFloat($("#total_a_cobrar").inputmask('unmaskedvalue'))
 
@@ -926,8 +932,10 @@
             }
             if ($("#tipo_moneda_usd").prop("checked")) { //si la moneda es usd, truncar a 3 decimales
                 $("#saldo_doc").val( saldo_doc.toFixed(3))
+                $("#total_recibido").html(total_recibido.toFixed(3))
             }else{ // si es vef redondear a 2
                 $("#saldo_doc").val( saldo_doc.toFixed(2))
+                $("#total_recibido").html(total_recibido.toFixed(2))
             }
 
             // if ($("#tipo_doc_ne").prop("checked")) { // Si es nota de entrega calcular la tasa de cambio
@@ -965,6 +973,7 @@
                 cantidad = 1
             }
             const total = parseFloat(cantidad * denominacion)
+            const nDecimals = ($("#tipo_moneda_usd").prop("checked")) ? 3 : 2
 
             table_montos.row.add([
                 parseFloat(cantidad) + `<input type="hidden" name="bill_cant[]" value="${parseFloat(cantidad)}">`,
@@ -974,7 +983,7 @@
                 "",
                 "",
                 "",
-                total.toFixed(2),
+                total.toFixed(nDecimals),
                 `<div class="btn-group" role="group">
                 <button type="button" onclick="RemoveRowTable(this)" class="btn btn-default btn-sm waves-effect"
                     data-toggle="tooltip" data-placement="auto"
