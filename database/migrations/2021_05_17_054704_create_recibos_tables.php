@@ -25,9 +25,10 @@ class CreateRecibosTables extends Migration
             $table->string("TIPO_PAGO", 1)->nullable();
             $table->string("TIPO_DOC", 6);
             $table->string("NUMEDOCU", 9)->nullable();
+            $table->string("CODICLIE", 10)->nullable();
             $table->string("NOMBCLIE")->nullable();
+            $table->string("CODIRUTA", 10)->nullable();
             $table->string("NOMBVEND")->nullable();
-
             $table->string("TIPO_COBRO", 10)->nullable()->default(null);
             $table->double("PORC")->default(0);
             $table->double("MONTO_DESC")->default(0);

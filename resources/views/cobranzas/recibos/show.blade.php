@@ -122,7 +122,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" class="form-control"
-                                                   value="{{ $document->CODICLIE ?? '' }}"
+                                                   value="{{ $recibo->CODICLIE ?? '' }}"
                                                    disabled>
                                             <label class="form-label">Codigo Cliente</label>
                                         </div>
@@ -146,7 +146,7 @@
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <input type="text" class="form-control"
-                                                   value="{{ $document->CODIRUTA ?? '' }}"
+                                                   value="{{ $recibo->CODIRUTA ?? '' }}"
                                                    disabled>
                                             <label class="form-label">Codigo Ruta</label>
                                         </div>
