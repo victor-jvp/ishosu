@@ -69,14 +69,14 @@
             {{ $recibo->idZero }}</td>
         <td class="text-right" style="padding-right: 3px">CLIENTE:</td>
         <td class="text-center" colspan="5">
-            <b>{{ $document->CODICLIE ." - ". $recibo->NOMBCLIE }}</b>
+            <b>{{ $recibo->CODICLIE ." - ". $recibo->NOMBCLIE }}</b>
         </td>
         <td class="text-center" rowspan="2" colspan="3" style="width: 300px;">FECHA: <b>{{ $recibo->FECHA->format("d/m/Y") }}<br>{{ $recibo->FECHA->format("h:i a") }}</b></td>
     </tr>
     <tr>
         <td class="text-right" style="padding-right: 3px">RUTA:</td>
         <td class="text-center" colspan="5">
-            <b>{{ $document->CODIRUTA." - ".$recibo->NOMBVEND }}</b>
+            <b>{{ $recibo->CODIRUTA." - ".$recibo->NOMBVEND }}</b>
         </td>
     </tr>
     <tr>
@@ -96,7 +96,7 @@
         <td class="text-right" style="padding-right: 5px"><b>{{ strtoupper($recibo->tipoDocumento->DESCR) }}:</b></td>
         <td class="text-center"><b>{{ $recibo->NUMEDOCU }}</b></td>
         <td class="text-right" style="padding-right: 5px;">{{ __("FECHA DE EMISION:") }}</td>
-        <td class="text-center"><b>{{ $document->FECHA->format("d/m/Y") }}</b></td>
+        <td class="text-center"><b>{{ $recibo->FECHA->format("d/m/Y") }}</b></td>
         <td class="text-center">{{ __("MONTO Bs.: ") }}<b>Bs. {{ number_format($document->TOTADOCU, 2) }}</b></td>
         <td colspan="3" class="text-center">{{ __("MONTO $: ") }}<br><b>$ {{ number_format($document->TOTADOCU / $document->CAMBDOL, 3) }}</b></td>
         <td colspan="2" class="text-center" >{{ __("NEG.ESP.: ") }}<br><b>Bs. {{ number_format($recibo->MONTO_DOC, $nDecimals) }}</b></td>

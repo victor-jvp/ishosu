@@ -93,7 +93,7 @@
                                             <div class="form-line">
                                                 <select class="form-control ms" required name="nro_documento"
                                                         id="nro_documento">
-                                                    6 </select>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -110,8 +110,8 @@
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <input type="text" class="form-control" id="id_cliente"
-                                                       disabled
-                                                       readonly autofocus>
+                                                       name="id_cliente"
+                                                       readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -133,7 +133,7 @@
                                         <p><b>Codigo Ruta</b></p>
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text" class="form-control" id="id_ruta" disabled>
+                                                <input type="text" class="form-control" id="id_ruta" name="id_ruta" readonly>
                                             </div>
                                         </div>
                                     </div>

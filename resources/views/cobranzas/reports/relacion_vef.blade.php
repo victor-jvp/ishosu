@@ -87,25 +87,13 @@
         $nDecimals = ($relacion->TIPO_MONEDA == "VEF") ? 2 : 3;
     @endphp
     @foreach($relacion->recibos as $recibo)
-
-        @php
-            $document = null;
-            if ($recibo->TIPO_DOC == "FA"){
-                $document = $recibo->factura;
-            }else if($recibo->TIPO_DOC == "NE") {
-                $document = $recibo->notaEntrega;
-            }else{
-                $document = $recibo->notaDebito;
-            }
-        @endphp
-
         <tr style="font-size: 6.5pt !important">
             <td class="text-center" style="padding: 3px;">{{ $recibo->idZero }}</td>
             <td class="text-center" style="padding: 3px;">{{ $recibo->FECHA->format("d/m/Y") }}</td>
             <td class="text-center"
-                style="padding: 3px;">{{ $document->CODICLIE ?? "" }}</td>
+                style="padding: 3px;">{{ $recibo->CODICLIE ?? "" }}</td>
             <td class=""
-                style="padding: 3px;">{{ $document->cliente->NOMBCLIE ?? "" }}</td>
+                style="padding: 3px;">{{ $recibo->NOMBCLIE ?? "" }}</td>
             <td class="text-center" style="padding: 3px;">{{ $recibo->NUMEDOCU }}</td>
             @if ($recibo->TIPO_PAGO == 'T')
             <td class="text-center">

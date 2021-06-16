@@ -67,21 +67,14 @@
 
                                         @php
                                             $nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3;
-                                            if ($item->TIPO_DOC == "FA") {
-                                                $document = $item->factura;
-                                            }else if($item->TIPO_DOC == "NE"){
-                                                $document = $item->notaEntrega;
-                                            }else {
-                                                $document = $item->notaDebito;
-                                            }
                                         @endphp
 
                                         <tr>
                                             <td><b>{{ $item->idZero }}</b></td>
                                             <td>{{ $item->FECHA->format("d/m/Y") }}</td>
                                             <td>{{ $item->tipoDocumento->DESCR }}</td>
-                                            <td>{{ $document->CODICLIE ?? "" }}</td>
-                                            <td>{{ $document->cliente->NOMBCLIE ?? "" }}</td>
+                                            <td>{{ $item->CODICLIE ?? "" }}</td>
+                                            <td>{{ $item->NOMBCLIE ?? "" }}</td>
                                             <td>{{ $item->NUMEDOCU }}</td>
                                             <td>{{number_format( $item->MONTO_DOC, $nDecimals, ".", "," ) }}</td>
                                             <td>{{number_format( $item->montoRecibido, $nDecimals, ".", "," ) }}</td>
