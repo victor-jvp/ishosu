@@ -41,6 +41,7 @@
                                 width="100%">
                                 <thead class="bg-indigo">
                                     <tr>
+                                        <th>id</th>
                                         <th>Nro.</th>
                                         <th>Fecha</th>
                                         <th>Tipo de Relacion</th>
@@ -52,6 +53,7 @@
                                 <tbody>
                                     @foreach($relaciones as $item)
                                     <tr>
+                                        <td>{{ $item->id }}</td>
                                         <td><b>{{ $item->idzero }}</b></td>
                                         <td>{{ $item->created_at->format("d/m/Y H:i A") }}</td>
                                         <td>{{ $item->TIPO_MONEDA }}</td>
@@ -120,7 +122,8 @@
                 'copy', 'csv', 'excel'
             ],
             columnDefs: [
-                {targets: 5, sorting: false}
+                { targets: 0, visible: false},
+                { targets: 5, sorting: false}
             ],
             sorting: [
                 [0, 'desc']

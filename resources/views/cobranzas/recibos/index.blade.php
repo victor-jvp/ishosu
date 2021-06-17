@@ -58,6 +58,7 @@
                                         width="100%">
                                     <thead class="bg-indigo">
                                     <tr>
+                                        <th>id</th>
                                         <th>Nro.</th>
                                         <th>Fecha</th>
                                         <th>Tipo Doc.</th>
@@ -82,16 +83,10 @@
 
                                         @php
                                             $nDecimals = ($item->TIPO_MONEDA == "VEF") ? 2 : 3;
-                                            // if ($item->TIPO_DOC == "FA") {
-                                            //     $document = $item->factura;
-                                            // }else if($item->TIPO_DOC == "NE"){
-                                            //     $document = $item->notaEntrega;
-                                            // }else {
-                                            //     $document = $item->notaDebito;
-                                            // }
                                         @endphp
 
                                         <tr>
+                                            <td>{{ $item->id }}</td>
                                             <td>
                                                 @if (Auth::user()->hasRole(["Admin", "Supervisor"]))
                                                 <input type="checkbox" id="md_checkbox_{{ $item->id }}"
@@ -251,11 +246,12 @@
                 buttons: [
                     'copy', 'csv', 'excel'
                 ],
-                // sorting: [
-                //     [0, 'desc']
-                // ],
+                sorting: [
+                    [0, 'desc']
+                ],
                 columnDefs: [
-                    {targets: [7,8,9,10,11,12], className: "dt-body-right"},
+                    {targets: 0, visible: false},
+                    {targets: [8,9,10,11,12,13], className: "dt-body-right"},
                     {targets: {{ (Auth::user()->hasRole(["Admin", "Supervisor"])) ? 14 : 13 }}, sorting: false}
                 ]
             })

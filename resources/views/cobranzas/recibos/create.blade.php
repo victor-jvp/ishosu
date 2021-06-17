@@ -1114,10 +1114,11 @@
             //Fill doc table data
 
             const totalIva = resp.IMPUBRUT
-            const totalBrut = resp.TOTABRUT
-            const exento = (resp.TIPODOCU == "ND") ? resp.EXENTO : parseFloat(resp.TOTADOCU - resp.TOTABRUT)
+            const subTotal = resp.TOTABRUT
             const totalDocu = (resp.TIPODOCU == "ND") ? resp.EXENTO + resp.TOTABRUT : resp.TOTADOCU
-            const baseImp = totalDocu - totalIva
+            const baseImp = parseFloat(totalIva / 0.16)
+            const exento = (resp.TIPODOCU == "ND") ? resp.EXENTO : parseFloat(subTotal - baseImp)
+
             const montoRet = totalIva * (75 / 100);
             const descuento = (resp.TIPODOCU != "ND") ? resp.DESCUENTOG : 0
             let cambdol = 0;
@@ -1132,8 +1133,8 @@
                 cambDol = resp.CAMBDOL
             }
 
-            $("#subtotal_vef").val(totalBrut)
-            $("#subtotal_usd").val((totalBrut / cambDol).toFixed(3))
+            $("#subtotal_vef").val(subTotal)
+            $("#subtotal_usd").val((subTotal / cambDol).toFixed(3))
             $("#descuento_vef").val(descuento)
             $("#descuento_usd").val((descuento / cambDol).toFixed(3))
             $("#exento_vef").val(exento.toFixed(2))
@@ -1141,7 +1142,7 @@
             $("#base_vef").val(baseImp.toFixed(2))
             $("#base_usd").val((baseImp / cambDol).toFixed(3))
             $("#iva_vef").val(totalIva)
-            $("#iva_usd").val((totalIva / cambDol, 3).toFixed(3))
+            $("#iva_usd").val((totalIva / cambDol).toFixed(3))
             $("#total_vef").val(totalDocu.toFixed(2))
             $("#total_usd").val((totalDocu / cambDol).toFixed(3))
 

@@ -28,9 +28,9 @@ class RecibosController extends Controller
             "Admin",
             "Supervisor"
         ])) {
-            $recibos = ReciboCab::whereNull("id_relacion")->orderBy('id', 'desc')->get();
+            $recibos = ReciboCab::whereNull("id_relacion")->get();
         } else {
-            $recibos = ReciboCab::whereNull("id_relacion")->where("created_by", auth()->user()->getAuthIdentifier())->orderBy('id', 'desc')->get();
+            $recibos = ReciboCab::whereNull("id_relacion")->where("created_by", auth()->user()->getAuthIdentifier())->get();
         }
 
         return view('cobranzas.recibos.index', compact('recibos'));

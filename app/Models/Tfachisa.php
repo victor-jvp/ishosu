@@ -26,7 +26,9 @@ class Tfachisa extends Model
         "CODIRUTA" => "string",
     ];
     protected $appends      = [
-        "total_cobrado"
+        "total_cobrado",
+        /*"total_gravable",
+        "total_exento"*/
     ];
 
     public function getTotalCobradoAttribute()
@@ -39,6 +41,16 @@ class Tfachisa extends Model
         }
         return round($totalCobrado, 2);
     }
+
+    /*public function getTotalGravableAttribute()
+    {
+        return $this->detalles->where('IMPU1', '>', 0)->sum(DB::raw('PRECVENT * UNIDADES'));
+    }
+
+    public function getTotalExentoAttribute()
+    {
+        return $this->detalles->where('IMPU1', '=', 0)->sum(DB::raw('PRECVENT * UNIDADES'));
+    }*/
 
     public function cliente()
     {
@@ -54,4 +66,9 @@ class Tfachisa extends Model
     {
         return $this->hasMany(ReciboCab::class, "NUMEDOCU", "NUMEDOCU");
     }
+
+    /*public function detalles()
+    {
+        return $this->hasMany(Tfachisb::class, 'NUMEDOCU', 'NUMEDOCU');
+    }*/
 }

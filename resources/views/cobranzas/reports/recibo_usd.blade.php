@@ -143,7 +143,7 @@
                     @endphp
                     <tr class="text-center">
                         <td>{{ $valCantidad }}</td>
-                        <td>{{ number_format($denominacion, 2, ".", ",") }}</td>
+                        <td>{{ number_format($denominacion, 3, ".", ",") }}</td>
                         <td>{{ number_format($totalUsd, 3) }}</td>
                         <td>{{ number_format($totalVef, 2) }}</td>
                     </tr>
