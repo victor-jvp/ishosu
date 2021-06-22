@@ -27,8 +27,8 @@ class Tfachisa extends Model
     ];
     protected $appends      = [
         "total_cobrado",
-        /*"total_gravable",
-        "total_exento"*/
+        "total_gravable",
+        "total_exento"
     ];
 
     public function getTotalCobradoAttribute()
@@ -42,15 +42,27 @@ class Tfachisa extends Model
         return round($totalCobrado, 2);
     }
 
-    /*public function getTotalGravableAttribute()
+    public function getTotalGravableAttribute()
     {
-        return $this->detalles->where('IMPU1', '>', 0)->sum(DB::raw('PRECVENT * UNIDADES'));
+        $acumPrecio = 0;
+        foreach ($this->detalles as $item) {
+            if ($item->IMPU1 > 0) {
+                $acumPrecio += round($item->precio_unitario * $item->UNIDADES, 2);
+            }
+        }
+        return $acumPrecio;
     }
 
     public function getTotalExentoAttribute()
     {
-        return $this->detalles->where('IMPU1', '=', 0)->sum(DB::raw('PRECVENT * UNIDADES'));
-    }*/
+        $acumPrecio = 0;
+        foreach ($this->detalles as $item) {
+            if ($item->IMPU1 <= 0) {
+                $acumPrecio += round($item->precio_unitario * $item->UNIDADES, 2);
+            }
+        }
+        return $acumPrecio;
+    }
 
     public function cliente()
     {
@@ -67,8 +79,8 @@ class Tfachisa extends Model
         return $this->hasMany(ReciboCab::class, "NUMEDOCU", "NUMEDOCU");
     }
 
-    /*public function detalles()
+    public function detalles()
     {
         return $this->hasMany(Tfachisb::class, 'NUMEDOCU', 'NUMEDOCU');
-    }*/
+    }
 }

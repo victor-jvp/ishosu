@@ -12,8 +12,20 @@ class Tfachisb extends Model
     public    $incrementing = false;
     protected $casts        = [
         'UNIDADES' => "double",
-        "CAMBDOL"  => "double",
         "PRECVENT" => "double",
         "IMPU1"    => "double",
     ];
+    protected $appends =[
+        'precio_unitario'
+    ];
+
+    public function getPrecioUnitarioAttribute()
+    {
+        return $this->PRECVENT / $this->inventory->UNIDCAJA;
+    }
+
+    public function inventory()
+    {
+        return $this->belongsTo(Tinv::class, 'CODIPROD', 'CODIPROD');
+    }
 }
