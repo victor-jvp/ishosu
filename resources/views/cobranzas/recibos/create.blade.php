@@ -1116,8 +1116,8 @@
             const totalIva = resp.IMPUBRUT
             const subTotal = resp.TOTABRUT
             const totalDocu = (resp.TIPODOCU == "ND") ? resp.EXENTO + resp.TOTABRUT : resp.TOTADOCU
-            const baseImp = resp.total_gravable
-            const exento = (resp.TIPODOCU == "ND") ? resp.EXENTO : resp.total_exento
+            const baseImp = totalIva / 0.16
+            const exento = (resp.TIPODOCU == "ND") ? resp.EXENTO : (subTotal - baseImp)
 
             const montoRet = totalIva * (75 / 100);
             const descuento = (resp.TIPODOCU != "ND") ? resp.DESCUENTOG : 0
@@ -1134,17 +1134,17 @@
             }
 
             $("#subtotal_vef").val(subTotal)
-            $("#subtotal_usd").val((subTotal / cambDol).toFixed(3))
+            $("#subtotal_usd").val( toTrunc(subTotal / cambDol, 3))
             $("#descuento_vef").val(descuento)
-            $("#descuento_usd").val((descuento / cambDol).toFixed(3))
+            $("#descuento_usd").val( toTrunc(descuento / cambDol, 3))
             $("#exento_vef").val( toTrunc(exento, 2) )
-            $("#exento_usd").val((exento / cambDol).toFixed(3))
+            $("#exento_usd").val( toTrunc(exento / cambDol, 3))
             $("#base_vef").val( toTrunc(baseImp, 2))
-            $("#base_usd").val((baseImp / cambDol).toFixed(3))
+            $("#base_usd").val( toTrunc(baseImp / cambDol, 3))
             $("#iva_vef").val(totalIva)
-            $("#iva_usd").val((totalIva / cambDol).toFixed(3))
+            $("#iva_usd").val( toTrunc(totalIva / cambDol, 3))
             $("#total_vef").val(totalDocu.toFixed(2))
-            $("#total_usd").val((totalDocu / cambDol).toFixed(3))
+            $("#total_usd").val( toTrunc(totalDocu / cambDol, 3))
 
             $("#monto_doc_vef").val()
             $("#tasa_cambio").val(cambDol)
